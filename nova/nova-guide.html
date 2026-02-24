@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova Guide — Activity Types · TRU Open Press</title>
+<script>(function(){var t=localStorage.getItem('om-theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ══════════════════════════════════════════════════════════
+   CSS CUSTOM PROPERTIES — DARK (default)
+   ══════════════════════════════════════════════════════════ */
+:root {
+  --void:       #09090f;
+  --deep:       #0d0d1a;
+  --panel:      #12121f;
+  --surface:    #1a1a2e;
+  --surface-hi: #20203a;
+  --border:     rgba(255,255,255,0.07);
+  --border-hi:  rgba(255,255,255,0.14);
+
+  --gold:       #f5a623;
+  --gold-dim:   rgba(245,166,35,0.15);
+  --gold-glow:  rgba(245,166,35,0.4);
+  --teal:       #00d4aa;
+  --teal-dim:   rgba(0,212,170,0.12);
+  --violet:     #a78bfa;
+  --violet-dim: rgba(167,139,250,0.12);
+  --rose:       #fb7185;
+  --rose-dim:   rgba(251,113,133,0.12);
+  --sky:        #38bdf8;
+  --sky-dim:    rgba(56,189,248,0.12);
+
+  --text:       #e8e8f0;
+  --text-dim:   #8888aa;
+  --text-faint: #7878a8;
+
+  --r: 12px;
+  --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ══════════════════════════════════════════════════════════
+   LIGHT THEME
+   ══════════════════════════════════════════════════════════ */
+[data-theme="light"] {
+  --void:       #f8f8ff;
+  --deep:       #f0f0f8;
+  --panel:      #ffffff;
+  --surface:    #eeeef8;
+  --surface-hi: #e4e4f0;
+  --border:     rgba(0,0,0,0.08);
+  --border-hi:  rgba(0,0,0,0.14);
+
+  --gold:       #c47a00;
+  --gold-dim:   rgba(196,122,0,0.12);
+  --gold-glow:  rgba(196,122,0,0.28);
+  --teal:       #007a62;
+  --teal-dim:   rgba(0,122,98,0.10);
+  --violet:     #6a44cc;
+  --violet-dim: rgba(106,68,204,0.10);
+  --rose:       #c42040;
+  --rose-dim:   rgba(196,32,64,0.10);
+  --sky:        #0070b8;
+  --sky-dim:    rgba(0,112,184,0.10);
+
+  --text:       #12121e;
+  --text-dim:   #505070;
+  --text-faint: #6868a0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   RESET & BASE
+   ══════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; scroll-behavior: smooth; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 3px; }
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--void);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* ══════════════════════════════════════════════════════════
+   TOPBAR
+   ══════════════════════════════════════════════════════════ */
+.topbar {
+  background: rgba(9,9,15,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  flex-shrink: 0;
+}
+[data-theme="light"] .topbar {
+  background: rgba(248,248,255,0.95);
+}
+.topbar-brand { display: flex; align-items: center; gap: 14px; }
+.brand-text { display: flex; flex-direction: column; }
+.brand-nova {
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem; font-weight: 700;
+  color: var(--gold); line-height: 1; letter-spacing: -0.01em;
+}
+.brand-sub {
+  font-size: 0.65rem; color: var(--text-dim);
+  letter-spacing: 0.06em; text-transform: uppercase; margin-top: 1px;
+}
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+.topbar-lab-badge {
+  padding: 4px 12px; border-radius: 20px;
+  font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  background: linear-gradient(135deg, rgba(167,139,250,0.2), rgba(245,166,35,0.2));
+  border: 1px solid rgba(167,139,250,0.3);
+  color: var(--violet);
+}
+
+/* ══════════════════════════════════════════════════════════
+   SUITE NAV
+   ══════════════════════════════════════════════════════════ */
+.suite-nav {
+  background: rgba(9,9,15,0.7);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px; height: 34px;
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 12px;
+  position: sticky; top: 56px; z-index: 199;
+  backdrop-filter: blur(8px); flex-shrink: 0;
+}
+[data-theme="light"] .suite-nav { background: rgba(240,240,248,0.92); }
+
+.suite-nav-home {
+  font-size: 0.63rem; font-weight: 600;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--text-dim); text-decoration: none;
+  transition: color 0.18s; flex-shrink: 0;
+}
+.suite-nav-home:hover { color: var(--text); }
+[data-theme="light"] .suite-nav-home { color: #505070; }
+[data-theme="light"] .suite-nav-home:hover { color: #12121e; }
+
+.suite-nav-tools { display: flex; align-items: center; gap: 4px; }
+.suite-nav-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 20px;
+  font-size: 0.63rem; font-weight: 600;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  text-decoration: none; border: 1px solid transparent;
+  transition: all 0.18s; white-space: nowrap;
+}
+.suite-nav-pill.pill-companion { color: #f5c06a; border-color: rgba(245,192,106,0.45); }
+.suite-nav-pill.pill-companion:hover { background: rgba(245,192,106,0.12); border-color: rgba(245,192,106,0.65); color: #fdd28a; }
+.suite-nav-pill.pill-builder   { color: #c8d8ec; border-color: rgba(200,216,236,0.35); }
+.suite-nav-pill.pill-builder:hover   { background: rgba(200,216,236,0.1); border-color: rgba(200,216,236,0.55); color: #e8eef8; }
+.suite-nav-pill.pill-nova      { color: #f5c06a; border-color: rgba(245,192,106,0.45); }
+.suite-nav-pill.pill-nova:hover      { background: rgba(245,192,106,0.12); border-color: rgba(245,192,106,0.65); color: #fdd28a; }
+.suite-nav-pill.pill-nova.pill-active { background: rgba(245,192,106,0.15); border-color: rgba(245,192,106,0.55); color: #fdd28a; font-weight: 700; cursor: default; pointer-events: none; }
+.suite-nav-pill.pill-rhizo     { color: #6de8c8; border-color: rgba(109,232,200,0.4); }
+.suite-nav-pill.pill-rhizo:hover     { background: rgba(109,232,200,0.1); border-color: rgba(109,232,200,0.6); color: #90f0d8; }
+.suite-nav-pill.pill-sylva     { color: #a8e6c8; border-color: rgba(168,230,200,0.35); }
+.suite-nav-pill.pill-sylva:hover     { background: rgba(168,230,200,0.1); border-color: rgba(168,230,200,0.55); color: #c0f0d8; }
+.suite-nav-pill.pill-active { cursor: default; pointer-events: none; }
+
+[data-theme="light"] .suite-nav-pill.pill-companion { color: #7a5800; border-color: rgba(122,88,0,0.35); }
+[data-theme="light"] .suite-nav-pill.pill-companion:hover { background: rgba(122,88,0,0.08); border-color: rgba(122,88,0,0.55); color: #5a4000; }
+[data-theme="light"] .suite-nav-pill.pill-builder   { color: #003865; border-color: rgba(0,56,101,0.35); }
+[data-theme="light"] .suite-nav-pill.pill-builder:hover   { background: rgba(0,56,101,0.08); border-color: rgba(0,56,101,0.55); color: #002244; }
+[data-theme="light"] .suite-nav-pill.pill-nova      { color: #7a5800; border-color: rgba(122,88,0,0.35); }
+[data-theme="light"] .suite-nav-pill.pill-nova:hover      { background: rgba(122,88,0,0.08); border-color: rgba(122,88,0,0.55); color: #5a4000; }
+[data-theme="light"] .suite-nav-pill.pill-nova.pill-active { background: rgba(122,88,0,0.10); border-color: rgba(122,88,0,0.45); color: #7a5800; }
+[data-theme="light"] .suite-nav-pill.pill-rhizo     { color: #006a50; border-color: rgba(0,106,80,0.35); }
+[data-theme="light"] .suite-nav-pill.pill-rhizo:hover     { background: rgba(0,106,80,0.08); border-color: rgba(0,106,80,0.55); color: #004a38; }
+[data-theme="light"] .suite-nav-pill.pill-sylva     { color: #1a5c3a; border-color: rgba(26,92,58,0.35); }
+[data-theme="light"] .suite-nav-pill.pill-sylva:hover     { background: rgba(26,92,58,0.08); border-color: rgba(26,92,58,0.55); color: #0f3d26; }
+
+.btn-suite-theme {
+  background: transparent; border: 1px solid rgba(128,128,128,0.25);
+  border-radius: 20px; padding: 4px 10px; font-size: 0.82rem;
+  cursor: pointer; color: inherit; opacity: 0.65;
+  transition: opacity 0.2s, background 0.2s; line-height: 1; flex-shrink: 0;
+}
+.btn-suite-theme:hover { opacity: 1; background: rgba(128,128,128,0.12); }
+
+/* ══════════════════════════════════════════════════════════
+   PAGE LAYOUT
+   ══════════════════════════════════════════════════════════ */
+.page-wrap {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 56px 32px 80px;
+  flex: 1;
+}
+
+/* ══════════════════════════════════════════════════════════
+   HERO
+   ══════════════════════════════════════════════════════════ */
+.guide-hero {
+  text-align: center;
+  margin-bottom: 64px;
+}
+.guide-hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 0.63rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--gold);
+  border: 1px solid rgba(245,166,35,0.3);
+  background: var(--gold-dim); border-radius: 20px;
+  padding: 4px 14px; margin-bottom: 20px;
+}
+.guide-hero-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700; color: var(--text);
+  line-height: 1.15; letter-spacing: -0.02em;
+  margin-bottom: 18px;
+}
+.guide-hero-title span { color: var(--gold); }
+.guide-hero-sub {
+  font-size: 1rem; color: var(--text-dim);
+  line-height: 1.75; max-width: 600px; margin: 0 auto 28px;
+}
+.guide-hero-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 24px; border-radius: 8px;
+  background: var(--gold-dim); border: 1px solid rgba(245,166,35,0.4);
+  color: var(--gold); font-weight: 600; font-size: 0.9rem;
+  text-decoration: none; transition: all var(--transition);
+}
+.guide-hero-cta:hover { background: rgba(245,166,35,0.22); border-color: rgba(245,166,35,0.65); }
+.guide-hero-quote {
+  font-family: 'Fraunces', serif; font-style: italic;
+  font-size: 0.92rem; color: var(--text-dim); line-height: 1.65;
+  border-left: 2px solid rgba(245,166,35,0.35); padding-left: 18px;
+  text-align: left; max-width: 540px; margin: 0 auto; display: block;
+}
+.guide-hero-cite {
+  display: block; font-style: normal; font-size: 0.65rem;
+  font-family: 'DM Sans', sans-serif; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--text-faint);
+  margin-top: 8px; padding-left: 18px; text-align: left; max-width: 540px; margin: 6px auto 0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   QUICK-START BOX
+   ══════════════════════════════════════════════════════════ */
+.quickstart {
+  background: var(--surface);
+  border: 1px solid var(--border-hi);
+  border-radius: var(--r);
+  padding: 24px 28px;
+  margin-bottom: 64px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+.quickstart-step {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.qs-num {
+  font-family: 'Fraunces', serif;
+  font-size: 1.8rem; font-weight: 700;
+  color: var(--gold); line-height: 1; opacity: 0.5;
+}
+.qs-title {
+  font-size: 0.88rem; font-weight: 600; color: var(--text);
+}
+.qs-body {
+  font-size: 0.78rem; color: var(--text-dim); line-height: 1.55;
+}
+
+/* ══════════════════════════════════════════════════════════
+   SECTION HEADING
+   ══════════════════════════════════════════════════════════ */
+.section-heading {
+  font-family: 'Fraunces', serif;
+  font-size: 1.35rem; font-weight: 600; color: var(--text);
+  margin-bottom: 24px; letter-spacing: -0.01em;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ACTIVITY CARDS
+   ══════════════════════════════════════════════════════════ */
+.activity-cards {
+  display: flex; flex-direction: column; gap: 28px;
+  margin-bottom: 64px;
+}
+
+.activity-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  transition: border-color var(--transition);
+}
+.activity-card:hover { border-color: var(--border-hi); }
+
+.activity-card-header {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 22px 24px 18px;
+  border-bottom: 1px solid var(--border);
+}
+.activity-card-icon {
+  font-size: 2rem; line-height: 1; flex-shrink: 0; margin-top: 2px;
+}
+.activity-card-meta { flex: 1; }
+.activity-card-name {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem; font-weight: 600;
+  color: var(--text); margin-bottom: 4px;
+}
+.activity-card-tag {
+  display: inline-block;
+  font-size: 0.58rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 2px 10px; border-radius: 20px;
+  margin-bottom: 8px;
+}
+.activity-card-tagline {
+  font-size: 0.88rem; color: var(--text-dim); line-height: 1.5;
+  font-style: italic;
+}
+
+.activity-card-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 18px; }
+
+.card-section-label {
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--text-faint); margin-bottom: 6px;
+}
+.card-section-text {
+  font-size: 0.85rem; color: var(--text-dim); line-height: 1.65;
+}
+.card-section-text strong { color: var(--text); font-weight: 600; }
+
+.card-steps { display: flex; flex-direction: column; gap: 8px; }
+.card-step {
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.card-step-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem; font-weight: 700; flex-shrink: 0;
+  margin-top: 1px;
+}
+.card-step-text {
+  font-size: 0.84rem; color: var(--text-dim); line-height: 1.5; padding-top: 2px;
+}
+.card-step-text strong { color: var(--text); }
+
+.card-tips { display: flex; flex-direction: column; gap: 7px; }
+.card-tip {
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: 0.82rem; color: var(--text-dim); line-height: 1.5;
+}
+.card-tip-icon { flex-shrink: 0; font-size: 0.85rem; margin-top: 1px; }
+.card-tip-text strong { color: var(--text); }
+
+.card-divider {
+  height: 1px; background: var(--border); margin: 2px 0;
+}
+
+/* Colour theming per activity */
+.card-gold  { --ac: var(--gold);   --ac-dim: var(--gold-dim);   --ac-border: rgba(245,166,35,0.3);  }
+.card-teal  { --ac: var(--teal);   --ac-dim: var(--teal-dim);   --ac-border: rgba(0,212,170,0.3);   }
+.card-violet{ --ac: var(--violet); --ac-dim: var(--violet-dim); --ac-border: rgba(167,139,250,0.3); }
+.card-sky   { --ac: var(--sky);    --ac-dim: var(--sky-dim);    --ac-border: rgba(56,189,248,0.3);  }
+.card-rose  { --ac: var(--rose);   --ac-dim: var(--rose-dim);   --ac-border: rgba(251,113,133,0.3); }
+
+.activity-card.card-gold:hover  { border-color: rgba(245,166,35,0.4);  }
+.activity-card.card-teal:hover  { border-color: rgba(0,212,170,0.4);   }
+.activity-card.card-violet:hover{ border-color: rgba(167,139,250,0.4); }
+.activity-card.card-sky:hover   { border-color: rgba(56,189,248,0.4);  }
+.activity-card.card-rose:hover  { border-color: rgba(251,113,133,0.4); }
+
+.activity-card-header { border-left: 3px solid var(--ac, var(--gold)); }
+.activity-card-tag {
+  background: var(--ac-dim, var(--gold-dim));
+  border: 1px solid var(--ac-border, rgba(245,166,35,0.3));
+  color: var(--ac, var(--gold));
+}
+.card-step-num {
+  background: var(--ac-dim, var(--gold-dim));
+  border: 1px solid var(--ac-border, rgba(245,166,35,0.3));
+  color: var(--ac, var(--gold));
+}
+
+/* ══════════════════════════════════════════════════════════
+   TIPS CALLOUT
+   ══════════════════════════════════════════════════════════ */
+.general-tips {
+  background: var(--surface);
+  border: 1px solid var(--border-hi);
+  border-radius: var(--r);
+  padding: 24px 28px;
+  margin-bottom: 64px;
+}
+.general-tips-heading {
+  font-family: 'Fraunces', serif;
+  font-size: 1.05rem; font-weight: 600;
+  color: var(--text); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.general-tips-list {
+  display: flex; flex-direction: column; gap: 12px;
+}
+.gtip {
+  display: flex; gap: 12px;
+  font-size: 0.85rem; color: var(--text-dim); line-height: 1.6;
+}
+.gtip-icon { flex-shrink: 0; font-size: 0.9rem; margin-top: 2px; }
+.gtip strong { color: var(--text); }
+
+/* ══════════════════════════════════════════════════════════
+   BOTTOM CTA
+   ══════════════════════════════════════════════════════════ */
+.bottom-cta {
+  text-align: center;
+  padding: 40px 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+}
+.bottom-cta-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem; font-weight: 600;
+  color: var(--text); margin-bottom: 10px;
+}
+.bottom-cta-sub {
+  font-size: 0.88rem; color: var(--text-dim);
+  margin-bottom: 20px; line-height: 1.6;
+}
+.bottom-cta-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 28px; border-radius: 8px;
+  background: var(--gold-dim); border: 1px solid rgba(245,166,35,0.45);
+  color: var(--gold); font-weight: 700; font-size: 0.92rem;
+  text-decoration: none; transition: all var(--transition);
+  font-family: 'DM Sans', sans-serif;
+}
+.bottom-cta-btn:hover { background: rgba(245,166,35,0.22); border-color: rgba(245,166,35,0.7); }
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .page-wrap { padding: 36px 20px 60px; }
+  .guide-hero { margin-bottom: 40px; }
+  .quickstart { grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px; }
+  .activity-cards { gap: 20px; margin-bottom: 40px; }
+  .activity-card-header { padding: 18px 18px 14px; }
+  .activity-card-body { padding: 16px 18px; }
+  .suite-nav-tools { display: none; }
+}
+@media (max-width: 480px) {
+  .quickstart { grid-template-columns: 1fr; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- Topbar -->
+<header class="topbar" role="banner">
+  <div class="topbar-brand">
+    <div class="brand-text">
+      <div class="brand-nova">Nova</div>
+      <div class="brand-sub">Experimental OER Lab</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-lab-badge" aria-label="Experimental tool">Lab</div>
+    <button class="btn-suite-theme" id="btn-suite-theme" aria-label="Toggle theme" title="Toggle theme">🌙</button>
+  </div>
+</header>
+
+<!-- Suite nav -->
+<nav class="suite-nav" aria-label="Open Margins suite">
+  <a href="../index.html" class="suite-nav-home">← Open Margins</a>
+  <div class="suite-nav-tools">
+    <a href="../companion/companion.html" class="suite-nav-pill pill-companion">✦ Companion</a>
+    <a href="../tru-oer-activity-builder.html" class="suite-nav-pill pill-builder">⬡ Activity Builder</a>
+    <a href="nova.html" class="suite-nav-pill pill-nova pill-active" aria-current="page">✺ Nova</a>
+    <a href="../rhizo/rhizo.html" class="suite-nav-pill pill-rhizo">∿ Rhizo</a>
+    <a href="../sylva/sylva.html" class="suite-nav-pill pill-sylva">⟡ Sylva</a>
+  </div>
+</nav>
+
+<!-- Main content -->
+<main class="page-wrap" id="main">
+
+  <!-- Hero -->
+  <div class="guide-hero">
+    <div class="guide-hero-eyebrow" aria-hidden="true">✺ Nova · Activity Guide</div>
+    <h1 class="guide-hero-title">How to get the most<br>out of <span>Nova</span></h1>
+    <p class="guide-hero-sub">Nova generates eight types of critical-thinking activities from any OER chapter. This guide explains what each one does, how it works, and how to get the best results.</p>
+    <a href="nova.html" class="guide-hero-cta">← Back to Nova</a>
+  </div>
+
+  <!-- Quick-start -->
+  <div class="quickstart" role="region" aria-label="How Nova works">
+    <div class="quickstart-step">
+      <div class="qs-num" aria-hidden="true">1</div>
+      <div class="qs-title">Load your text</div>
+      <div class="qs-body">Browse TRU Open Press books, paste a URL, upload a PDF or Word doc, or paste text directly into the left panel.</div>
+    </div>
+    <div class="quickstart-step">
+      <div class="qs-num" aria-hidden="true">2</div>
+      <div class="qs-title">Set a focus (optional)</div>
+      <div class="qs-body">Enter a learning focus in the objective field to steer the activity toward a specific concept or skill.</div>
+    </div>
+    <div class="quickstart-step">
+      <div class="qs-num" aria-hidden="true">3</div>
+      <div class="qs-title">Pick an activity</div>
+      <div class="qs-body">Choose one of the eight activity tiles. Each one approaches the text from a different angle — see below for details.</div>
+    </div>
+    <div class="quickstart-step">
+      <div class="qs-num" aria-hidden="true">4</div>
+      <div class="qs-title">Generate &amp; engage</div>
+      <div class="qs-body">Hit Generate. Nova reads the chapter and builds the activity. Then do the work — write, reason, reflect. Ask for AI feedback on your responses.</div>
+    </div>
+  </div>
+
+  <!-- Activity cards -->
+  <h2 class="section-heading">The eight activity types</h2>
+  <div class="activity-cards">
+
+    <!-- 1. Concept Map -->
+    <article class="activity-card card-gold" aria-labelledby="card-conceptmap">
+      <div class="activity-card-header">
+        <div class="activity-card-icon" aria-hidden="true">🕸</div>
+        <div class="activity-card-meta">
+          <div class="activity-card-name" id="card-conceptmap">Concept Map</div>
+          <div class="activity-card-tag">visual · structural</div>
+          <div class="activity-card-tagline">"What connects to what, and how?"</div>
+        </div>
+      </div>
+      <div class="activity-card-body">
+        <div>
+          <div class="card-section-label">What it does</div>
+          <div class="card-section-text">Nova reads the chapter and extracts the key concepts as an interactive node-and-edge diagram. Each node represents a concept with a short explanation; edges are labelled with the relationship between them (e.g. <em>causes</em>, <em>is a type of</em>, <em>contrasts with</em>). You can hover nodes to read summaries, and pan or zoom the map.</div>
+        </div>
+        <div class="card-divider"></div>
+        <div>
+          <div class="card-section-label">How to engage</div>
+          <div class="card-steps">
+            <div class="card-step">
+              <div class="card-step-num">1</div>
+              <div class="card-step-text">Read each node and its edges. <strong>Can you reconstruct the argument of the chapter just from the map?</strong></div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">2</div>
+              <div class="card-step-text">Find a connection you think is wrong or missing. <strong>What would you add or change?</strong></div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">3</div>
+              <div class="card-step-text">Identify the most central node. <strong>Would you call it the same thing the text does?</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="card-divider"></div>
+        <div>
+          <div class="card-section-label">Tips for better results</div>
+          <div class="card-tips">
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div class="card-tip-text"><strong>Use a focused chapter</strong>, not a whole textbook section — concept maps work best on 1,500–4,000 words.</div></div>
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div class="card-tip-text"><strong>Set a learning focus</strong> if the chapter covers many topics — e.g. "focus on the relationship between memory and emotion."</div></div>
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div class="card-tip-text"><strong>Regenerate</strong> if the map feels too broad — each generation produces a different selection of concepts.</div></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 2. Socratic Tutor -->
+    <article class="activity-card card-teal" aria-labelledby="card-socratic">
+      <div class="activity-card-header">
+        <div class="activity-card-icon" aria-hidden="true">🦉</div>
+        <div class="activity-card-meta">
+          <div class="activity-card-name" id="card-socratic">Socratic Tutor</div>
+          <div class="activity-card-tag">dialogue · discovery</div>
+          <div class="activity-card-tagline">"What do <em>you</em> think it means?"</div>
+        </div>
+      </div>
+      <div class="activity-card-body">
+        <div>
+          <div class="card-section-label">What it does</div>
+          <div class="card-section-text">Nova plays a strict Socratic tutor — it <strong>never gives direct answers or explanations</strong>. Instead it asks questions that guide you to discover the answer yourself. It varies its technique: sometimes asking you to define a term, sometimes challenging you with a counter-example, sometimes asking what would happen if the opposite were true. After 6–8 exchanges it asks you to state the key insight in your own words.</div>
+        </div>
+        <div class="card-divider"></div>
+        <div>
+          <div class="card-section-label">How to engage</div>
+          <div class="card-steps">
+            <div class="card-step">
+              <div class="card-step-num">1</div>
+              <div class="card-step-text"><strong>Answer every question in full sentences.</strong> The more you write, the better the tutor can probe your thinking.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">2</div>
+              <div class="card-step-text"><strong>Don't look things up</strong> mid-session. The point is to surface what you already understand, and find its edges.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">3</div>
+              <div class="card-step-text">If you're stuck, say so and explain <em>where</em> you're stuck — the tutor will probe that specific gap.</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-divider"></div>
+        <div>
+          <div class="card-section-label">Tips for better results</div>
+          <div class="card-tips">
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div class="card-tip-text"><strong>Read the chapter first.</strong> The Socratic tutor works best after an initial read — it deepens understanding rather than building it from scratch.</div></div>
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div class="card-tip-text"><strong>Use the learning focus field</strong> to direct the conversation toward a specific argument or concept in the chapter.</div></div>
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div class="card-tip-text">Sessions are <strong>not shareable</strong>, but you can save the full transcript using the Save button.</div></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 3. Evidence Tribunal -->
+    <article class="activity-card card-violet" aria-labelledby="card-tribunal">
+      <div class="activity-card-header">
+        <div class="activity-card-icon" aria-hidden="true">⚖️</div>
+        <div class="activity-card-meta">
+          <div class="activity-card-name" id="card-tribunal">Evidence Tribunal</div>
+          <div class="activity-card-tag">critical thinking · evaluation</div>
+          <div class="activity-card-tagline">"The evidence has been heard. What's your verdict?"</div>
+        </div>
+      </div>
+      <div class="activity-card-body">
+        <div>
+          <div class="card-section-label">What it does</div>
+          <div class="card-section-text">Nova identifies a substantive, debatable claim from the chapter and marshals the text's own evidence for and against it — with a strength score for each argument. You read both sides, then drag a verdict slider and write your reasoning. Nova evaluates the quality of your argument, not just which side you pick.</div>
+        </div>
+        <div class="card-divider"></div>
+        <div>
+          <div class="card-section-label">How to engage</div>
+          <div class="card-steps">
+            <div class="card-step">
+              <div class="card-step-num">1</div>
+              <div class="card-step-text">Read <strong>all</strong> arguments on both sides before deciding. Resist anchoring to the first strong argument.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">2</div>
+              <div class="card-step-text">In your verdict, name the <strong>specific arguments that were most decisive</strong> and explain why.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">3</div>
+              <div class="card-step-text">State what <strong>additional evidence would change your mind</strong> — this tests whether you really understand the claim.</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-divider"></div>
+        <div>
+          <div class="card-section-label">Tips for better results</div>
+          <div class="card-tips">
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div class="card-tip-text"><strong>Works best on argumentative or analytical chapters</strong> — social science, history, philosophy, policy. Less useful for procedural or skills-based content.</div></div>
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div class="card-tip-text">If the claim Nova generates feels obvious, <strong>regenerate</strong> — it will find a different, potentially more interesting one.</div></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 4. Analogy Forge -->
+    <article class="activity-card card-sky" aria-labelledby="card-analogy">
+      <div class="activity-card-header">
+        <div class="activity-card-icon" aria-hidden="true">🔥</div>
+        <div class="activity-card-meta">
+          <div class="activity-card-name" id="card-analogy">Analogy Forge</div>
+          <div class="activity-card-tag">transfer · abstraction</div>
+          <div class="activity-card-tagline">"If this concept were a traffic jam, what would the road signs be?"</div>
+        </div>
+      </div>
+      <div class="activity-card-body">
+        <div>
+          <div class="card-section-label">What it does</div>
+          <div class="card-section-text">Nova picks the most portable concept from the chapter and maps it onto an everyday analog — something like a recipe, a river fork, a musical band. It shows you exactly which elements correspond to which. Then it gives you three tasks: <strong>Extend</strong> the analogy by finding another mapping, <strong>Break</strong> it by identifying where it fails, and <strong>Rebuild</strong> it by proposing something better.</div>
+        </div>
+        <div class="card-divider"></div>
+        <div>
+          <div class="card-section-label">How to engage</div>
+          <div class="card-steps">
+            <div class="card-step">
+              <div class="card-step-num">1</div>
+              <div class="card-step-text"><strong>Extend:</strong> find a mapping not already listed. The best extensions reveal something about the concept the existing map missed.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">2</div>
+              <div class="card-step-text"><strong>Break:</strong> find where the analogy distorts rather than illuminates. What does it make seem simpler or more mechanical than it really is?</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">3</div>
+              <div class="card-step-text"><strong>Rebuild:</strong> propose a different analogy that fixes the flaw. Explain why yours works better.</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-divider"></div>
+        <div>
+          <div class="card-section-label">Tips for better results</div>
+          <div class="card-tips">
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div class="card-tip-text">The <strong>Break task is the most intellectually demanding</strong> — don't skip it. A good breakdown shows you understand the concept's real nature, not just the metaphor.</div></div>
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div class="card-tip-text">If the analogy feels too obvious, <strong>regenerate</strong> — Nova may find a more surprising one on the next attempt.</div></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 5. Concept Timeline -->
+    <article class="activity-card card-rose" aria-labelledby="card-timeline">
+      <div class="activity-card-header">
+        <div class="activity-card-icon" aria-hidden="true">📍</div>
+        <div class="activity-card-meta">
+          <div class="activity-card-name" id="card-timeline">Concept Timeline</div>
+          <div class="activity-card-tag">sequence · development</div>
+          <div class="activity-card-tagline">"How does idea B grow out of idea A?"</div>
+        </div>
+      </div>
+      <div class="activity-card-body">
+        <div>
+          <div class="card-section-label">What it does</div>
+          <div class="card-section-text">Nova traces the <strong>logical or conceptual sequence</strong> in which ideas build on each other in the text — not necessarily a historical timeline, but the order of reasoning. Each stage is a card you click to reveal a deeper question. After you've opened half the cards, a synthesis challenge appears asking you to explain the whole sequence in your own words.</div>
+        </div>
+        <div class="card-divider"></div>
+        <div>
+          <div class="card-section-label">How to engage</div>
+          <div class="card-steps">
+            <div class="card-step">
+              <div class="card-step-num">1</div>
+              <div class="card-step-text">Click cards in order and <strong>actually think about the revealed question</strong> before moving on.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">2</div>
+              <div class="card-step-text">For the synthesis, write in full sentences. <strong>Don't just list the stages</strong> — explain how each one makes the next necessary.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">3</div>
+              <div class="card-step-text">Ask yourself: <strong>could the stages be in a different order?</strong> If so, what would that imply?</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-divider"></div>
+        <div>
+          <div class="card-section-label">Tips for better results</div>
+          <div class="card-tips">
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div class="card-tip-text"><strong>Works well for process chapters</strong> — how something develops, how an argument is built, how a theory evolved.</div></div>
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div class="card-tip-text">If the stages feel arbitrary, use the learning focus field to specify what kind of sequence you want traced — e.g. "trace the development of the core argument."</div></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 6. Assumption Excavator -->
+    <article class="activity-card card-violet" aria-labelledby="card-assumptions">
+      <div class="activity-card-header">
+        <div class="activity-card-icon" aria-hidden="true">🔍</div>
+        <div class="activity-card-meta">
+          <div class="activity-card-name" id="card-assumptions">Assumption Excavator</div>
+          <div class="activity-card-tag">critical · ideology</div>
+          <div class="activity-card-tagline">"What does this text take for granted?"</div>
+        </div>
+      </div>
+      <div class="activity-card-body">
+        <div>
+          <div class="card-section-label">What it does</div>
+          <div class="card-section-text">Every text is built on assumptions its author treats as obvious — about what counts as evidence, whose interests matter, what words mean, and how the world works. Nova excavates 4–6 of these, labels each as <strong>empirical</strong> (assumed fact), <strong>normative</strong> (assumed value), <strong>conceptual</strong> (assumed definition), or <strong>political</strong> (assumed distribution of power). You rate how much you agree with each assumption, then write a response to a challenge question about the ones you find most contestable.</div>
+        </div>
+        <div class="card-divider"></div>
+        <div>
+          <div class="card-section-label">How to engage</div>
+          <div class="card-steps">
+            <div class="card-step">
+              <div class="card-step-num">1</div>
+              <div class="card-step-text">Read each assumption carefully. <strong>Is the author aware they're making it?</strong> Would they agree with how Nova has stated it?</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">2</div>
+              <div class="card-step-text">Rate your agreement, then write your response to the challenge question — <strong>don't just say "I agree" or "I disagree."</strong> Give a reason or an example.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">3</div>
+              <div class="card-step-text">For the assumptions you disagree with, ask: <strong>if this assumption is wrong, how much of the text's argument survives?</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="card-divider"></div>
+        <div>
+          <div class="card-section-label">Tips for better results</div>
+          <div class="card-tips">
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div class="card-tip-text"><strong>Especially powerful for social science, history, policy, and ethics chapters</strong> — texts where the author's standpoint shapes what they see as obvious.</div></div>
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div class="card-tip-text">The most productive responses engage with <strong>normative and political assumptions</strong> — these are hardest to see and most worth examining.</div></div>
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div class="card-tip-text">Try disagreeing with an assumption you actually agree with — <strong>steelmanning the opposition</strong> sharpens your understanding of the assumption's role.</div></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 7. Transfer Challenge -->
+    <article class="activity-card card-teal" aria-labelledby="card-transfer">
+      <div class="activity-card-header">
+        <div class="activity-card-icon" aria-hidden="true">🌐</div>
+        <div class="activity-card-meta">
+          <div class="activity-card-name" id="card-transfer">Transfer Challenge</div>
+          <div class="activity-card-tag">application · transfer</div>
+          <div class="activity-card-tagline">"Where else does this idea show up — and what happens there?"</div>
+        </div>
+      </div>
+      <div class="activity-card-body">
+        <div>
+          <div class="card-section-label">What it does</div>
+          <div class="card-section-text">Nova identifies the most portable concept in the chapter and generates three scenarios from very different real-world domains where that concept applies — but not perfectly. You choose one scenario and work through three tasks: explain <strong>how the concept applies</strong>, identify <strong>where it breaks down</strong>, and reflect on <strong>what the transfer process has revealed about the concept itself</strong>.</div>
+        </div>
+        <div class="card-divider"></div>
+        <div>
+          <div class="card-section-label">How to engage</div>
+          <div class="card-steps">
+            <div class="card-step">
+              <div class="card-step-num">1</div>
+              <div class="card-step-text">Choose the scenario that feels most <strong>unfamiliar</strong> to you — transfer is harder and more valuable when you can't rely on prior knowledge.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">2</div>
+              <div class="card-step-text">For the "Apply" task, be <strong>specific</strong>: name which elements of the concept map onto which elements of the scenario.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">3</div>
+              <div class="card-step-text">The "Insight" task is the most important — <strong>what did applying the concept to this domain reveal that the original chapter didn't?</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="card-divider"></div>
+        <div>
+          <div class="card-section-label">Tips for better results</div>
+          <div class="card-tips">
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div class="card-tip-text"><strong>Don't skip the breakdown task.</strong> An application that never breaks down is either too vague or too easy — good transfer always has limits.</div></div>
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div class="card-tip-text">Use the learning focus to specify which concept you want transferred — e.g. "focus on the concept of feedback loops."</div></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 8. Question Generator -->
+    <article class="activity-card card-gold" aria-labelledby="card-questions">
+      <div class="activity-card-header">
+        <div class="activity-card-icon" aria-hidden="true">❓</div>
+        <div class="activity-card-meta">
+          <div class="activity-card-name" id="card-questions">Question Generator</div>
+          <div class="activity-card-tag">metacognitive · inquiry</div>
+          <div class="activity-card-tagline">"What questions does this text raise — and which are most worth pursuing?"</div>
+        </div>
+      </div>
+      <div class="activity-card-body">
+        <div>
+          <div class="card-section-label">What it does</div>
+          <div class="card-section-text">Nova generates eight questions from the text across four types — <strong>clarification</strong> (probing meaning and precision), <strong>implication</strong> (what follows if the text is right), <strong>evaluation</strong> (is the argument good?), and <strong>research gap</strong> (what the text raises but doesn't answer). You star the most interesting question, add your own, and write a rationale for which question is most worth pursuing — and why.</div>
+        </div>
+        <div class="card-divider"></div>
+        <div>
+          <div class="card-section-label">How to engage</div>
+          <div class="card-steps">
+            <div class="card-step">
+              <div class="card-step-num">1</div>
+              <div class="card-step-text">Read all eight questions before starring any. <strong>Notice which type of question is hardest to answer</strong> — that's usually the most revealing.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">2</div>
+              <div class="card-step-text">Add at least one question of your own from each type you found underrepresented.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">3</div>
+              <div class="card-step-text">In your rationale, explain not just <em>why</em> the question matters but <strong>what it would actually take to answer it</strong> — what evidence, method, or expertise would you need?</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-divider"></div>
+        <div>
+          <div class="card-section-label">Tips for better results</div>
+          <div class="card-tips">
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div class="card-tip-text"><strong>Research Gap questions are often the most generative</strong> — they point to where the field is genuinely unsettled and where original thinking is possible.</div></div>
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div class="card-tip-text">Use this activity as a <strong>research brainstorming tool</strong>: the questions you add yourself, and the rationale you write, are the beginning of a research agenda.</div></div>
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div class="card-tip-text">Try generating twice on the same chapter — <strong>the second set of questions will be different</strong>, and comparing them is itself revealing.</div></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </div><!-- /activity-cards -->
+
+  <!-- General tips -->
+  <div class="general-tips" role="region" aria-label="General tips for all activities">
+    <div class="general-tips-heading">
+      <span aria-hidden="true">✺</span> General tips for all activities
+    </div>
+    <div class="general-tips-list">
+      <div class="gtip">
+        <div class="gtip-icon" aria-hidden="true">📄</div>
+        <div><strong>Focused text works better than long text.</strong> A single well-chosen chapter (1,500–5,000 words) will produce a richer, more specific activity than a sprawling survey. If a chapter is too long, paste only the section most relevant to your learning goal.</div>
+      </div>
+      <div class="gtip">
+        <div class="gtip-icon" aria-hidden="true">🎯</div>
+        <div><strong>The learning focus field is powerful.</strong> It steers every activity toward a specific concept, argument, or skill. Without it, Nova chooses freely — sometimes brilliantly, sometimes not what you need. Use it when you have a clear goal.</div>
+      </div>
+      <div class="gtip">
+        <div class="gtip-icon" aria-hidden="true">🔄</div>
+        <div><strong>Regenerate freely.</strong> Because Nova uses AI, each generation is different. If the first result doesn't quite fit — wrong concept, obvious claim, too-easy analogy — hit Regenerate. Two or three attempts usually surfaces something more useful.</div>
+      </div>
+      <div class="gtip">
+        <div class="gtip-icon" aria-hidden="true">✍</div>
+        <div><strong>Write full responses before asking for feedback.</strong> The AI feedback is calibrated to what you actually wrote. Short or vague responses get short or vague feedback. The more reasoning you put in, the more precise and useful the response will be.</div>
+      </div>
+      <div class="gtip">
+        <div class="gtip-icon" aria-hidden="true">💾</div>
+        <div><strong>Save your session.</strong> Use the Save button to download your work as a Markdown file. This is useful for reflection, portfolio evidence, or sharing with an instructor. Saved files include your responses and any AI feedback you received.</div>
+      </div>
+      <div class="gtip">
+        <div class="gtip-icon" aria-hidden="true">🔗</div>
+        <div><strong>Share activities with others.</strong> Most activities (everything except Socratic) can be shared via a URL — hit the Share button after generating. The link encodes the full activity so anyone with it can explore the same content.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom CTA -->
+  <div class="bottom-cta">
+    <div class="bottom-cta-title">Ready to go deeper?</div>
+    <div class="bottom-cta-sub">Load a chapter, pick an activity, and see what Nova finds in it.</div>
+    <a href="nova.html" class="bottom-cta-btn">✺ Open Nova →</a>
+  </div>
+
+</main>
+
+<script>
+(function() {
+  var btn = document.getElementById('btn-suite-theme');
+  if (!btn) return;
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    btn.textContent = theme === 'dark' ? '☀' : '🌙';
+    btn.title = theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+    btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+    try { localStorage.setItem('om-theme', theme); } catch(e) {}
+  }
+  btn.addEventListener('click', function() {
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    applyTheme(cur === 'dark' ? 'light' : 'dark');
+  });
+  var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+  btn.textContent = cur === 'dark' ? '☀' : '🌙';
+  btn.title = cur === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+  btn.setAttribute('aria-label', cur === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+})();
+</script>
+
+</body>
+</html>

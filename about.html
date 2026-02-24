@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About the Tools · Open Margins · TRU Open Press · Five Active Learning Tools for OER</title>
+<script>(function(){var t=localStorage.getItem('om-theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,500;1,9..144,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ══════════════════════════════════════════════════════════
+   ABOUT THE TOOLS · TRU OPEN PRESS
+   ══════════════════════════════════════════════════════════ */
+
+:root {
+  --cream:     #f5f0e8;
+  --cream-hi:  #ede7d9;
+  --parchment: #e8dfc8;
+  --ink:       #1a1610;
+  --ink-mid:   #3d3528;
+  --ink-light: #6b5e48;
+  --ink-faint: #a8997e;
+
+  --amber:       #c17f24;
+  --amber-light: #dfa03a;
+  --amber-dim:   rgba(193,127,36,0.12);
+
+  --tool-companion: #e8a245;
+  --tool-builder:   #003865;
+  --tool-nova:      #f5a623;
+  --tool-rhizo:     #7db87a;
+  --tool-sylva:     #2d6b4e;
+
+  --border:    rgba(26,22,16,0.10);
+  --border-hi: rgba(26,22,16,0.18);
+
+  --shadow-sm: 0 1px 3px rgba(26,22,16,0.08), 0 1px 2px rgba(26,22,16,0.06);
+  --shadow-md: 0 4px 16px rgba(26,22,16,0.10), 0 2px 4px rgba(26,22,16,0.06);
+  --shadow-lg: 0 12px 40px rgba(26,22,16,0.14), 0 4px 8px rgba(26,22,16,0.06);
+
+  --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  --r: 12px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+* { position: relative; z-index: 1; }
+
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+.page-wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ── HEADER ── */
+.site-header {
+  padding: 48px 0 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.header-inner {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 32px;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.header-logo {
+  height: 52px;
+  width: 52px;
+  object-fit: contain;
+  opacity: 0.9;
+  filter: drop-shadow(0 2px 8px rgba(193,127,36,0.18));
+}
+
+.header-wordmark { display: flex; flex-direction: column; gap: 2px; }
+
+.wordmark-press {
+  font-family: 'Fraunces', serif;
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+.wordmark-press span { color: var(--amber); }
+
+.wordmark-sub {
+  font-size: 0.67rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.header-nav { display: flex; align-items: center; gap: 6px; }
+
+.nav-link {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.77rem;
+  font-weight: 500;
+  color: var(--ink-light);
+  text-decoration: none;
+  transition: all var(--transition);
+  border: 1px solid transparent;
+}
+.nav-link:hover {
+  color: var(--ink);
+  background: var(--cream-hi);
+  border-color: var(--border);
+}
+.nav-link.active {
+  color: var(--ink);
+  background: var(--cream-hi);
+  border-color: var(--border);
+}
+.nav-link.external::after { content: ' ↗'; font-size: 0.7em; opacity: 0.6; }
+
+/* ── PAGE HERO ── */
+.page-hero {
+  padding: 56px 0 52px;
+  border-bottom: 1px solid var(--border);
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.77rem;
+  font-weight: 500;
+  color: var(--ink-faint);
+  text-decoration: none;
+  margin-bottom: 28px;
+  transition: color var(--transition);
+}
+.back-link:hover { color: var(--ink-light); }
+.back-link::before { content: '←'; }
+
+.page-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.69rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 16px;
+}
+.page-eyebrow::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--amber);
+  border-radius: 1px;
+}
+
+.page-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  max-width: 680px;
+  margin-bottom: 20px;
+}
+
+.page-title em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--amber);
+}
+
+.page-sub {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--ink-light);
+  max-width: 560px;
+}
+
+/* ── SECTION LABELS ── */
+.section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.69rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 12px;
+}
+.section-eyebrow::before {
+  content: '';
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--amber);
+  border-radius: 1px;
+}
+
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.65rem;
+  font-weight: 700;
+  letter-spacing: -0.022em;
+  color: var(--ink);
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.section-sub {
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--ink-light);
+  max-width: 540px;
+  margin-bottom: 36px;
+}
+
+/* ── PATHWAYS ── */
+.pathways-section { padding: 64px 0 0; }
+
+.pathways-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 72px;
+}
+
+.pathway-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.pathway-header {
+  padding: 28px 30px 22px;
+  border-bottom: 1px solid var(--border);
+}
+
+.pathway-who { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.pathway-icon { font-size: 1.6rem; line-height: 1; }
+.pathway-who-label {
+  font-family: 'Fraunces', serif;
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.pathway-who-sub {
+  font-size: 0.79rem;
+  color: var(--ink-faint);
+  line-height: 1.5;
+}
+
+.pathway-body {
+  padding: 22px 30px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pathway-use {
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+  padding: 13px 15px;
+  border-radius: 9px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  transition: border-color var(--transition), background var(--transition);
+  text-decoration: none;
+  color: inherit;
+}
+.pathway-use:hover { background: var(--cream-hi); border-color: var(--border-hi); }
+
+.pathway-use-tool {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 20px;
+  border: 1px solid;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.pathway-use-text { flex: 1; }
+
+.pathway-use-headline {
+  font-size: 0.81rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 2px;
+  line-height: 1.35;
+}
+
+.pathway-use-desc {
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: var(--ink-light);
+}
+
+/* ── DIVIDER ── */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--border-hi) 20%, var(--border-hi) 80%, transparent);
+  margin: 0;
+}
+
+/* ── HOW-TOS ── */
+.howto-section { padding: 64px 0 80px; }
+
+.howto-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 18px;
+}
+
+.howto-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 22px 24px 24px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition), border-color var(--transition);
+}
+.howto-card:hover { box-shadow: var(--shadow-md); border-color: var(--border-hi); }
+
+.howto-tool-badge {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 9px;
+  border-radius: 20px;
+  border: 1px solid;
+  margin-bottom: 10px;
+}
+
+.howto-title {
+  font-family: 'Fraunces', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+  margin-bottom: 8px;
+}
+
+.howto-desc {
+  font-size: 0.79rem;
+  line-height: 1.65;
+  color: var(--ink-light);
+}
+
+.howto-desc strong { color: var(--ink); font-weight: 600; }
+.howto-desc em { font-style: italic; color: var(--ink-mid); }
+
+/* ── CONNECTIONS ── */
+.connections-section { padding: 64px 0 0; }
+
+.connections-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 72px;
+}
+
+.connection-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 22px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition), border-color var(--transition);
+}
+.connection-card:hover { box-shadow: var(--shadow-md); border-color: var(--border-hi); }
+
+.connection-pair {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.conn-tool-chip {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 20px;
+  border: 1px solid;
+}
+
+.conn-arrow { font-size: 0.75rem; color: var(--ink-faint); flex-shrink: 0; }
+
+.connection-text { font-size: 0.81rem; line-height: 1.65; color: var(--ink-light); }
+.connection-text strong { color: var(--ink); font-weight: 600; }
+
+/* ── GETTING STARTED ── */
+.getting-started-section { padding: 0 0 80px; }
+
+.gs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.gs-card {
+  border-radius: var(--r);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.gs-card-header {
+  padding: 18px 22px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--cream);
+}
+
+.gs-card-icon { font-size: 1.2rem; line-height: 1; flex-shrink: 0; }
+
+.gs-card-title {
+  font-family: 'Fraunces', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.gs-card-tool {
+  margin-left: auto;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 20px;
+  border: 1px solid;
+  flex-shrink: 0;
+}
+
+.gs-steps {
+  padding: 16px 22px 20px;
+  background: white;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gs-step {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 0.79rem;
+  color: var(--ink-light);
+  line-height: 1.55;
+}
+
+.gs-step-num {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 0.62rem;
+  font-weight: 700;
+  background: var(--amber-dim);
+  color: var(--amber);
+  border: 1px solid rgba(193,127,36,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.gs-step strong { color: var(--ink); font-weight: 600; }
+.gs-step code {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.74rem;
+  background: var(--cream);
+  border: 1px solid var(--border-hi);
+  border-radius: 4px;
+  padding: 1px 5px;
+  color: var(--ink-mid);
+}
+
+/* ── FOOTER ── */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 0;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.footer-credit { font-size: 0.76rem; color: var(--ink-faint); line-height: 1.6; }
+.footer-credit a { color: var(--amber); text-decoration: none; }
+.footer-credit a:hover { text-decoration: underline; }
+
+.footer-tools { display: flex; gap: 5px; }
+.footer-tool-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE — TABLET & MOBILE
+   ══════════════════════════════════════════════════════════ */
+
+@media (max-width: 1024px) {
+  .page-wrap { padding: 0 24px; }
+  .connections-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+  .page-wrap { padding: 0 16px; }
+  .site-header { padding: 0 16px; flex-wrap: wrap; gap: 8px; height: auto; padding-top: 10px; padding-bottom: 10px; }
+  .site-nav { gap: 12px; }
+
+  /* Suite nav */
+  .suite-nav { padding: 0 16px; }
+  .suite-nav-tools { gap: 4px; flex-wrap: wrap; }
+  .suite-nav-pill { font-size: 0.62rem; padding: 3px 7px; }
+
+  /* All multi-col grids → single column */
+  .pathways-grid,
+  .gs-grid,
+  .connections-grid { grid-template-columns: 1fr !important; }
+
+  /* howto-grid: let it go single col when narrow */
+  .howto-grid { grid-template-columns: 1fr; }
+
+  /* Section headings */
+  .section-heading { font-size: 1.8rem; }
+  .section-sub { font-size: 0.9rem; }
+
+  /* Pathway and connection cards */
+  .pathway-card { padding: 20px; }
+  .connection-card { padding: 18px; }
+  .gs-card { padding: 20px; }
+  .howto-card { padding: 18px; }
+
+  /* Hero sections */
+  .page-hero { padding: 48px 0 36px; }
+  .page-hero-headline { font-size: 2rem; }
+  .page-hero-body { font-size: 0.9rem; }
+}
+
+@media (max-width: 480px) {
+  .page-wrap { padding: 0 12px; }
+  .page-hero-headline { font-size: 1.65rem; }
+  .section-heading { font-size: 1.5rem; }
+}
+
+/* ── Dark theme override ── */
+[data-theme="dark"] {
+  --cream:       #0f0e0c;
+  --cream-hi:    #161410;
+  --parchment:   #1e1b15;
+  --ink:         #e8e2d4;
+  --ink-mid:     #c8bfa8;
+  --ink-light:   #b0a28a;
+  --ink-faint:   #7a6e5c;
+  --amber:       #e8a245;
+  --amber-light: #f0b86a;
+  --amber-dim:   rgba(232,162,69,0.12);
+  --amber-glow:  rgba(232,162,69,0.28);
+  --tool-companion: #e8a245;
+  --tool-builder:   #4a9ad4;
+  --tool-nova:      #f5a623;
+  --tool-rhizo:     #7db87a;
+  --tool-sylva:     #5aad82;
+  --border:      rgba(255,255,255,0.08);
+  --border-hi:   rgba(255,255,255,0.14);
+  --shadow-sm:   0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md:   0 4px 16px rgba(0,0,0,0.35);
+  --shadow-lg:   0 12px 40px rgba(0,0,0,0.45);
+}
+[data-theme="dark"] .pathway-card,
+[data-theme="dark"] .howto-card,
+[data-theme="dark"] .connection-card,
+[data-theme="dark"] .gs-steps { background: var(--parchment); }
+
+/* Tool chip inline-style colors: adapt to dark theme */
+[data-theme="dark"] .pathway-use-tool,
+[data-theme="dark"] .gs-card-tool,
+[data-theme="dark"] .howto-tool-badge,
+[data-theme="dark"] .conn-tool-chip {
+  background: rgba(255,255,255,0.07) !important;
+  border-color: rgba(255,255,255,0.14) !important;
+  color: var(--ink-mid) !important;
+}
+
+/* ── Suite theme toggle button ── */
+.btn-suite-theme {
+  background: transparent;
+  border: 1px solid rgba(128,128,128,0.25);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.65;
+  transition: opacity 0.2s, background 0.2s;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.btn-suite-theme:hover { opacity: 1; background: rgba(128,128,128,0.12); }
+
+</style>
+</head>
+<body>
+
+<!-- ══════ HEADER ══════ -->
+<header class="site-header">
+  <div class="page-wrap">
+    <div class="header-inner">
+      <div class="header-brand">
+        <img src="openpress-logo.png"
+             alt="TRU Open Press logo"
+             class="header-logo"
+             onerror="this.src='https://openpress.trubox.ca/wp-content/uploads/sites/2142/2023/10/cropped-openpress_logo_colour-1.png'">
+        <div class="header-wordmark">
+          <div class="wordmark-press">TRU <span>Open Press</span></div>
+          <div class="wordmark-sub">Open Margins · Active Learning Tools</div>
+        </div>
+      </div>
+      <nav class="header-nav" aria-label="Site navigation">
+        <a href="index.html" class="nav-link">← Home</a>
+        <a href="about.html" class="nav-link active">About the tools</a>
+        <a href="why.html" class="nav-link">Why Open Margins?</a>
+        <a href="https://openpress.trubox.ca" target="_blank" rel="noopener" class="nav-link external">Open Press</a>
+        <a href="https://pressbooks.tru.ca" target="_blank" rel="noopener" class="nav-link external">Pressbooks</a>
+        <button class="btn-suite-theme" id="btn-suite-theme" aria-label="Toggle theme" title="Toggle theme">🌙</button>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<!-- ══════ PAGE HERO ══════ -->
+<div class="page-hero">
+  <div class="page-wrap">
+    <div class="page-eyebrow reveal">Open Margins · Guide</div>
+    <h1 class="page-title reveal" style="transition-delay:0.06s">
+      Which tool is right<br>for <em>you?</em>
+    </h1>
+    <p class="page-sub reveal" style="transition-delay:0.12s">
+      Open Margins is TRU Open Press's suite of five active learning tools, shaped by the <a href="https://designframework.trubox.ca" target="_blank" rel="noopener" style="color:var(--amber);text-decoration:none;font-weight:600">TRU Learning Design Framework</a>. Each tool serves a different moment in the reading, thinking, and teaching journey — here's a full breakdown of who each tool is built for, what it does, and how it fits alongside the others.
+    </p>
+  </div>
+</div>
+
+<!-- ══════ PATHWAYS ══════ -->
+<section class="pathways-section">
+  <div class="page-wrap">
+
+    <div class="reveal">
+      <div class="section-eyebrow">Two paths</div>
+      <h2 class="section-title">Use cases by audience</h2>
+      <p class="section-sub">Whether you're reading to learn or designing to teach, each tool has a distinct role to play.</p>
+    </div>
+
+    <div class="pathways-grid">
+
+      <!-- LEARNERS -->
+      <div class="pathway-card reveal" style="transition-delay:0.06s">
+        <div class="pathway-header">
+          <div class="pathway-who">
+            <div class="pathway-icon">🎒</div>
+            <div><div class="pathway-who-label">Learners</div></div>
+          </div>
+          <div class="pathway-who-sub">Students, independent readers, and lifelong learners who want to do more than skim a chapter. These pathways support the TRU Learning Design Framework's emphasis on <em>active</em> and <em>connected</em> learning.</div>
+        </div>
+        <div class="pathway-body">
+
+          <div class="pathway-use">
+            <span class="pathway-use-tool" style="background:rgba(232,162,69,0.1);border-color:rgba(232,162,69,0.3);color:#7a4e12">Companion</span>
+            <div class="pathway-use-text">
+              <div class="pathway-use-headline">Read with a thinking partner beside you</div>
+              <div class="pathway-use-desc">Highlight any passage — get plain-language explanation, four different perspectives, or real-world connections, right in the margin. Load multiple chapters or sources for cross-text sessions.</div>
+            </div>
+          </div>
+
+          <div class="pathway-use">
+            <span class="pathway-use-tool" style="background:rgba(232,162,69,0.1);border-color:rgba(232,162,69,0.3);color:#7a4e12">Companion</span>
+            <div class="pathway-use-text">
+              <div class="pathway-use-headline">Keep a reading record</div>
+              <div class="pathway-use-desc">Add your own notes alongside AI annotations. Export the whole session as a structured reading log for review or submission.</div>
+            </div>
+          </div>
+
+          <div class="pathway-use">
+            <span class="pathway-use-tool" style="background:rgba(0,56,101,0.08);border-color:rgba(0,56,101,0.2);color:#003865">Activity Maker</span>
+            <div class="pathway-use-text">
+              <div class="pathway-use-headline">Test yourself on what you've read</div>
+              <div class="pathway-use-desc">Generate a comprehension quiz, a scenario challenge, or an analogy exercise directly from the chapter — self-study on demand.</div>
+            </div>
+          </div>
+
+          <div class="pathway-use">
+            <span class="pathway-use-tool" style="background:rgba(245,166,35,0.09);border-color:rgba(245,166,35,0.25);color:#9b6008">Nova</span>
+            <div class="pathway-use-text">
+              <div class="pathway-use-headline">Think harder — not just longer</div>
+              <div class="pathway-use-desc">Map concepts visually, pressure-test claims in an Evidence Tribunal, or enter a one-on-one Socratic Dialogue with the text itself.</div>
+            </div>
+          </div>
+
+          <div class="pathway-use">
+            <span class="pathway-use-tool" style="background:rgba(125,184,122,0.09);border-color:rgba(125,184,122,0.28);color:#3a6438">Rhizo</span>
+            <div class="pathway-use-text">
+              <div class="pathway-use-headline">Question what the text takes for granted</div>
+              <div class="pathway-use-desc">Surface silences, contested assumptions, and genuinely unanswerable questions — for when comprehension isn't the point. Supports multiple sources for comparative critical inquiry across readings.</div>
+            </div>
+          </div>
+
+          <div class="pathway-use">
+            <span class="pathway-use-tool" style="background:rgba(45,107,78,0.08);border-color:rgba(45,107,78,0.25);color:#2d6b4e">Sylva</span>
+            <div class="pathway-use-text">
+              <div class="pathway-use-headline">See how your reading fits the bigger picture</div>
+              <div class="pathway-use-desc">Curious how an instructor might teach this material? Run Sylva to see a full lesson arc built around the chapter — objectives, timing, and all. Useful for exam prep and self-directed study.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- INSTRUCTORS -->
+      <div class="pathway-card reveal" style="transition-delay:0.12s">
+        <div class="pathway-header">
+          <div class="pathway-who">
+            <div class="pathway-icon">🖊</div>
+            <div><div class="pathway-who-label">Instructors</div></div>
+          </div>
+          <div class="pathway-who-sub">Educators who want to extend OER content into active, participatory learning experiences — without extra prep time. Aligned with the TRU Learning Design Framework's <em>open</em> and <em>caring</em> design principles.</div>
+        </div>
+        <div class="pathway-body">
+
+          <div class="pathway-use">
+            <span class="pathway-use-tool" style="background:rgba(232,162,69,0.1);border-color:rgba(232,162,69,0.3);color:#7a4e12">Companion</span>
+            <div class="pathway-use-text">
+              <div class="pathway-use-headline">Assign active reading, not passive reading</div>
+              <div class="pathway-use-desc">Point students to a chapter in Companion. Their annotated session becomes evidence of engagement — a reading record with their own questions and notes included.</div>
+            </div>
+          </div>
+
+          <div class="pathway-use">
+            <span class="pathway-use-tool" style="background:rgba(0,56,101,0.08);border-color:rgba(0,56,101,0.2);color:#003865">Activity Maker</span>
+            <div class="pathway-use-text">
+              <div class="pathway-use-headline">Build course materials in minutes</div>
+              <div class="pathway-use-desc">Generate quizzes, case studies, and branching scenarios from any TRU Open Press chapter. Paste the output into your LMS or assign it directly.</div>
+            </div>
+          </div>
+
+          <div class="pathway-use">
+            <span class="pathway-use-tool" style="background:rgba(245,166,35,0.09);border-color:rgba(245,166,35,0.25);color:#9b6008">Nova</span>
+            <div class="pathway-use-text">
+              <div class="pathway-use-headline">Share activities directly with students</div>
+              <div class="pathway-use-desc">Generate a Concept Map or Evidence Tribunal, copy the share link, and send it directly. Students open it instantly — no server, no login, no setup.</div>
+            </div>
+          </div>
+
+          <div class="pathway-use">
+            <span class="pathway-use-tool" style="background:rgba(125,184,122,0.09);border-color:rgba(125,184,122,0.28);color:#3a6438">Rhizo</span>
+            <div class="pathway-use-text">
+              <div class="pathway-use-headline">Spark seminar discussion</div>
+              <div class="pathway-use-desc">Run Wicked Council or Uncertainty Map outputs as discussion seeds — five conflicting voices or twelve genuinely open questions, ready for the room.</div>
+            </div>
+          </div>
+
+          <div class="pathway-use">
+            <span class="pathway-use-tool" style="background:rgba(0,56,101,0.08);border-color:rgba(0,56,101,0.2);color:#003865">Activity Maker</span>
+            <div class="pathway-use-text">
+              <div class="pathway-use-headline">Scaffold diverse learners</div>
+              <div class="pathway-use-desc">Use Companion's Illuminate mode for dense passages, or Activity Maker's analogy exercises — practical tools for differentiated instruction with OER content.</div>
+            </div>
+          </div>
+
+          <div class="pathway-use">
+            <span class="pathway-use-tool" style="background:rgba(45,107,78,0.08);border-color:rgba(45,107,78,0.25);color:#2d6b4e">Sylva</span>
+            <div class="pathway-use-text">
+              <div class="pathway-use-headline">Plan a full lesson in under two minutes</div>
+              <div class="pathway-use-desc">Load any OER chapter, set your session length and delivery mode (in-class, online sync, or async), and get a complete timed lesson arc with Bloom's-tagged objectives. Export as Markdown or print directly.</div>
+            </div>
+          </div>
+
+          <div class="pathway-use">
+            <span class="pathway-use-tool" style="background:rgba(45,107,78,0.08);border-color:rgba(45,107,78,0.25);color:#2d6b4e">Sylva</span>
+            <div class="pathway-use-text">
+              <div class="pathway-use-headline">Connect your lesson plan to the full suite</div>
+              <div class="pathway-use-desc">Sylva's output naturally sequences the other tools — it may suggest Companion for the reading, Nova for post-class synthesis, or Rhizo for seminar discussion, turning your plan into a full learning flow.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════ TRU LEARNING DESIGN FRAMEWORK ══════ -->
+<div class="section-divider"></div>
+<section style="padding: 64px 0 72px;">
+  <div class="page-wrap">
+    <div class="reveal">
+      <div class="section-eyebrow">Design principles</div>
+      <h2 class="section-title">Shaped by the TRU Learning Design Framework</h2>
+      <p class="section-sub">Each tool in Open Margins was built in alignment with the <a href="https://designframework.trubox.ca" target="_blank" rel="noopener" style="color:var(--amber);text-decoration:none;font-weight:600">TRU Learning Design Framework</a> — TRU Open Learning's evidence-based approach to creating flexible, learner-centred digital experiences. The framework's four core values run through every tool.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px" class="reveal" style="transition-delay:0.06s">
+      <div style="background:white;border:1px solid var(--border);border-radius:var(--r);padding:24px 26px;box-shadow:var(--shadow-sm);border-top:3px solid var(--tool-companion)">
+        <div style="font-size:1.4rem;margin-bottom:12px">🤝</div>
+        <div style="font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:8px">Caring</div>
+        <p style="font-size:0.79rem;line-height:1.65;color:var(--ink-light)">Open Margins scaffolds diverse learners: Companion's Illuminate mode makes dense passages accessible; Activity Builder's analogy exercises build conceptual bridges; Sylva accounts for different session lengths and delivery modes.</p>
+      </div>
+      <div style="background:white;border:1px solid var(--border);border-radius:var(--r);padding:24px 26px;box-shadow:var(--shadow-sm);border-top:3px solid var(--tool-builder)">
+        <div style="font-size:1.4rem;margin-bottom:12px">📖</div>
+        <div style="font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:8px">Open</div>
+        <p style="font-size:0.79rem;line-height:1.65;color:var(--ink-light)">Every tool works with any openly licensed OER — not just TRU Open Press titles. No data is stored. Nothing is uploaded to external servers. Source materials stay in your browser. Open practices, from the ground up.</p>
+      </div>
+      <div style="background:white;border:1px solid var(--border);border-radius:var(--r);padding:24px 26px;box-shadow:var(--shadow-sm);border-top:3px solid var(--tool-rhizo)">
+        <div style="font-size:1.4rem;margin-bottom:12px">🌐</div>
+        <div style="font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:8px">Connected</div>
+        <p style="font-size:0.79rem;line-height:1.65;color:var(--ink-light)">Rhizo's Community Contract builds a sense of personal learning commitment. Nova's shareable activities connect instructors and students around the same text. Sylva's lesson arcs sequence tools to create a coherent learning journey.</p>
+      </div>
+      <div style="background:white;border:1px solid var(--border);border-radius:var(--r);padding:24px 26px;box-shadow:var(--shadow-sm);border-top:3px solid var(--tool-nova)">
+        <div style="font-size:1.4rem;margin-bottom:12px">⚡</div>
+        <div style="font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:8px">Active</div>
+        <p style="font-size:0.79rem;line-height:1.65;color:var(--ink-light)">Every tool demands something of the learner. Annotate. Map. Argue. Question. Plan. The suite moves steadily from passive reading toward deep, participatory engagement with ideas — exactly what the framework calls for.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ GETTING STARTED ══════ -->
+<div class="section-divider"></div>
+<section class="getting-started-section">
+  <div class="page-wrap" style="padding-top: 64px;">
+    <div class="reveal">
+      <div class="section-eyebrow">Setup &amp; first steps</div>
+      <h2 class="section-title">How to get going</h2>
+      <p class="section-sub">Step-by-step walkthroughs for the most common starting points — pick whichever matches what you want to do first.</p>
+    </div>
+
+    <div class="gs-grid reveal" style="transition-delay:0.06s">
+
+      <div class="gs-card">
+        <div class="gs-card-header">
+          <span class="gs-card-icon">📖</span>
+          <span class="gs-card-title">Read a chapter with Companion</span>
+          <span class="gs-card-tool" style="background:rgba(232,162,69,0.1);border-color:rgba(232,162,69,0.3);color:#7a4e12">Companion</span>
+        </div>
+        <ol class="gs-steps">
+          <li class="gs-step"><span class="gs-step-num">1</span><span>Start the server: <code>node server.js</code> in the Companion folder, then open <code>companion/companion.html</code> in your browser.</span></li>
+          <li class="gs-step"><span class="gs-step-num">2</span><span>Click <strong>Connect</strong> in the left panel. When it turns green, the AI is ready.</span></li>
+          <li class="gs-step"><span class="gs-step-num">3</span><span>Browse the book list, select a part and chapter, then click <strong>+ Add chapter to sources</strong>.</span></li>
+          <li class="gs-step"><span class="gs-step-num">4</span><span>Click <strong>Open for reading</strong>. The chapter appears on the right. Select any passage — the mode popup appears in the margin.</span></li>
+          <li class="gs-step"><span class="gs-step-num">5</span><span>Hit <strong>Illuminate</strong>, <strong>Council</strong>, <strong>Connect</strong>, or <strong>Note</strong>. Your annotation appears in the right margin and is saved to your session.</span></li>
+          <li class="gs-step"><span class="gs-step-num">6</span><span>When done, click <strong>Save session</strong> or <strong>Copy session</strong> in the margin toolbar to export your reading record as Markdown.</span></li>
+        </ol>
+      </div>
+
+      <div class="gs-card">
+        <div class="gs-card-header">
+          <span class="gs-card-icon">⟡</span>
+          <span class="gs-card-title">Generate a lesson plan with Sylva</span>
+          <span class="gs-card-tool" style="background:rgba(45,107,78,0.08);border-color:rgba(45,107,78,0.25);color:#2d6b4e">Sylva</span>
+          <a href="sylva/sylva-guide.html" style="font-size:0.62rem;color:var(--amber);text-decoration:none;font-weight:600;margin-left:8px;white-space:nowrap">Full guide ↗</a>
+        </div>
+        <ol class="gs-steps">
+          <li class="gs-step"><span class="gs-step-num">1</span><span>Start the shared server: <code>node server.js</code> in the root folder, then open <code>sylva/sylva.html</code>.</span></li>
+          <li class="gs-step"><span class="gs-step-num">2</span><span>Click <strong>Connect</strong>. Once connected, browse to a chapter via the book browser — or paste a URL, upload a PDF, or paste text directly.</span></li>
+          <li class="gs-step"><span class="gs-step-num">3</span><span>Set your <strong>session length</strong> (in minutes) and choose a delivery mode: in-class, online synchronous, or asynchronous.</span></li>
+          <li class="gs-step"><span class="gs-step-num">4</span><span>Click <strong>Generate Lesson Plan</strong>. Sylva produces a fully timed arc with Bloom's Taxonomy objectives for each activity.</span></li>
+          <li class="gs-step"><span class="gs-step-num">5</span><span>Click <strong>↓ Export Markdown</strong> to download the plan, or <strong>🖨 Print</strong> for a clean printable version.</span></li>
+        </ol>
+      </div>
+
+      <div class="gs-card">
+        <div class="gs-card-header">
+          <span class="gs-card-icon">✺</span>
+          <span class="gs-card-title">Share a Nova activity with students</span>
+          <span class="gs-card-tool" style="background:rgba(245,166,35,0.09);border-color:rgba(245,166,35,0.25);color:#9b6008">Nova</span>
+          <a href="nova/nova-guide.html" style="font-size:0.62rem;color:var(--amber);text-decoration:none;font-weight:600;margin-left:8px;white-space:nowrap">Full guide ↗</a>
+        </div>
+        <ol class="gs-steps">
+          <li class="gs-step"><span class="gs-step-num">1</span><span>Start the shared server and open <code>nova/nova.html</code>. Connect, then load a chapter (or paste text, fetch a URL, or upload a file).</span></li>
+          <li class="gs-step"><span class="gs-step-num">2</span><span>Select an activity type: <strong>Concept Map</strong>, <strong>Evidence Tribunal</strong>, <strong>Analogy Forge</strong>, or <strong>Concept Timeline</strong> are all shareable.</span></li>
+          <li class="gs-step"><span class="gs-step-num">3</span><span>Click <strong>Generate</strong>. Once the activity loads, click the <strong>⤴ Share</strong> button that appears next to Regenerate.</span></li>
+          <li class="gs-step"><span class="gs-step-num">4</span><span>A URL is copied to your clipboard. The entire activity is encoded in that link — send it to students.</span></li>
+          <li class="gs-step"><span class="gs-step-num">5</span><span>Students open the link in any browser. <em>No server, no API key, no setup required on their end.</em></span></li>
+        </ol>
+      </div>
+
+      <div class="gs-card">
+        <div class="gs-card-header">
+          <span class="gs-card-icon">⬡</span>
+          <span class="gs-card-title">Generate activities for your LMS</span>
+          <span class="gs-card-tool" style="background:rgba(0,56,101,0.08);border-color:rgba(0,56,101,0.2);color:#003865">Activity Maker</span>
+          <span style="font-size:0.62rem;color:var(--ink-faint);margin-left:8px;white-space:nowrap">Multiple sources supported</span>
+        </div>
+        <ol class="gs-steps">
+          <li class="gs-step"><span class="gs-step-num">1</span><span>Start the shared server and open <code>tru-oer-activity-builder.html</code>. Click <strong>Connect</strong>.</span></li>
+          <li class="gs-step"><span class="gs-step-num">2</span><span>Load your source material: browse to a chapter, fetch a URL, upload a PDF or Word doc, or paste text directly.</span></li>
+          <li class="gs-step"><span class="gs-step-num">3</span><span>Choose an activity type from the panel: <strong>Comprehension Quiz</strong>, <strong>Case Study</strong>, <strong>Branching Scenario</strong>, <strong>Analogy Exercise</strong>, and more.</span></li>
+          <li class="gs-step"><span class="gs-step-num">4</span><span>Click <strong>Generate Activity</strong>. The output is structured, formatted, and ready to paste into Moodle, Canvas, or any LMS.</span></li>
+          <li class="gs-step"><span class="gs-step-num">5</span><span>Use the <strong>Copy</strong> button or the <strong>↓ Save</strong> button to export the activity as Markdown.</span></li>
+        </ol>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════ FEATURE HOW-TOS ══════ -->
+<div class="section-divider"></div>
+<section class="howto-section">
+  <div class="page-wrap">
+    <div class="reveal">
+      <div class="section-eyebrow">Tips &amp; tricks</div>
+      <h2 class="section-title">Getting the most out of the tools</h2>
+      <p class="section-sub">A few features that are easy to miss — and worth knowing about.</p>
+    </div>
+
+    <div class="howto-grid reveal" style="transition-delay:0.06s">
+
+      <div class="howto-card">
+        <div class="howto-tool-badge" style="background:rgba(232,162,69,0.1);border-color:rgba(232,162,69,0.3);color:#7a4e12">Companion</div>
+        <h3 class="howto-title">Export your entire reading session</h3>
+        <p class="howto-desc">After annotating, hit <strong>Save session</strong> or <strong>Copy session</strong> in the margin toolbar. You get a structured Markdown document with every passage, AI response, and personal note — formatted for submission or personal review. Students can hand this in as evidence of active reading.</p>
+      </div>
+
+      <div class="howto-card">
+        <div class="howto-tool-badge" style="background:rgba(232,162,69,0.1);border-color:rgba(232,162,69,0.3);color:#7a4e12">Companion</div>
+        <h3 class="howto-title">Send your session to Activity Maker</h3>
+        <p class="howto-desc">Inside the margin panel, the <strong>Send to Activity Builder</strong> button opens Activity Maker in a new tab pre-loaded with your annotated session text. Turn a student's own reading questions into a personalized quiz — no copy-paste needed.</p>
+      </div>
+
+      <div class="howto-card">
+        <div class="howto-tool-badge" style="background:rgba(245,166,35,0.09);border-color:rgba(245,166,35,0.25);color:#9b6008">Nova</div>
+        <h3 class="howto-title">Share activities without a server</h3>
+        <p class="howto-desc">After generating a Concept Map, Evidence Tribunal, Analogy Forge, or Timeline, click <strong>⤴ Share</strong>. Nova encodes the entire activity into the URL — students open the link and interact with it instantly, with <em>no API key, no server, no setup</em> required on their end.</p>
+      </div>
+
+      <div class="howto-card">
+        <div class="howto-tool-badge" style="background:rgba(245,166,35,0.09);border-color:rgba(245,166,35,0.25);color:#9b6008">Nova</div>
+        <h3 class="howto-title">Add multiple sources at once</h3>
+        <p class="howto-desc">All five tools now accept multiple source materials simultaneously. Load several chapters, fetch a URL, or upload a PDF — each appears as a labelled chip in the source tray. Claude sees all of them with clear section headers, enabling activities that synthesise across readings. This is especially powerful in Rhizo for comparative critical inquiry, and in Sylva for lesson plans that span multiple chapters.</p>
+      </div>
+
+      <div class="howto-card">
+        <div class="howto-tool-badge" style="background:rgba(0,56,101,0.08);border-color:rgba(0,56,101,0.2);color:#003865">Activity Maker</div>
+        <h3 class="howto-title">Load source material from a URL or file</h3>
+        <p class="howto-desc">You don't need a TRU Open Press chapter. Paste a URL and click <strong>Fetch</strong> to pull any web-accessible OER into the source panel. Or click <strong>Upload PDF or Word document</strong> — text is extracted entirely in your browser, nothing is uploaded to any server.</p>
+      </div>
+
+      <div class="howto-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div class="howto-tool-badge" style="background:rgba(125,184,122,0.09);border-color:rgba(125,184,122,0.28);color:#3a6438;margin-bottom:0">Rhizo</div>
+          <a href="rhizo/rhizo-guide.html" style="font-size:0.62rem;color:var(--amber);text-decoration:none;font-weight:600">Full guide ↗</a>
+        </div>
+        <h3 class="howto-title">Use Wicked Council as a debate starter</h3>
+        <p class="howto-desc">Wicked Council generates five perspectives from radically different standpoints — not to reach consensus, but to show students that the same text looks different from different positions. Project the output and ask: <em>which voice is closest to yours? Which makes you most uncomfortable?</em> Load multiple sources to generate perspectives across several readings at once.</p>
+      </div>
+
+      <div class="howto-card">
+        <div class="howto-tool-badge" style="background:rgba(45,107,78,0.08);border-color:rgba(45,107,78,0.25);color:#2d6b4e">Sylva</div>
+        <h3 class="howto-title">Plan for your exact session length</h3>
+        <p class="howto-desc">Sylva asks for your session length in minutes before generating. The output is a fully timed arc — opening hook, chunked content blocks, activities with durations, and a closing synthesis — all adding up to exactly your time limit. Adjust the slider and regenerate for different formats.</p>
+      </div>
+
+      <div class="howto-card">
+        <div class="howto-tool-badge" style="background:rgba(45,107,78,0.08);border-color:rgba(45,107,78,0.25);color:#2d6b4e">Sylva</div>
+        <h3 class="howto-title">Export as Markdown or print to PDF</h3>
+        <p class="howto-desc">Click <strong>↓ Export Markdown</strong> for a structured plain-text lesson plan you can drop into any notes app, LMS, or shared doc. Or click <strong>🖨 Print</strong> for a clean, printer-friendly version with no sidebar chrome — useful for department files or substitute teacher handoffs.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════ CONNECTIONS ══════ -->
+<div class="section-divider"></div>
+<section class="connections-section">
+  <div class="page-wrap">
+    <div class="reveal">
+      <div class="section-eyebrow">Using them together</div>
+      <h2 class="section-title">How the tools connect</h2>
+      <p class="section-sub">Each tool is useful on its own — but they're designed to work together across a full reading and learning journey.</p>
+    </div>
+
+    <div class="connections-grid">
+
+      <div class="connection-card reveal" style="transition-delay:0.05s">
+        <div class="connection-pair">
+          <span class="conn-tool-chip" style="background:rgba(232,162,69,0.09);border-color:rgba(232,162,69,0.28);color:#7a4e12">Companion</span>
+          <span class="conn-arrow">→</span>
+          <span class="conn-tool-chip" style="background:rgba(125,184,122,0.09);border-color:rgba(125,184,122,0.28);color:#3a6438">Rhizo</span>
+        </div>
+        <p class="connection-text">Read actively with Companion's margin annotations, then bring those questions to Rhizo — which surfaces the deeper uncertainties, silences, and contested ground that close reading starts to reveal.</p>
+      </div>
+
+      <div class="connection-card reveal" style="transition-delay:0.10s">
+        <div class="connection-pair">
+          <span class="conn-tool-chip" style="background:rgba(232,162,69,0.09);border-color:rgba(232,162,69,0.28);color:#7a4e12">Companion</span>
+          <span class="conn-arrow">+</span>
+          <span class="conn-tool-chip" style="background:rgba(245,166,35,0.09);border-color:rgba(245,166,35,0.28);color:#9b6008">Nova</span>
+        </div>
+        <p class="connection-text">Companion's <strong>Connect</strong> mode and Nova's <strong>Analogy Forge</strong> both build real-world bridges — use them in sequence for students who struggle to see why a text matters beyond the classroom.</p>
+      </div>
+
+      <div class="connection-card reveal" style="transition-delay:0.15s">
+        <div class="connection-pair">
+          <span class="conn-tool-chip" style="background:rgba(232,162,69,0.09);border-color:rgba(232,162,69,0.28);color:#7a4e12">Companion</span>
+          <span class="conn-arrow">→</span>
+          <span class="conn-tool-chip" style="background:rgba(0,56,101,0.08);border-color:rgba(0,56,101,0.22);color:#003865">Activity Maker</span>
+        </div>
+        <p class="connection-text">Export a Companion reading session and use the annotated passages as raw material for Activity Maker — turning a student's own marginal questions into a personalized comprehension activity.</p>
+      </div>
+
+      <div class="connection-card reveal" style="transition-delay:0.20s">
+        <div class="connection-pair">
+          <span class="conn-tool-chip" style="background:rgba(0,56,101,0.08);border-color:rgba(0,56,101,0.22);color:#003865">Activity Maker</span>
+          <span class="conn-arrow">→</span>
+          <span class="conn-tool-chip" style="background:rgba(245,166,35,0.09);border-color:rgba(245,166,35,0.28);color:#9b6008">Nova</span>
+        </div>
+        <p class="connection-text">Start with <strong>structured activities</strong> for comprehension, then move to Nova's deeper modes for students ready to go further — or use Nova's shareable outputs as discussion springboards.</p>
+      </div>
+
+      <div class="connection-card reveal" style="transition-delay:0.25s">
+        <div class="connection-pair">
+          <span class="conn-tool-chip" style="background:rgba(0,56,101,0.08);border-color:rgba(0,56,101,0.22);color:#003865">Activity Maker</span>
+          <span class="conn-arrow">→</span>
+          <span class="conn-tool-chip" style="background:rgba(125,184,122,0.09);border-color:rgba(125,184,122,0.28);color:#3a6438">Rhizo</span>
+        </div>
+        <p class="connection-text">Activity Maker's <strong>branching scenarios</strong> work well before Rhizo's Wicked Council — scenario practice builds the tolerance for ambiguity that multi-perspective activities demand.</p>
+      </div>
+
+      <div class="connection-card reveal" style="transition-delay:0.30s">
+        <div class="connection-pair">
+          <span class="conn-tool-chip" style="background:rgba(125,184,122,0.09);border-color:rgba(125,184,122,0.28);color:#3a6438">Rhizo</span>
+          <span class="conn-arrow">→</span>
+          <span class="conn-tool-chip" style="background:rgba(245,166,35,0.09);border-color:rgba(245,166,35,0.28);color:#9b6008">Nova</span>
+        </div>
+        <p class="connection-text">Rhizo's <strong>Community Contract</strong> sets personal learning commitments — take those into Nova's Socratic Dialogue for a one-on-one conversation that tests those commitments against the text.</p>
+      </div>
+
+      <div class="connection-card reveal" style="transition-delay:0.35s">
+        <div class="connection-pair">
+          <span class="conn-tool-chip" style="background:rgba(45,107,78,0.08);border-color:rgba(45,107,78,0.25);color:#2d6b4e">Sylva</span>
+          <span class="conn-arrow">→</span>
+          <span class="conn-tool-chip" style="background:rgba(232,162,69,0.09);border-color:rgba(232,162,69,0.28);color:#7a4e12">Companion</span>
+        </div>
+        <p class="connection-text">Sylva's lesson arc often recommends Companion for the pre-reading phase. Point students to the chapter in Companion first — their annotated session becomes the raw material for the in-class discussion Sylva has already planned.</p>
+      </div>
+
+      <div class="connection-card reveal" style="transition-delay:0.40s">
+        <div class="connection-pair">
+          <span class="conn-tool-chip" style="background:rgba(45,107,78,0.08);border-color:rgba(45,107,78,0.25);color:#2d6b4e">Sylva</span>
+          <span class="conn-arrow">→</span>
+          <span class="conn-tool-chip" style="background:rgba(245,166,35,0.09);border-color:rgba(245,166,35,0.28);color:#9b6008">Nova</span>
+        </div>
+        <p class="connection-text">Use Sylva to plan the session, then generate a Nova <strong>Concept Map</strong> or <strong>Evidence Tribunal</strong> for the synthesis activity. Share the Nova link directly with students — no server required on their end.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════ FOOTER ══════ -->
+<footer class="site-footer">
+  <div class="page-wrap">
+    <div class="footer-inner">
+      <div class="footer-credit">
+        Built for <a href="https://openpress.trubox.ca" target="_blank" rel="noopener">TRU Open Press</a> ·
+        Thompson Rivers University · Kamloops, BC, Canada ·
+        Content published under open licenses for educational use.
+        <br><a href="index.html">← Back to the tools</a> · <a href="why.html">Why Open Margins?</a>
+      </div>
+      <div class="footer-tools" aria-label="Five tools">
+        <div class="footer-tool-dot" style="background:var(--tool-companion)" title="Companion"></div>
+        <div class="footer-tool-dot" style="background:var(--tool-builder)" title="Activity Maker"></div>
+        <div class="footer-tool-dot" style="background:var(--tool-nova)" title="Nova"></div>
+        <div class="footer-tool-dot" style="background:var(--tool-rhizo)" title="Rhizo"></div>
+        <div class="footer-tool-dot" style="background:var(--tool-sylva)" title="Sylva"></div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ── Suite-wide theme toggle ──────────────────────────────
+(function() {
+  var btn = document.getElementById('btn-suite-theme');
+  if (!btn) return;
+  function applyOmTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    btn.textContent = theme === 'dark' ? '☀' : '🌙';
+    btn.title = theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+    try { localStorage.setItem('om-theme', theme); } catch(e) {}
+  }
+  btn.addEventListener('click', function() {
+    var cur = document.documentElement.getAttribute('data-theme') || 'light';
+    applyOmTheme(cur === 'dark' ? 'light' : 'dark');
+  });
+  var cur = document.documentElement.getAttribute('data-theme') || 'light';
+  btn.textContent = cur === 'dark' ? '☀' : '🌙';
+  btn.title = cur === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+})();
+</script>
+
+</body>
+</html>

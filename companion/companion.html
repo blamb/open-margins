@@ -1,0 +1,4072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Companion — Reading in the Margins · TRU Open Press</title>
+<script>(function(){var t=localStorage.getItem('companion-theme')||localStorage.getItem('om-theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');if(t&&t!=='dark')document.documentElement.setAttribute('data-theme',t);})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400;1,9..144,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- OpenDyslexic — dyslexia-friendly reading font (cdn.jsdelivr.net) -->
+<style>
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/fonts/OpenDyslexic-Regular.otf') format('opentype');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/fonts/OpenDyslexic-Bold.otf') format('opentype');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/fonts/OpenDyslexic-Italic.otf') format('opentype');
+  font-weight: 400; font-style: italic; font-display: swap;
+}
+</style>
+<style>
+/* ══════════════════════════════════════════════════════════
+   COMPANION — Reading in the Margins
+   A tool that works DURING reading, not after.
+   TRU Open Press · Illuminate · Interrogate · Connect
+   ══════════════════════════════════════════════════════════ */
+
+/* ── THEME: DARK (default) ── */
+:root {
+  --slate:      #080c12;
+  --deep:       #0c1219;
+  --panel:      #101820;
+  --surface:    #16202c;
+  --surface-hi: #1e2c3c;
+  --raised:     #243040;
+
+  --amber:      #e8a245;
+  --amber-dim:  rgba(232,162,69,0.12);
+  --amber-glow: rgba(232,162,69,0.32);
+  --amber-soft: rgba(232,162,69,0.06);
+
+  --lilac:      #b8a0e8;
+  --lilac-dim:  rgba(184,160,232,0.12);
+  --lilac-glow: rgba(184,160,232,0.28);
+  --copper:     #d4845a;
+  --copper-dim: rgba(212,132,90,0.12);
+  --copper-glow:rgba(212,132,90,0.28);
+  --sage:       #7ab89e;
+  --sage-dim:   rgba(122,184,158,0.12);
+  --sage-glow:  rgba(122,184,158,0.28);
+  --honey:      #c9a84c;   /* Note — warm gold-yellow */
+  --honey-dim:  rgba(201,168,76,0.13);
+  --honey-glow: rgba(201,168,76,0.28);
+
+  --text:       #dce8f0;
+  --text-dim:   #8098aa;
+  --text-faint: #445566;
+
+  --border:     rgba(255,255,255,0.06);
+  --border-hi:  rgba(255,255,255,0.11);
+
+  --topbar-bg:  rgba(8,12,18,0.95);
+  --scrollbar-track: var(--deep);
+  --scrollbar-thumb: rgba(255,255,255,0.09);
+  --selection-bg: rgba(232,162,69,0.25);
+
+  --r: 10px;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── THEME: LIGHT ── */
+[data-theme="light"] {
+  --slate:      #f4f1eb;
+  --deep:       #ede9e1;
+  --panel:      #f8f5f0;
+  --surface:    #ffffff;
+  --surface-hi: #f0ebe2;
+  --raised:     #e8e2d8;
+
+  --amber:      #b5751a;
+  --amber-dim:  rgba(181,117,26,0.10);
+  --amber-glow: rgba(181,117,26,0.25);
+  --amber-soft: rgba(181,117,26,0.05);
+
+  --lilac:      #6b4faa;
+  --lilac-dim:  rgba(107,79,170,0.10);
+  --lilac-glow: rgba(107,79,170,0.22);
+  --copper:     #a0502a;
+  --copper-dim: rgba(160,80,42,0.10);
+  --copper-glow:rgba(160,80,42,0.22);
+  --sage:       #3a7a62;
+  --sage-dim:   rgba(58,122,98,0.10);
+  --sage-glow:  rgba(58,122,98,0.22);
+  --honey:      #8a6a10;
+  --honey-dim:  rgba(138,106,16,0.10);
+  --honey-glow: rgba(138,106,16,0.22);
+
+  --text:       #1a1a2a;
+  --text-dim:   #5a5870;
+  --text-faint: #a0a0b8;
+
+  --border:     rgba(0,0,0,0.08);
+  --border-hi:  rgba(0,0,0,0.14);
+
+  --topbar-bg:  rgba(244,241,235,0.96);
+  --scrollbar-track: var(--deep);
+  --scrollbar-thumb: rgba(0,0,0,0.12);
+  --selection-bg: rgba(181,117,26,0.2);
+}
+
+/* ── THEME: SEPIA ── */
+[data-theme="sepia"] {
+  --slate:      #1c1510;
+  --deep:       #231a12;
+  --panel:      #2a2016;
+  --surface:    #33271a;
+  --surface-hi: #3d2f20;
+  --raised:     #4a3828;
+
+  --amber:      #d4a055;
+  --amber-dim:  rgba(212,160,85,0.13);
+  --amber-glow: rgba(212,160,85,0.30);
+  --amber-soft: rgba(212,160,85,0.06);
+
+  --lilac:      #c0a0d8;
+  --lilac-dim:  rgba(192,160,216,0.12);
+  --lilac-glow: rgba(192,160,216,0.26);
+  --copper:     #cc8060;
+  --copper-dim: rgba(204,128,96,0.12);
+  --copper-glow:rgba(204,128,96,0.26);
+  --sage:       #88b898;
+  --sage-dim:   rgba(136,184,152,0.12);
+  --sage-glow:  rgba(136,184,152,0.26);
+  --honey:      #c8a040;
+  --honey-dim:  rgba(200,160,64,0.13);
+  --honey-glow: rgba(200,160,64,0.26);
+
+  --text:       #e8dcc8;
+  --text-dim:   #a09070;
+  --text-faint: #6a5840;
+
+  --border:     rgba(255,220,160,0.07);
+  --border-hi:  rgba(255,220,160,0.13);
+
+  --topbar-bg:  rgba(28,21,16,0.95);
+  --scrollbar-track: var(--deep);
+  --scrollbar-thumb: rgba(255,200,120,0.1);
+  --selection-bg: rgba(212,160,85,0.28);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; scroll-behavior: smooth; }
+/* Focus ring — keyboard users only, uses amber from current theme */
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; border-radius: 3px; }
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--slate);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+::selection { background: var(--selection-bg); color: var(--text); }
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+
+/* ── TOPBAR ── */
+.topbar {
+  background: var(--topbar-bg);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 300;
+  flex-shrink: 0;
+}
+
+.topbar-brand { display: flex; align-items: center; gap: 12px; }
+.topbar-logo { height: 32px; width: 32px; object-fit: contain; filter: drop-shadow(0 0 6px rgba(232,162,69,0.3)); }
+.brand-text { display: flex; flex-direction: column; }
+.brand-name {
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem; font-weight: 700;
+  color: var(--amber);
+  line-height: 1; letter-spacing: -0.02em;
+}
+.brand-sub {
+  font-size: 0.6rem; color: var(--text-dim);
+  letter-spacing: 0.09em; text-transform: uppercase; margin-top: 2px;
+}
+
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+
+.status-pill {
+  display: flex; align-items: center; gap: 5px;
+  padding: 4px 11px; border-radius: 20px;
+  font-size: 0.65rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  background: var(--panel); border: 1px solid var(--border);
+  color: var(--text-dim); transition: all var(--transition);
+}
+.status-pill.connected { border-color: rgba(232,162,69,0.35); color: var(--amber); }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.status-pill.connected .status-dot { box-shadow: 0 0 6px currentColor; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+.topbar-badge {
+  padding: 4px 11px; border-radius: 20px;
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  background: var(--amber-dim); border: 1px solid rgba(232,162,69,0.22); color: var(--amber);
+}
+
+/* ── APP SHELL ── */
+.app-shell {
+  display: flex; flex: 1;
+  height: calc(100vh - 56px - 34px); /* topbar 56px + suite-nav 34px */
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════════════════════════
+   LEFT PANEL — Source / Setup
+   ══════════════════════════════════════════════════════════ */
+.source-panel {
+  width: 280px;
+  background: var(--deep);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow: hidden; flex-shrink: 0;
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.source-panel.collapsed {
+  width: 44px;
+}
+
+/* Hide all panel content when collapsed, keep only the expand tab */
+.source-panel.collapsed .panel-header-content,
+.source-panel.collapsed .panel-body,
+.source-panel.collapsed .panel-footer {
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+  width: 0;
+  height: 0;
+  padding: 0;
+}
+
+/* In collapsed state, panel-header becomes a full-height expand tab */
+.source-panel.collapsed .panel-header {
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  border-bottom: none;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* The collapse button: small pill in expanded state */
+.panel-collapse-btn {
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 3px 7px;
+  border-radius: 6px;
+  transition: color var(--transition), background var(--transition), border-color var(--transition);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 1px;
+}
+.panel-collapse-btn:hover { color: var(--amber); background: var(--amber-dim); border-color: var(--amber-glow); }
+
+/* Collapsed expand tab — fills the full panel height */
+.source-panel.collapsed .panel-collapse-btn {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  padding: 16px 0 20px;
+  margin: 0;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--surface);
+  border-right: 3px solid var(--amber-glow);
+  color: var(--text-dim);
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+  box-shadow: inset -1px 0 0 var(--border);
+}
+.source-panel.collapsed .panel-collapse-btn:hover {
+  background: var(--amber-dim);
+  color: var(--amber);
+  border-right-color: var(--amber);
+}
+
+/* Chevron — plain in expanded state */
+.panel-collapse-btn .collapse-icon {
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+/* Chevron pill in collapsed state */
+.source-panel.collapsed .panel-collapse-btn .collapse-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--amber-dim);
+  border: 1px solid var(--amber-glow);
+  color: var(--amber);
+  font-size: 1rem;
+  flex-shrink: 0;
+  transition: background var(--transition), border-color var(--transition);
+}
+.source-panel.collapsed .panel-collapse-btn:hover .collapse-icon {
+  background: rgba(232,162,69,0.25);
+  border-color: rgba(232,162,69,0.6);
+}
+
+/* Book icon (SVG) in middle of collapsed tab */
+.panel-collapse-btn .collapse-book {
+  display: none;
+  opacity: 0.35;
+  flex-shrink: 0;
+}
+.source-panel.collapsed .panel-collapse-btn .collapse-book { display: block; }
+.source-panel.collapsed .panel-collapse-btn:hover .collapse-book { opacity: 0.6; }
+
+/* Vertical "OPEN" label */
+.panel-collapse-btn .collapse-label {
+  display: none;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.57rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--amber);
+  opacity: 0.7;
+}
+.source-panel.collapsed .panel-collapse-btn .collapse-label { display: block; }
+.source-panel.collapsed .panel-collapse-btn:hover .collapse-label { opacity: 1; }
+
+.panel-header {
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 6px;
+  transition: padding var(--transition), justify-content var(--transition);
+}
+
+.panel-header-content {
+  flex: 1; min-width: 0;
+  transition: opacity 0.2s ease;
+}
+
+.section-label {
+  font-size: 0.57rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-faint); margin-bottom: 8px;
+}
+
+.proxy-row { display: flex; gap: 5px; align-items: center; margin-bottom: 6px; }
+
+.proxy-input {
+  flex: 1; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 6px;
+  padding: 6px 9px;
+  font-family: 'DM Mono', monospace; font-size: 0.65rem;
+  color: var(--text); outline: none;
+  transition: border-color var(--transition);
+}
+.proxy-input:focus { border-color: rgba(232,162,69,0.4); }
+
+.btn-connect {
+  padding: 6px 10px;
+  background: var(--amber-dim); border: 1px solid rgba(232,162,69,0.28);
+  border-radius: 6px; color: var(--amber);
+  font-family: 'DM Sans', sans-serif; font-size: 0.68rem; font-weight: 600;
+  cursor: pointer; transition: all var(--transition); white-space: nowrap;
+}
+.btn-connect:hover { background: rgba(232,162,69,0.2); }
+.btn-connect:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.connect-msg {
+  font-size: 0.69rem; color: var(--text-dim); line-height: 1.4; margin-top: 5px;
+}
+.connect-msg code { font-family: 'DM Mono', monospace; color: var(--amber); font-size: 0.65rem; }
+
+.panel-body { flex: 1; overflow-y: auto; padding: 13px 16px; }
+
+/* Book browser */
+.books-loading { display: flex; align-items: center; gap: 7px; padding: 10px 0; color: var(--text-dim); font-size: 0.75rem; }
+.books-spinner { width: 12px; height: 12px; border: 2px solid var(--border-hi); border-top-color: var(--amber); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.books-error { padding: 9px 0; font-size: 0.75rem; color: var(--copper); }
+.books-retry-btn { background: none; border: none; color: var(--amber); font-size: 0.75rem; cursor: pointer; text-decoration: underline; padding: 0; font-family: inherit; }
+
+.book-search {
+  width: 100%; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 7px;
+  padding: 7px 9px 7px 28px; font-family: 'DM Sans', sans-serif;
+  font-size: 0.77rem; color: var(--text); outline: none;
+  transition: border-color var(--transition);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23445566' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: 8px center; margin-bottom: 7px;
+}
+.book-search:focus { border-color: rgba(232,162,69,0.4); }
+.book-search::placeholder { color: var(--text-dim); }
+
+.book-count { font-size: 0.59rem; color: var(--text-faint); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 6px; }
+.book-list { display: flex; flex-direction: column; gap: 3px; max-height: 220px; overflow-y: auto; }
+
+.book-item {
+  padding: 8px 10px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 7px;
+  cursor: pointer; transition: all var(--transition); text-align: left; width: 100%;
+  font-family: 'DM Sans', sans-serif;
+}
+.book-item:hover { border-color: rgba(232,162,69,0.28); background: var(--surface-hi); }
+.book-item-title { font-size: 0.77rem; font-weight: 600; color: var(--text); line-height: 1.3; margin-bottom: 2px; }
+.book-item-meta { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.book-subject-badge {
+  font-size: 0.55rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+  padding: 2px 5px; border-radius: 8px;
+  background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(232,162,69,0.2);
+}
+.book-item-author { font-size: 0.65rem; color: var(--text-dim); }
+
+/* Focus view */
+.book-back-btn {
+  background: none; border: none; color: var(--amber);
+  font-size: 0.68rem; font-family: 'DM Sans', sans-serif; font-weight: 600;
+  cursor: pointer; padding: 0; margin-bottom: 8px; transition: color var(--transition);
+}
+.book-back-btn:hover { color: var(--text); }
+
+.selected-book-card {
+  background: linear-gradient(135deg, var(--amber-dim), rgba(232,162,69,0.05));
+  border: 1px solid rgba(232,162,69,0.18); border-radius: 9px;
+  padding: 10px 12px; margin-bottom: 11px;
+}
+.selected-book-title { font-family: 'Fraunces', serif; font-size: 0.86rem; font-weight: 600; color: var(--text); line-height: 1.3; margin-bottom: 2px; }
+.selected-book-subject { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--amber); }
+
+.toc-loading { display: flex; align-items: center; gap: 7px; padding: 8px 0; color: var(--text-dim); font-size: 0.75rem; }
+
+.toc-select {
+  width: 100%; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 7px; padding: 7px 26px 7px 9px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.77rem; color: var(--text);
+  outline: none; transition: border-color var(--transition);
+  -webkit-appearance: none; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%23445566' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 8px center;
+}
+.toc-select:focus { border-color: rgba(232,162,69,0.4); }
+.toc-select:disabled { opacity: 0.4; cursor: not-allowed; }
+.toc-select option { background: var(--surface); color: var(--text); }
+.toc-gap { margin-top: 6px; }
+
+.chapter-meta { display: flex; align-items: center; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+.chapter-wc-pill { font-size: 0.6rem; font-weight: 600; padding: 2px 7px; border-radius: 8px; background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(232,162,69,0.22); }
+.chapter-link { font-size: 0.6rem; color: var(--text-dim); text-decoration: none; transition: color var(--transition); }
+.chapter-link:hover { color: var(--amber); }
+
+.btn-load-chapter {
+  width: 100%; margin-top: 10px; padding: 8px 12px;
+  background: var(--amber-dim); border: 1px solid rgba(232,162,69,0.3);
+  border-radius: 7px; color: var(--amber);
+  font-family: 'DM Sans', sans-serif; font-size: 0.77rem; font-weight: 600;
+  cursor: pointer; transition: all var(--transition);
+}
+.btn-load-chapter:hover { background: rgba(232,162,69,0.2); }
+.btn-load-chapter:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Multi-source tray ── */
+.source-tray { margin-top: 8px; display: flex; flex-direction: column; gap: 5px; }
+.source-chip {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--surface); border: 1px solid var(--border-hi);
+  border-radius: 7px; padding: 6px 8px; font-size: 0.73rem;
+}
+.source-chip-icon { font-size: 0.9rem; flex-shrink: 0; }
+.source-chip-body { flex: 1; min-width: 0; }
+.source-chip-label { font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.source-chip-meta { font-size: 0.65rem; color: var(--text-dim); margin-top: 1px; }
+.source-chip-remove {
+  background: none; border: none; cursor: pointer;
+  color: var(--text-faint); font-size: 0.85rem; padding: 2px 4px;
+  border-radius: 4px; transition: color var(--transition), background var(--transition);
+  flex-shrink: 0;
+}
+.source-chip-remove:hover { color: var(--copper); background: var(--copper-dim); }
+
+/* ── URL fetch row ── */
+.url-fetch-row { display: flex; gap: 5px; margin-top: 6px; align-items: center; }
+.url-fetch-input {
+  flex: 1; min-width: 0; padding: 6px 9px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 7px;
+  color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.73rem;
+  outline: none; transition: border-color var(--transition);
+}
+.url-fetch-input:focus { border-color: rgba(232,162,69,0.4); }
+.url-fetch-input::placeholder { color: var(--text-faint); }
+.btn-fetch-url {
+  padding: 6px 10px; background: var(--amber-dim); border: 1px solid rgba(232,162,69,0.3);
+  border-radius: 7px; color: var(--amber); font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem; font-weight: 600; cursor: pointer; white-space: nowrap;
+  transition: all var(--transition);
+}
+.btn-fetch-url:hover { background: rgba(232,162,69,0.2); }
+.url-fetch-status { font-size: 0.68rem; color: var(--text-dim); margin-top: 3px; min-height: 1em; }
+
+/* ── File upload ── */
+.file-upload-btn {
+  width: 100%; margin-top: 5px; padding: 6px 10px;
+  background: var(--surface); border: 1px dashed var(--border-hi);
+  border-radius: 7px; color: var(--text-dim); font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem; cursor: pointer; transition: all var(--transition); text-align: left;
+}
+.file-upload-btn:hover { border-color: rgba(232,162,69,0.4); color: var(--amber); }
+.file-upload-status { font-size: 0.68rem; color: var(--text-dim); margin-top: 3px; min-height: 1em; }
+#file-upload-input { display: none; }
+
+/* ── Source separator ── */
+.oer-source-sep {
+  display: flex; align-items: center; gap: 6px; margin: 8px 0 4px;
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-faint);
+}
+.oer-source-sep::before, .oer-source-sep::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+.chapter-notice { margin-top: 8px; padding: 7px 10px; border-radius: 7px; font-size: 0.74rem; line-height: 1.5; }
+.chapter-notice.success { background: var(--amber-dim); border: 1px solid rgba(232,162,69,0.28); color: var(--amber); }
+.chapter-notice.error { background: var(--copper-dim); border: 1px solid rgba(212,132,90,0.28); color: var(--copper); }
+
+.context-divider { height: 1px; background: var(--border); margin: 12px 0; }
+
+.paste-toggle-btn {
+  background: none; border: none; color: var(--text-faint);
+  font-size: 0.66rem; font-family: 'DM Sans', sans-serif; font-weight: 500;
+  cursor: pointer; padding: 0; transition: color var(--transition); letter-spacing: 0.02em;
+}
+.paste-toggle-btn:hover { color: var(--text-dim); }
+.paste-toggle-btn.active { color: var(--amber); }
+
+.oer-textarea {
+  width: 100%; min-height: 130px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 7px;
+  padding: 9px 11px; font-family: 'DM Sans', sans-serif;
+  font-size: 0.77rem; line-height: 1.6; color: var(--text);
+  resize: vertical; outline: none; transition: border-color var(--transition);
+}
+.oer-textarea:focus { border-color: rgba(232,162,69,0.35); }
+.oer-textarea::placeholder { color: var(--text-dim); }
+
+.word-count { font-size: 0.6rem; color: var(--text-faint); text-align: right; margin-top: 3px; }
+
+/* Mode legend */
+.mode-legend { margin-top: 3px; }
+.mode-legend-title { font-size: 0.57rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 7px; }
+.mode-item {
+  display: flex; align-items: flex-start; gap: 7px; margin-bottom: 7px;
+}
+.mode-pip {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px;
+}
+.mode-name { font-size: 0.71rem; font-weight: 600; line-height: 1.2; }
+.mode-desc { font-size: 0.65rem; color: var(--text-dim); line-height: 1.4; margin-top: 1px; }
+
+.panel-footer {
+  padding: 10px 16px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.btn-load-reading {
+  width: 100%; padding: 10px 16px;
+  background: linear-gradient(135deg, rgba(232,162,69,0.15), rgba(232,162,69,0.08));
+  border: 1px solid rgba(232,162,69,0.32); border-radius: 8px;
+  color: var(--amber); font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem; font-weight: 600; cursor: pointer;
+  transition: all var(--transition);
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+}
+.btn-load-reading:hover { background: linear-gradient(135deg, rgba(232,162,69,0.22), rgba(232,162,69,0.12)); border-color: rgba(232,162,69,0.5); transform: translateY(-1px); }
+.btn-load-reading:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+
+/* ══════════════════════════════════════════════════════════
+   READING PANE — The actual text
+   ══════════════════════════════════════════════════════════ */
+.reading-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--panel);
+}
+
+.reading-header {
+  padding: 12px 22px 11px;
+  border-bottom: 1px solid var(--border);
+  background: var(--deep);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.reading-chapter-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.0rem; font-weight: 600; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  line-height: 1.3;
+}
+.reading-header-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.reading-hint {
+  font-size: 0.67rem; color: var(--text-faint); font-style: italic;
+}
+
+/* Mode toolbar */
+.mode-toolbar {
+  display: flex; gap: 5px; flex-shrink: 0;
+}
+.btn-mode {
+  padding: 5px 11px; border-radius: 7px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.69rem; font-weight: 600;
+  cursor: pointer; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text-dim);
+  transition: all var(--transition);
+  display: flex; align-items: center; gap: 5px;
+}
+.btn-mode:hover { border-color: var(--border-hi); color: var(--text); }
+.btn-mode.active-illuminate { background: var(--lilac-dim); border-color: rgba(184,160,232,0.4); color: var(--lilac); }
+.btn-mode.active-council    { background: var(--copper-dim); border-color: rgba(212,132,90,0.4); color: var(--copper); }
+.btn-mode.active-connect    { background: var(--sage-dim); border-color: rgba(122,184,158,0.4); color: var(--sage); }
+
+.mode-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+/* Reading body */
+.reading-body {
+  flex: 1; overflow-y: auto; padding: 28px 32px;
+  user-select: text;
+}
+
+/* The idle/empty state */
+.reading-idle {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  height: 100%; text-align: center; gap: 16px; padding: 40px;
+}
+.idle-glyph {
+  font-family: 'Fraunces', serif;
+  font-size: 5rem; font-weight: 300; font-style: italic;
+  color: var(--amber); opacity: 0.12; user-select: none;
+  line-height: 1;
+}
+.idle-title { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 600; color: var(--text); max-width: 480px; line-height: 1.35; }
+.idle-sub { font-size: 0.84rem; color: var(--text-dim); max-width: 400px; line-height: 1.75; }
+.idle-modes { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; margin-top: 4px; }
+.idle-mode-chip {
+  padding: 4px 12px; border-radius: 20px; font-size: 0.72rem;
+  border: 1px solid var(--border-hi); color: var(--text-dim); background: var(--surface);
+}
+.idle-mode-chip.chip-illuminate { border-color: rgba(184,160,232,0.3); color: var(--lilac); background: var(--lilac-dim); }
+.idle-mode-chip.chip-council    { border-color: rgba(212,132,90,0.3); color: var(--copper); background: var(--copper-dim); }
+.idle-mode-chip.chip-connect    { border-color: rgba(122,184,158,0.3); color: var(--sage); background: var(--sage-dim); }
+.idle-mode-chip.chip-note       { border-color: rgba(201,168,76,0.3); color: var(--honey); background: var(--honey-dim); }
+
+/* Chapter text rendering */
+.chapter-text {
+  font-family: 'Fraunces', serif;
+  font-size: 1.01rem;
+  line-height: 1.82;
+  color: var(--text);
+  max-width: 680px;
+  margin: 0 auto;
+}
+.chapter-text p { margin-bottom: 1.3em; }
+.chapter-text h1, .chapter-text h2 {
+  font-family: 'Fraunces', serif; font-weight: 700;
+  color: var(--text); margin: 1.6em 0 0.6em;
+  line-height: 1.25;
+}
+.chapter-text h1 { font-size: 1.4rem; }
+.chapter-text h2 { font-size: 1.15rem; color: var(--amber); }
+.chapter-text h3 { font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-dim); margin: 1.4em 0 0.5em; }
+.chapter-text strong { color: var(--text); font-weight: 600; }
+.chapter-text em { font-style: italic; color: var(--text-dim); }
+.chapter-text ul, .chapter-text ol { padding-left: 1.4em; margin-bottom: 1.2em; }
+.chapter-text li { margin-bottom: 0.4em; line-height: 1.7; }
+.chapter-text blockquote {
+  border-left: 3px solid var(--amber-glow); padding: 10px 18px;
+  color: var(--text-dim); font-style: italic; margin: 1.4em 0;
+  background: var(--amber-soft); border-radius: 0 7px 7px 0;
+}
+
+/* Selection popup */
+#selection-popup {
+  position: fixed;
+  background: var(--raised);
+  border: 1px solid var(--border-hi);
+  border-radius: 10px;
+  padding: 6px;
+  display: flex; gap: 4px;
+  z-index: 500;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+  transform: translateY(-8px);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+#selection-popup.visible {
+  opacity: 1; pointer-events: all; transform: translateY(0);
+}
+.popup-btn {
+  padding: 6px 11px; border-radius: 7px; border: 1px solid transparent;
+  font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 600;
+  cursor: pointer; transition: all var(--transition);
+  display: flex; align-items: center; gap: 5px;
+}
+.popup-btn-illuminate {
+  background: var(--lilac-dim); color: var(--lilac); border-color: rgba(184,160,232,0.3);
+}
+.popup-btn-illuminate:hover { background: rgba(184,160,232,0.22); border-color: rgba(184,160,232,0.5); }
+.popup-btn-council {
+  background: var(--copper-dim); color: var(--copper); border-color: rgba(212,132,90,0.3);
+}
+.popup-btn-council:hover { background: rgba(212,132,90,0.22); border-color: rgba(212,132,90,0.5); }
+.popup-btn-connect {
+  background: var(--sage-dim); color: var(--sage); border-color: rgba(122,184,158,0.3);
+}
+.popup-btn-connect:hover { background: rgba(122,184,158,0.22); border-color: rgba(122,184,158,0.5); }
+
+/* ══════════════════════════════════════════════════════════
+   MARGIN PANEL — Annotations
+   ══════════════════════════════════════════════════════════ */
+.margin-panel {
+  width: 360px;
+  background: var(--deep);
+  border-left: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow: hidden; flex-shrink: 0;
+  position: relative;  /* anchor for absolute nudge pills */
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.margin-panel.collapsed {
+  width: 44px;
+}
+
+/* Hide all margin content when collapsed, keep only the collapse tab */
+.margin-panel.collapsed .margin-body,
+.margin-panel.collapsed .margin-footer,
+.margin-panel.collapsed .margin-scroll-nudge,
+.margin-panel.collapsed .margin-scroll-nudge-top {
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+  width: 0;
+  height: 0;
+  padding: 0;
+}
+
+/* In collapsed state, margin-header becomes a full-height expand tab */
+.margin-panel.collapsed .margin-header {
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  border-bottom: none;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Hide title/subtitle/clear button when collapsed */
+.margin-panel.collapsed .margin-header > div,
+.margin-panel.collapsed .btn-clear-margin {
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+  width: 0;
+  height: 0;
+  padding: 0;
+  margin: 0;
+}
+
+/* The margin collapse button */
+.margin-collapse-btn {
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 3px 7px;
+  border-radius: 6px;
+  transition: color var(--transition), background var(--transition), border-color var(--transition);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 1px;
+}
+.margin-collapse-btn:hover { color: var(--amber); background: var(--amber-dim); border-color: var(--amber-glow); }
+
+/* Collapsed expand tab — fills the full panel height */
+.margin-panel.collapsed .margin-collapse-btn {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  padding: 16px 0 20px;
+  margin: 0;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--surface);
+  border-left: 3px solid var(--amber-glow);
+  color: var(--text-dim);
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+  box-shadow: inset 1px 0 0 var(--border);
+}
+.margin-panel.collapsed .margin-collapse-btn:hover {
+  background: var(--amber-dim);
+  color: var(--amber);
+  border-left-color: var(--amber);
+}
+
+/* Chevron — plain in expanded state */
+.margin-collapse-btn .collapse-icon {
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+/* Chevron pill in collapsed state */
+.margin-panel.collapsed .margin-collapse-btn .collapse-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--amber-dim);
+  border: 1px solid var(--amber-glow);
+  color: var(--amber);
+  font-size: 1rem;
+  flex-shrink: 0;
+  transition: background var(--transition), border-color var(--transition);
+}
+.margin-panel.collapsed .margin-collapse-btn:hover .collapse-icon {
+  background: rgba(232,162,69,0.25);
+  border-color: rgba(232,162,69,0.6);
+}
+
+/* Pen icon in middle of collapsed tab */
+.margin-collapse-btn .collapse-pen {
+  display: none;
+  opacity: 0.35;
+  flex-shrink: 0;
+}
+.margin-panel.collapsed .margin-collapse-btn .collapse-pen { display: block; }
+.margin-panel.collapsed .margin-collapse-btn:hover .collapse-pen { opacity: 0.6; }
+
+/* Vertical "NOTES" label */
+.margin-collapse-btn .collapse-label {
+  display: none;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.57rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--amber);
+  opacity: 0.7;
+}
+.margin-panel.collapsed .margin-collapse-btn .collapse-label { display: block; }
+.margin-panel.collapsed .margin-collapse-btn:hover .collapse-label { opacity: 1; }
+
+.margin-header {
+  padding: 13px 16px 12px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.margin-title {
+  font-family: 'Fraunces', serif;
+  font-size: 0.95rem; font-weight: 600; color: var(--text);
+}
+.margin-subtitle { font-size: 0.63rem; color: var(--text-faint); margin-top: 1px; }
+
+.btn-clear-margin {
+  background: none; border: none; color: var(--text-faint);
+  font-size: 0.65rem; font-family: 'DM Sans', sans-serif;
+  cursor: pointer; padding: 3px 7px; border-radius: 5px;
+  transition: all var(--transition);
+}
+.btn-clear-margin:hover { color: var(--copper); background: var(--copper-dim); }
+
+.margin-body {
+  flex: 1; overflow-y: auto;
+  padding: 12px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+
+/* Empty margin state */
+.margin-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  height: 100%; gap: 10px; text-align: center; padding: 30px 20px;
+}
+.margin-empty-glyph { font-size: 2.2rem; opacity: 0.18; }
+.margin-empty-text { font-size: 0.8rem; color: var(--text-dim); line-height: 1.6; max-width: 220px; }
+
+/* Margin navigation pills — absolutely positioned overlays on the margin-panel */
+/* margin-panel already has position:relative and overflow:hidden */
+.margin-scroll-nudge,
+.margin-scroll-nudge-top {
+  position: absolute;
+  left: 0; right: 0;
+  z-index: 20;
+  display: none;           /* hidden by default; JS sets display:flex to show */
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+}
+
+/* Bottom pill — "↓ latest" */
+.margin-scroll-nudge {
+  bottom: 72px;            /* sit above the margin-footer (≈68px tall) */
+  padding: 0 0 8px;
+  background: linear-gradient(to top, var(--deep) 40%, transparent);
+}
+
+/* Top pill — "↑ top" */
+.margin-scroll-nudge-top {
+  top: 48px;               /* sit below the margin-header (≈45px tall) */
+  padding: 8px 0 0;
+  background: linear-gradient(to bottom, var(--deep) 40%, transparent);
+}
+
+.margin-nudge-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 12px; border-radius: 20px;
+  background: var(--raised);
+  border: 1px solid var(--border-hi);
+  color: var(--text-dim);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.68rem; font-weight: 600;
+  cursor: pointer; pointer-events: all;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.45);
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+.margin-nudge-btn:hover { color: var(--amber); border-color: rgba(232,162,69,0.35); background: var(--amber-dim); }
+.margin-nudge-btn .nudge-count {
+  background: var(--amber); color: var(--slate);
+  font-size: 0.6rem; font-weight: 700;
+  padding: 1px 5px; border-radius: 10px;
+  min-width: 16px; text-align: center;
+}
+
+/* Annotation card */
+.annotation-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  animation: slideIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.annotation-header {
+  padding: 9px 12px 8px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.annotation-mode-tag {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 0.59rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.annotation-excerpt {
+  font-size: 0.66rem; color: var(--text-faint); font-style: italic;
+  max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.btn-collapse {
+  background: none; border: none; color: var(--text-faint);
+  cursor: pointer; font-size: 0.7rem; padding: 1px 4px;
+  transition: color var(--transition);
+}
+.btn-collapse:hover { color: var(--text-dim); }
+
+.annotation-body { padding: 11px 12px; }
+
+.annotation-thinking {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.77rem; color: var(--text-dim); font-style: italic;
+}
+.thinking-dots span {
+  display: inline-block; width: 4px; height: 4px; border-radius: 50%;
+  background: currentColor; margin: 0 1px;
+  animation: thinking 1.2s infinite;
+}
+.thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+.thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes thinking { 0%,100%{opacity:0.2} 50%{opacity:1} }
+
+.annotation-text {
+  font-size: 0.82rem; line-height: 1.68; color: var(--text);
+}
+.annotation-text p { margin-bottom: 0.75em; }
+.annotation-text p:last-child { margin-bottom: 0; }
+.annotation-text strong { font-weight: 600; }
+
+/* Mode-specific left border accent */
+.annotation-card.mode-illuminate { border-left: 3px solid var(--lilac); }
+.annotation-card.mode-council    { border-left: 3px solid var(--copper); }
+.annotation-card.mode-connect    { border-left: 3px solid var(--sage); }
+
+/* ── Inline text markers ── */
+/* Highlight wrap around the annotated passage */
+.ann-highlight {
+  border-radius: 2px;
+  padding: 0 1px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.ann-highlight.mode-illuminate { background: rgba(184,160,232,0.18); border-bottom: 1px solid rgba(184,160,232,0.45); }
+.ann-highlight.mode-council    { background: rgba(212,132,90,0.15);  border-bottom: 1px solid rgba(212,132,90,0.4); }
+.ann-highlight.mode-connect    { background: rgba(122,184,158,0.15); border-bottom: 1px solid rgba(122,184,158,0.4); }
+.ann-highlight.mode-note       { background: rgba(201,168,76,0.15);  border-bottom: 1px solid rgba(201,168,76,0.4); }
+.ann-highlight:hover.mode-illuminate { background: rgba(184,160,232,0.32); }
+.ann-highlight:hover.mode-council    { background: rgba(212,132,90,0.28); }
+.ann-highlight:hover.mode-connect    { background: rgba(122,184,158,0.28); }
+.ann-highlight:hover.mode-note       { background: rgba(201,168,76,0.28); }
+
+/* Small superscript badge on each highlight */
+.ann-marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.58rem;
+  font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  line-height: 1;
+  min-width: 14px;
+  height: 14px;
+  padding: 0 3px;
+  border-radius: 8px;
+  vertical-align: super;
+  margin-left: 1px;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.ann-marker:hover { transform: scale(1.2); box-shadow: 0 1px 4px rgba(0,0,0,0.4); }
+.ann-marker.mode-illuminate { background: var(--lilac);  color: var(--slate); }
+.ann-marker.mode-council    { background: var(--copper); color: var(--slate); }
+.ann-marker.mode-connect    { background: var(--sage);   color: var(--slate); }
+.ann-marker.mode-note       { background: var(--honey);  color: var(--slate); }
+
+/* Collapsed state */
+.annotation-card.collapsed .annotation-body { display: none; }
+
+/* Source citation in annotations */
+.annotation-passage {
+  margin-bottom: 9px; padding: 7px 10px;
+  background: var(--panel); border-radius: 6px;
+  border-left: 2px solid var(--border-hi);
+  font-size: 0.75rem; color: var(--text-dim); font-style: italic; line-height: 1.5;
+}
+
+/* Follow-up row */
+.annotation-followup {
+  margin-top: 10px; padding-top: 9px; border-top: 1px solid var(--border);
+  display: flex; gap: 5px;
+}
+.followup-input {
+  flex: 1; background: var(--panel); border: 1px solid var(--border);
+  border-radius: 6px; padding: 5px 9px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.75rem; color: var(--text);
+  outline: none; transition: border-color var(--transition);
+}
+.followup-input:focus { border-color: rgba(232,162,69,0.4); }
+.followup-input::placeholder { color: var(--text-dim); }
+.btn-followup {
+  padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border-hi);
+  background: var(--raised); color: var(--text-dim);
+  font-size: 0.72rem; font-weight: 600; cursor: pointer;
+  transition: all var(--transition);
+}
+.btn-followup:hover { color: var(--amber); border-color: rgba(232,162,69,0.3); background: var(--amber-dim); }
+
+/* Save session button */
+.margin-footer {
+  padding: 10px 12px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.btn-save-session {
+  flex: 1; padding: 9px 14px;
+  background: var(--amber-dim); border: 1px solid rgba(232,162,69,0.28);
+  border-radius: 8px; color: var(--amber);
+  font-family: 'DM Sans', sans-serif; font-size: 0.79rem; font-weight: 600;
+  cursor: pointer; transition: all var(--transition);
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn-save-session:hover { background: rgba(232,162,69,0.2); transform: translateY(-1px); }
+.btn-save-session:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+.btn-save-session.save-done { color: var(--sage); border-color: rgba(122,184,158,0.4); background: var(--sage-dim); }
+
+/* ── NOTE MODE ── */
+.annotation-card.mode-note { border-left: 3px solid var(--honey); }
+.note-textarea {
+  width: 100%; min-height: 72px;
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 6px; padding: 8px 10px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+  line-height: 1.6; color: var(--text); resize: vertical;
+  outline: none; transition: border-color var(--transition);
+}
+.note-textarea:focus { border-color: rgba(201,168,76,0.45); }
+.note-textarea::placeholder { color: var(--text-dim); }
+.note-save-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 7px;
+}
+.note-char-count { font-size: 0.63rem; color: var(--text-faint); }
+.btn-note-save {
+  padding: 4px 11px; border-radius: 6px;
+  background: var(--honey-dim); border: 1px solid rgba(201,168,76,0.35);
+  color: var(--honey); font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem; font-weight: 600; cursor: pointer;
+  transition: all var(--transition);
+}
+.btn-note-save:hover { background: rgba(201,168,76,0.22); }
+.note-saved-text {
+  font-size: 0.79rem; line-height: 1.6; color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+}
+.note-edit-btn {
+  background: none; border: none; color: var(--text-faint);
+  font-size: 0.65rem; cursor: pointer; padding: 2px 6px;
+  transition: color var(--transition);
+}
+.note-edit-btn:hover { color: var(--honey); }
+.popup-btn-note {
+  background: var(--honey-dim); color: var(--honey); border-color: rgba(201,168,76,0.3);
+}
+.popup-btn-note:hover { background: rgba(201,168,76,0.22); border-color: rgba(201,168,76,0.5); }
+.btn-mode.active-note { background: var(--honey-dim); border-color: rgba(201,168,76,0.4); color: var(--honey); }
+
+/* ── THEME SWITCHER ── */
+.theme-switcher {
+  display: flex; align-items: center; gap: 3px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 3px;
+}
+.btn-theme {
+  padding: 3px 9px; border-radius: 5px; border: none;
+  font-family: 'DM Sans', sans-serif; font-size: 0.64rem; font-weight: 600;
+  cursor: pointer; color: var(--text-dim); background: transparent;
+  transition: all var(--transition); letter-spacing: 0.03em;
+}
+.btn-theme:hover { color: var(--text); }
+.btn-theme.active { background: var(--raised); color: var(--amber); }
+
+/* ── READING CONTROLS (font size + font family) ── */
+.reading-controls {
+  display: flex; align-items: center; gap: 4px;
+}
+
+.reading-controls-divider {
+  width: 1px; height: 16px;
+  background: var(--border-hi);
+  margin: 0 2px;
+  flex-shrink: 0;
+}
+
+.size-switcher, .font-switcher {
+  display: flex; align-items: center; gap: 2px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 3px;
+}
+
+.btn-size {
+  padding: 2px 8px; border-radius: 5px; border: none;
+  font-family: 'DM Sans', sans-serif; font-weight: 700;
+  cursor: pointer; color: var(--text-dim); background: transparent;
+  transition: all var(--transition);
+  line-height: 1;
+}
+.btn-size:first-child { font-size: 0.6rem; }
+.btn-size:last-child  { font-size: 0.82rem; }
+.btn-size:hover { color: var(--text); }
+.btn-size.active { background: var(--raised); color: var(--amber); }
+
+.btn-font {
+  padding: 3px 9px; border-radius: 5px; border: none;
+  font-size: 0.64rem; font-weight: 600;
+  cursor: pointer; color: var(--text-dim); background: transparent;
+  transition: all var(--transition);
+}
+.btn-font:hover { color: var(--text); }
+.btn-font.active { background: var(--raised); color: var(--amber); }
+.btn-font[data-font="serif"]  { font-family: 'Fraunces', serif; font-style: italic; }
+.btn-font[data-font="sans"]   { font-family: 'DM Sans', sans-serif; }
+
+/* Chapter text responds to reading-size & reading-font data attrs on reading-body */
+#reading-body[data-size="sm"]  .chapter-text { font-size: 0.88rem; }
+#reading-body[data-size="md"]  .chapter-text { font-size: 1.01rem; }
+#reading-body[data-size="lg"]  .chapter-text { font-size: 1.18rem; }
+#reading-body[data-size="xl"]  .chapter-text { font-size: 1.35rem; line-height: 1.9; }
+
+#reading-body[data-font="sans"] .chapter-text,
+#reading-body[data-font="sans"] .chapter-text h1,
+#reading-body[data-font="sans"] .chapter-text h2 {
+  font-family: 'DM Sans', sans-serif;
+  font-style: normal;
+}
+#reading-body[data-font="serif"] .chapter-text,
+#reading-body[data-font="serif"] .chapter-text h1,
+#reading-body[data-font="serif"] .chapter-text h2 {
+  font-family: 'Fraunces', serif;
+}
+
+/* ── DYSLEXIC READING MODE ── */
+#reading-body[data-font="dyslexic"] .chapter-text,
+#reading-body[data-font="dyslexic"] .chapter-text p,
+#reading-body[data-font="dyslexic"] .chapter-text li,
+#reading-body[data-font="dyslexic"] .chapter-text blockquote {
+  font-family: 'OpenDyslexic', 'Arial', sans-serif;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  word-spacing: 0.22em;
+  line-height: 1.95;
+}
+#reading-body[data-font="dyslexic"] .chapter-text h1,
+#reading-body[data-font="dyslexic"] .chapter-text h2,
+#reading-body[data-font="dyslexic"] .chapter-text h3 {
+  font-family: 'OpenDyslexic', 'Arial', sans-serif;
+  font-style: normal;
+  letter-spacing: 0.04em;
+}
+/* Slightly wider paragraphs help tracking */
+#reading-body[data-font="dyslexic"] .chapter-text p { margin-bottom: 1.6em; }
+
+/* Dyslexic button label styling */
+.btn-font[data-font="dyslexic"] {
+  font-family: 'OpenDyslexic', 'Arial', sans-serif;
+  font-size: 0.58rem;
+  letter-spacing: 0.01em;
+}
+
+/* ── LINE-FOCUS RULER ── */
+.reading-pane { position: relative; }
+
+/* The ruler itself: a fixed-height transparent band that "cuts out" of a dark overlay */
+#line-focus-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;         /* never blocks text selection */
+  z-index: 10;
+  display: none;                /* hidden until activated */
+  /* Two-zone gradient: dim above ruler, clear band, dim below ruler */
+  background:
+    linear-gradient(to bottom,
+      rgba(0,0,0,0.55) 0%,
+      rgba(0,0,0,0.55) var(--ruler-start, 40%),
+      rgba(0,0,0,0)    var(--ruler-start, 40%),
+      rgba(0,0,0,0)    var(--ruler-end,   60%),
+      rgba(0,0,0,0.55) var(--ruler-end,   60%),
+      rgba(0,0,0,0.55) 100%
+    );
+}
+/* Light-theme ruler uses a lighter dimming */
+[data-theme="light"] #line-focus-overlay {
+  background:
+    linear-gradient(to bottom,
+      rgba(255,255,255,0.72) 0%,
+      rgba(255,255,255,0.72) var(--ruler-start, 40%),
+      rgba(255,255,255,0)    var(--ruler-start, 40%),
+      rgba(255,255,255,0)    var(--ruler-end,   60%),
+      rgba(255,255,255,0.72) var(--ruler-end,   60%),
+      rgba(255,255,255,0.72) 100%
+    );
+}
+/* Sepia theme */
+[data-theme="sepia"] #line-focus-overlay {
+  background:
+    linear-gradient(to bottom,
+      rgba(15,10,5,0.60) 0%,
+      rgba(15,10,5,0.60) var(--ruler-start, 40%),
+      rgba(15,10,5,0)    var(--ruler-start, 40%),
+      rgba(15,10,5,0)    var(--ruler-end,   60%),
+      rgba(15,10,5,0.60) var(--ruler-end,   60%),
+      rgba(15,10,5,0.60) 100%
+    );
+}
+
+/* Ruler active state on reading-body */
+#reading-body.line-focus-active ~ #line-focus-overlay,
+.reading-pane.line-focus-active #line-focus-overlay {
+  display: block;
+}
+
+/* Focus toggle button */
+.btn-focus {
+  padding: 3px 9px; border-radius: 5px; border: none;
+  font-size: 0.62rem; font-weight: 600;
+  cursor: pointer; color: var(--text-dim); background: transparent;
+  transition: all var(--transition); white-space: nowrap;
+}
+.btn-focus:hover { color: var(--text); }
+.btn-focus.active {
+  background: var(--raised);
+  color: var(--amber);
+}
+
+/* ── COPY BUTTON ── */
+.btn-copy-session {
+  padding: 9px 12px;
+  background: var(--surface); border: 1px solid var(--border-hi);
+  border-radius: 8px; color: var(--text-dim);
+  font-family: 'DM Sans', sans-serif; font-size: 0.79rem; font-weight: 600;
+  cursor: pointer; transition: all var(--transition);
+  display: flex; align-items: center; gap: 5px; flex-shrink: 0;
+}
+.btn-copy-session:hover { color: var(--amber); border-color: rgba(232,162,69,0.3); background: var(--amber-dim); }
+.btn-copy-session:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-copy-session.copy-done { color: var(--sage); border-color: rgba(122,184,158,0.4); background: var(--sage-dim); }
+
+/* ── SEND TO ACTIVITY BUILDER ── */
+.btn-send-to-builder {
+  width: 100%; padding: 9px 14px; margin-top: 4px;
+  background: var(--sage-dim, rgba(122,184,158,0.12));
+  border: 1px solid rgba(122,184,158,0.32);
+  border-radius: 8px; color: var(--sage, #7ab89e);
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.02em;
+  cursor: pointer; transition: all var(--transition);
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+}
+.btn-send-to-builder:hover { background: rgba(122,184,158,0.22); transform: translateY(-1px); border-color: rgba(122,184,158,0.55); }
+.btn-send-to-builder:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+.btn-send-to-builder.send-done { color: var(--amber); border-color: rgba(232,162,69,0.4); background: var(--amber-dim); }
+
+/* ── UTILITIES ── */
+.hidden { display: none !important; }
+button { cursor: pointer; }
+
+/* ── SUITE NAV ── */
+.suite-nav {
+  background: rgba(0,0,0,0.18);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  position: sticky;
+  top: 56px; /* sits below the 56px topbar */
+  z-index: 299;
+  backdrop-filter: blur(8px);
+  flex-shrink: 0;
+}
+/* Light theme: slightly different base */
+[data-theme="light"] .suite-nav  { background: rgba(0,0,0,0.04); }
+[data-theme="sepia"] .suite-nav  { background: rgba(0,0,0,0.15); }
+
+.suite-nav-home {
+  font-size: 0.63rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.18s;
+  flex-shrink: 0;
+}
+.suite-nav-home:hover { color: var(--text); }
+
+.suite-nav-tools { display: flex; align-items: center; gap: 4px; }
+.suite-nav-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.63rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+/* Companion active — amber, themed */
+.suite-nav-pill.pill-companion { color: var(--amber); border-color: var(--amber-glow); }
+.suite-nav-pill.pill-companion.pill-active { background: var(--amber-dim); cursor: default; pointer-events: none; font-weight: 700; }
+/* Other tools — use full --text color for legibility, soften with border only */
+.suite-nav-pill.pill-builder { color: var(--text); border-color: var(--border-hi); }
+.suite-nav-pill.pill-builder:hover { background: var(--surface); border-color: var(--amber-glow); color: var(--amber); }
+.suite-nav-pill.pill-nova    { color: var(--text); border-color: var(--border-hi); }
+.suite-nav-pill.pill-nova:hover    { background: var(--surface); border-color: var(--amber-glow); color: var(--amber); }
+.suite-nav-pill.pill-rhizo   { color: var(--text); border-color: var(--border-hi); }
+.suite-nav-pill.pill-rhizo:hover   { background: var(--surface); border-color: var(--amber-glow); color: var(--amber); }
+.suite-nav-pill.pill-sylva   { color: var(--sage); border-color: var(--sage-glow); }
+.suite-nav-pill.pill-sylva:hover   { background: var(--sage-dim); border-color: var(--sage-glow); color: var(--sage); }
+.suite-nav-pill.pill-sylva.pill-active { background: var(--sage-dim); border-color: var(--sage-glow); color: var(--sage); font-weight: 700; cursor: default; pointer-events: none; }
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE — TABLET & MOBILE
+   ══════════════════════════════════════════════════════════ */
+
+/* Tablet: shrink sidebars */
+@media (max-width: 1024px) {
+  .source-panel { width: 220px; }
+  .source-panel.collapsed { width: 38px; }
+  .margin-panel { width: 280px; }
+  .margin-panel.collapsed { width: 44px; }
+  .suite-nav-pill { padding: 3px 8px; font-size: 0.65rem; }
+}
+
+/* Mobile: full-width stack, sidebars become bottom drawers */
+@media (max-width: 768px) {
+  body { overflow: hidden; }
+
+  /* Suite nav — hide tool links, keep home */
+  .suite-nav { padding: 0 12px; }
+  .suite-nav-tools { display: none; }
+
+  /* App shell stacks vertically */
+  .app-shell {
+    flex-direction: column;
+    height: calc(100vh - 56px - 34px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Source panel becomes a bottom drawer */
+  .source-panel {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    width: 100% !important;
+    max-height: 70vh;
+    z-index: 200;
+    border-right: none;
+    border-top: 1px solid var(--border-hi);
+    border-radius: 16px 16px 0 0;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    overflow-y: auto;
+  }
+  .source-panel.mobile-open {
+    transform: translateY(0);
+  }
+  /* Cancel collapsed state on mobile */
+  .source-panel.collapsed {
+    width: 100% !important;
+    transform: translateY(100%);
+  }
+  .source-panel.collapsed.mobile-open {
+    transform: translateY(0);
+  }
+  .source-panel.collapsed .panel-header-content,
+  .source-panel.collapsed .panel-body,
+  .source-panel.collapsed .panel-footer { display: flex; }
+  .source-panel.collapsed .panel-header { flex-direction: row; height: auto; }
+  /* Hide vertical collapse buttons on mobile */
+  .panel-collapse-btn { display: none; }
+  .margin-collapse-btn { display: none; }
+
+  /* Margin panel also becomes a bottom drawer (from right) */
+  .margin-panel {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    width: 100% !important;
+    max-height: 65vh;
+    z-index: 199;
+    border-left: none;
+    border-top: 1px solid var(--border-hi);
+    border-radius: 16px 16px 0 0;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+  .margin-panel.mobile-open {
+    transform: translateY(0);
+  }
+  /* Cancel collapsed state on mobile */
+  .margin-panel.collapsed {
+    width: 100% !important;
+    transform: translateY(100%);
+  }
+  .margin-panel.collapsed.mobile-open {
+    transform: translateY(0);
+  }
+  .margin-panel.collapsed .margin-body,
+  .margin-panel.collapsed .margin-footer { display: flex; }
+  .margin-panel.collapsed .margin-header { flex-direction: row; height: auto; }
+  .margin-panel.collapsed .margin-header > div,
+  .margin-panel.collapsed .btn-clear-margin { opacity: 1; pointer-events: auto; width: auto; height: auto; padding: revert; margin: revert; overflow: visible; }
+  /* Nudge pills — reposition for mobile */
+  .margin-scroll-nudge { bottom: 12px; }
+  .margin-scroll-nudge-top { top: 12px; }
+
+  /* Reading pane takes full width */
+  .reading-pane {
+    flex: 1;
+    width: 100%;
+    overflow-y: auto;
+  }
+  .reading-body { padding: 16px; }
+
+  /* Floating mobile toolbar at bottom of reading pane */
+  .mobile-toolbar {
+    display: flex !important;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 52px;
+    background: var(--surface);
+    border-top: 1px solid var(--border-hi);
+    z-index: 300;
+    align-items: stretch;
+  }
+  .mobile-toolbar-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    background: none;
+    border: none;
+    border-right: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+    padding: 0;
+  }
+  .mobile-toolbar-btn:last-child { border-right: none; }
+  .mobile-toolbar-btn .tb-icon { font-size: 1.1rem; line-height: 1; }
+  .mobile-toolbar-btn.active { color: var(--amber); background: rgba(232,162,69,0.07); }
+  .mobile-toolbar-btn:hover { color: var(--text); background: var(--surface-hi); }
+
+  /* Backdrop for drawers */
+  .mobile-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 198;
+  }
+  .mobile-backdrop.visible { display: block; }
+
+  /* Push reading pane up so toolbar doesn't overlap text */
+  .reading-pane { padding-bottom: 52px; }
+
+  /* Topbar — compact */
+  .topbar { padding: 0 12px; }
+  .topbar-brand-name { display: none; }
+
+  /* Selection popup — ensure it stays on screen */
+  .selection-popup { max-width: calc(100vw - 24px); }
+
+  /* Theme strip on mobile */
+  .theme-strip { flex-wrap: wrap; gap: 4px; }
+}
+
+/* Prevent drawers being clipped on very small screens */
+@media (max-width: 400px) {
+  .source-panel, .margin-panel { max-height: 80vh; }
+}
+
+/* ── Session restore banner ── */
+.session-restore-banner {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 14px 9px 12px;
+  background: linear-gradient(135deg, rgba(122,184,158,0.14) 0%, rgba(122,184,158,0.06) 100%);
+  border-bottom: 1px solid rgba(122,184,158,0.25);
+  font-size: 0.78rem; color: var(--text-dim);
+  flex-shrink: 0;
+}
+.session-restore-banner .restore-icon { font-size: 1rem; opacity: 0.7; flex-shrink: 0; }
+.session-restore-banner .restore-msg { flex: 1; line-height: 1.4; }
+.session-restore-banner .restore-msg strong { color: var(--text); }
+.btn-restore-dismiss {
+  font-size: 0.72rem; padding: 3px 9px;
+  background: transparent; border: 1px solid rgba(122,184,158,0.4);
+  border-radius: 20px; color: var(--sage); cursor: pointer;
+  font-family: 'DM Sans', sans-serif; white-space: nowrap;
+  transition: all var(--transition); flex-shrink: 0;
+}
+.btn-restore-dismiss:hover { background: rgba(122,184,158,0.15); }
+.btn-restore-clear {
+  font-size: 0.72rem; padding: 3px 9px;
+  background: transparent; border: 1px solid rgba(180,110,80,0.3);
+  border-radius: 20px; color: var(--copper); cursor: pointer;
+  font-family: 'DM Sans', sans-serif; white-space: nowrap;
+  transition: all var(--transition); flex-shrink: 0;
+}
+.btn-restore-clear:hover { background: rgba(180,110,80,0.1); }
+
+/* ── Suite theme toggle button ── */
+.btn-suite-theme {
+  background: transparent;
+  border: 1px solid rgba(128,128,128,0.25);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.65;
+  transition: opacity 0.2s, background 0.2s;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.btn-suite-theme:hover { opacity: 1; background: rgba(128,128,128,0.12); }
+
+/* ── TTS READER ── */
+mark.tts-active-sentence {
+  background: rgba(200,160,60,0.30);
+  border-radius: 2px;
+  color: inherit;
+  transition: background 0.15s;
+}
+[data-theme="dark"] mark.tts-active-sentence,
+[data-theme=""] mark.tts-active-sentence {
+  background: rgba(200,160,60,0.22);
+}
+.tts-reader-bar {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 8px 16px;
+  background: var(--panel); border-top: 1px solid var(--border-hi);
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+  font-size: 0.75rem; flex-shrink: 0;
+}
+.tts-reader-bar.hidden { display: none; }
+.tts-bar-controls { display: flex; gap: 5px; }
+.btn-tts {
+  padding: 4px 11px; border-radius: 6px; font-size: 0.72rem; font-weight: 600;
+  cursor: pointer; border: 1px solid var(--border-hi);
+  background: var(--surface); color: var(--text-mid);
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn-tts:hover { background: var(--surface-hi); }
+.btn-tts-stop { color: var(--copper, #c87040); }
+.tts-bar-speed { display: flex; align-items: center; gap: 4px; }
+.tts-bar-voice { display: flex; align-items: center; gap: 5px; }
+.tts-bar-label {
+  font-size: 0.62rem; color: var(--text-faint); letter-spacing: 0.05em;
+  text-transform: uppercase; white-space: nowrap;
+}
+.btn-tts-speed {
+  padding: 3px 7px; border-radius: 5px; font-size: 0.67rem; font-weight: 600;
+  cursor: pointer; border: 1px solid var(--border);
+  background: transparent; color: var(--text-dim);
+  transition: background 0.12s, color 0.12s;
+}
+.btn-tts-speed.active {
+  background: rgba(160,120,200,0.14); color: var(--lilac, #a07ac8);
+  border-color: rgba(160,120,200,0.4);
+}
+.btn-tts-speed:hover:not(.active) { background: var(--surface-hi); }
+#tts-voice-select {
+  font-size: 0.72rem; background: var(--surface); color: var(--text);
+  border: 1px solid var(--border-hi); border-radius: 5px;
+  padding: 3px 6px; max-width: 170px; cursor: pointer;
+}
+.btn-tts-close {
+  margin-left: auto; font-size: 1rem; opacity: 0.45; cursor: pointer;
+  background: none; border: none; color: var(--text-dim); padding: 1px 5px;
+  line-height: 1;
+}
+.btn-tts-close:hover { opacity: 1; }
+/* Speak button in selection popup */
+.popup-btn-speak { border-color: rgba(160,120,200,0.5); }
+/* TTS open button in topbar */
+.btn-tts-open {
+  background: transparent; border: none; cursor: pointer;
+  font-size: 0.95rem; opacity: 0.55; padding: 2px 5px; line-height: 1;
+  color: inherit; transition: opacity 0.18s;
+}
+.btn-tts-open:hover { opacity: 1; }
+
+</style>
+<!-- PDF.js (ES module) for client-side PDF text extraction -->
+<script type="module">
+  import * as pdfjs from 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.min.mjs';
+  pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.worker.min.mjs';
+  window.pdfjsLib = pdfjs;
+</script>
+<!-- mammoth.js for client-side .docx text extraction -->
+<script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar" role="banner">
+  <div class="topbar-brand">
+    <img src="https://openpress.trubox.ca/wp-content/uploads/sites/2142/2023/10/cropped-openpress_logo_colour-1.png"
+         alt="TRU Open Press" class="topbar-logo"
+         onerror="this.style.display='none'">
+    <div class="brand-text">
+      <div class="brand-name">Companion</div>
+      <div class="brand-sub">Reading in the Margins · TRU Open Press</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="reading-controls" role="group" aria-label="Reading appearance">
+      <div class="size-switcher" aria-label="Text size">
+        <button class="btn-size" data-size="sm" title="Smaller text">A−</button>
+        <button class="btn-size active" data-size="md" title="Default text size">A</button>
+        <button class="btn-size" data-size="lg" title="Larger text">A+</button>
+        <button class="btn-size" data-size="xl" title="Largest text">A⁺⁺</button>
+      </div>
+      <div class="reading-controls-divider" aria-hidden="true"></div>
+      <div class="font-switcher" aria-label="Font style">
+        <button class="btn-font active" data-font="serif" title="Serif font (Fraunces)">Serif</button>
+        <button class="btn-font" data-font="sans" title="Sans-serif font (DM Sans)">Sans</button>
+        <button class="btn-font" data-font="dyslexic" title="OpenDyslexic — dyslexia-friendly typeface with wider spacing">Dyslexic</button>
+      </div>
+      <div class="reading-controls-divider" aria-hidden="true"></div>
+      <button class="btn-focus" id="btn-line-focus" title="Line focus — dims text above and below your reading position to reduce visual tracking loss" aria-pressed="false">⊟ Focus</button>
+      <button class="btn-tts-open" id="btn-tts-open" title="Read chapter aloud" aria-label="Read chapter aloud">🔊</button>
+    </div>
+    <div class="theme-switcher" role="group" aria-label="Reading theme">
+      <button class="btn-theme active" data-theme="dark" title="Dark theme">Dark</button>
+      <button class="btn-theme" data-theme="light" title="Light theme">Light</button>
+      <button class="btn-theme" data-theme="sepia" title="Sepia theme">Sepia</button>
+    </div>
+    <div class="status-pill" id="status-pill">
+      <span class="status-dot"></span>
+      <span id="status-text">Not connected</span>
+    </div>
+    <div class="topbar-badge">Alpha</div>
+  </div>
+</header>
+
+<!-- SUITE NAV -->
+<nav class="suite-nav" aria-label="Open Margins suite">
+  <a href="../index.html" class="suite-nav-home">← Open Margins</a>
+  <div class="suite-nav-tools">
+    <span class="suite-nav-pill pill-companion pill-active" aria-current="page">✦ Companion</span>
+    <a href="../tru-oer-activity-builder.html" class="suite-nav-pill pill-builder">⬡ Activity Builder</a>
+    <a href="../nova/nova.html" class="suite-nav-pill pill-nova">✺ Nova</a>
+    <a href="../rhizo/rhizo.html" class="suite-nav-pill pill-rhizo">∿ Rhizo</a>
+    <a href="../sylva/sylva.html" class="suite-nav-pill pill-sylva">⟡ Sylva</a>
+  </div>
+  <button class="btn-suite-theme" id="btn-suite-theme" aria-label="Toggle theme" title="Toggle theme">🌙</button>
+</nav>
+
+<div class="app-shell">
+
+  <!-- LEFT PANEL: Source -->
+  <aside class="source-panel" role="complementary" aria-label="Source material">
+
+    <div class="panel-header">
+      <div class="panel-header-content">
+        <div class="section-label">Proxy & Connection</div>
+        <div class="proxy-row">
+          <input class="proxy-input" id="proxy-url"
+                 type="url" value="http://localhost:3001/api/generate"
+                 placeholder="http://localhost:3001/api/generate"
+                 spellcheck="false" autocomplete="off"
+                 aria-label="Proxy server URL">
+          <button class="btn-connect" id="btn-connect">Connect</button>
+        </div>
+        <div class="connect-msg" id="connect-msg">Enter your proxy URL and connect to begin.</div>
+      </div>
+      <button class="panel-collapse-btn" id="panel-collapse-btn" title="Collapse panel" aria-label="Collapse source panel">
+        <span class="collapse-icon">‹</span>
+        <svg class="collapse-book" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="9" y1="7" x2="16" y2="7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="9" y1="11" x2="14" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span class="collapse-label">Open</span>
+      </button>
+    </div>
+
+    <div class="panel-body" id="panel-body">
+
+      <!-- Book browser -->
+      <div class="section-label" style="margin-bottom:8px">TRU Open Press Books</div>
+
+      <div id="books-loading" class="books-loading">
+        <div class="books-spinner"></div>
+        <span>Loading library…</span>
+      </div>
+      <div id="books-error" class="books-error hidden">
+        Failed to load library.
+        <button class="books-retry-btn" id="books-retry">Retry</button>
+      </div>
+
+      <div id="books-ready" class="hidden">
+        <div id="book-list-view">
+          <input class="book-search" id="book-search" type="text" placeholder="Search books…" autocomplete="off" aria-label="Search books">
+          <div class="book-count" id="book-count"></div>
+          <div class="book-list" id="book-list"></div>
+        </div>
+
+        <div id="book-focus-view" class="hidden">
+          <button class="book-back-btn" id="book-back">← All books</button>
+          <div class="selected-book-card" id="selected-book-card"></div>
+          <div id="toc-loading" class="toc-loading hidden">
+            <div class="books-spinner"></div><span>Loading contents…</span>
+          </div>
+          <div id="toc-selectors" class="hidden">
+            <div class="field-label" style="font-size:0.63rem;font-weight:600;color:var(--text-dim);margin-bottom:5px">Part</div>
+            <select class="toc-select" id="part-select">
+              <option value="">— select a part —</option>
+            </select>
+            <div class="field-label toc-gap" style="font-size:0.63rem;font-weight:600;color:var(--text-dim);margin-bottom:5px;margin-top:7px">Chapter</div>
+            <select class="toc-select" id="chapter-select" disabled>
+              <option value="">— select a chapter —</option>
+            </select>
+            <div class="chapter-meta hidden" id="chapter-meta"></div>
+            <button class="btn-load-chapter hidden" id="btn-load-chapter">+ Add chapter to sources</button>
+            <div class="chapter-notice hidden" id="chapter-notice"></div>
+            <!-- Source tray -->
+            <div class="source-tray" id="source-tray"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="context-divider"></div>
+
+      <!-- URL fetch -->
+      <div class="oer-source-sep">or add from URL</div>
+      <div class="url-fetch-row">
+        <input class="url-fetch-input" id="url-fetch-input" type="url" placeholder="https://…" autocomplete="off" spellcheck="false">
+        <button class="btn-fetch-url" id="btn-fetch-url">Fetch</button>
+      </div>
+      <div class="url-fetch-status" id="url-fetch-status"></div>
+
+      <!-- File upload -->
+      <div class="oer-source-sep">or upload a file</div>
+      <button class="file-upload-btn" id="btn-file-upload">📄 Upload PDF or Word document…</button>
+      <input type="file" id="file-upload-input" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+      <div class="file-upload-status" id="file-upload-status"></div>
+
+      <div class="context-divider"></div>
+
+      <!-- Paste -->
+      <button class="paste-toggle-btn" id="paste-toggle">✎ Paste text instead</button>
+      <div id="paste-section" class="hidden" style="margin-top:7px">
+        <textarea class="oer-textarea" id="oer-text"
+                  placeholder="Paste a chapter or excerpt here…"
+                  spellcheck="true" rows="7"></textarea>
+        <div class="word-count" id="word-count">0 words</div>
+      </div>
+
+      <div class="context-divider"></div>
+
+      <!-- Mode guide -->
+      <div class="mode-legend">
+        <div class="mode-legend-title">Companion modes</div>
+        <div class="mode-item">
+          <div class="mode-pip" style="background:var(--lilac)"></div>
+          <div>
+            <div class="mode-name" style="color:var(--lilac)">Illuminate</div>
+            <div class="mode-desc">Plain-language explanation, with examples and analogies drawn from the chapter.</div>
+          </div>
+        </div>
+        <div class="mode-item">
+          <div class="mode-pip" style="background:var(--copper)"></div>
+          <div>
+            <div class="mode-name" style="color:var(--copper)">Council</div>
+            <div class="mode-desc">Multiple perspectives — whose voices would agree, push back, or complicate this?</div>
+          </div>
+        </div>
+        <div class="mode-item">
+          <div class="mode-pip" style="background:var(--sage)"></div>
+          <div>
+            <div class="mode-name" style="color:var(--sage)">Connect</div>
+            <div class="mode-desc">Real-world examples, cross-disciplinary links, and current applications.</div>
+          </div>
+        </div>
+        <div class="mode-item">
+          <div class="mode-pip" style="background:var(--honey)"></div>
+          <div>
+            <div class="mode-name" style="color:var(--honey)">Note</div>
+            <div class="mode-desc">Your own thought, reaction, or question — no AI. Saved with your session.</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /panel-body -->
+
+    <div class="panel-footer">
+      <button class="btn-load-reading" id="btn-load-reading" disabled>
+        <span>📖</span>
+        <span>Open for reading</span>
+      </button>
+    </div>
+
+  </aside>
+
+  <!-- CENTRE: Reading pane -->
+  <main class="reading-pane" id="reading-pane">
+
+    <div class="reading-header" id="reading-header">
+      <div class="reading-chapter-title" id="reading-chapter-title">No chapter loaded</div>
+      <div class="reading-header-right">
+        <div class="reading-hint" id="reading-hint">Select text, then choose a mode →</div>
+        <div class="mode-toolbar" id="mode-toolbar">
+          <button class="btn-mode" id="btn-mode-illuminate" data-mode="illuminate">
+            <span class="mode-dot" style="background:var(--lilac)"></span>
+            Illuminate
+          </button>
+          <button class="btn-mode" id="btn-mode-council" data-mode="council">
+            <span class="mode-dot" style="background:var(--copper)"></span>
+            Council
+          </button>
+          <button class="btn-mode" id="btn-mode-connect" data-mode="connect">
+            <span class="mode-dot" style="background:var(--sage)"></span>
+            Connect
+          </button>
+          <button class="btn-mode" id="btn-mode-note" data-mode="note">
+            <span class="mode-dot" style="background:var(--honey)"></span>
+            Note
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Line-focus ruler overlay (pointer-events:none — never blocks selection) -->
+    <div id="line-focus-overlay" aria-hidden="true"></div>
+
+    <div class="reading-body" id="reading-body">
+      <div class="reading-idle" id="reading-idle">
+        <div class="idle-glyph">¶</div>
+        <div class="idle-title">Read with a companion in the margin</div>
+        <div class="idle-sub">Load a chapter from TRU Open Press — or paste any text — then select a passage and ask it to illuminate, interrogate, or connect.</div>
+        <div class="idle-modes">
+          <span class="idle-mode-chip chip-illuminate">✦ Illuminate</span>
+          <span class="idle-mode-chip chip-council">⊛ Council</span>
+          <span class="idle-mode-chip chip-connect">⬡ Connect</span>
+          <span class="idle-mode-chip chip-note">✎ Note</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TTS reader bar -->
+    <div id="tts-reader-bar" class="tts-reader-bar hidden" role="toolbar" aria-label="Read aloud controls">
+      <div class="tts-bar-controls">
+        <button class="btn-tts" id="btn-tts-play">▶ Play</button>
+        <button class="btn-tts hidden" id="btn-tts-pause">⏸ Pause</button>
+        <button class="btn-tts hidden" id="btn-tts-resume">▶ Resume</button>
+        <button class="btn-tts btn-tts-stop" id="btn-tts-stop">■ Stop</button>
+      </div>
+      <div class="tts-bar-speed">
+        <span class="tts-bar-label">Speed</span>
+        <button class="btn-tts-speed" data-rate="0.5">½×</button>
+        <button class="btn-tts-speed active" data-rate="1">1×</button>
+        <button class="btn-tts-speed" data-rate="1.5">1.5×</button>
+        <button class="btn-tts-speed" data-rate="2">2×</button>
+      </div>
+      <div class="tts-bar-voice">
+        <span class="tts-bar-label">Voice</span>
+        <select id="tts-voice-select" aria-label="Select voice"></select>
+      </div>
+      <button class="btn-tts-close" id="btn-tts-close" aria-label="Close reader">×</button>
+    </div>
+
+  </main>
+
+  <!-- RIGHT PANEL: Margin annotations -->
+  <aside class="margin-panel" role="complementary" aria-label="Margin annotations">
+
+    <div class="margin-header">
+      <button class="margin-collapse-btn" id="margin-collapse-btn" title="Collapse annotations panel" aria-label="Collapse annotations panel">
+        <span class="collapse-icon">›</span>
+        <svg class="collapse-pen" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 20h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="collapse-label">Notes</span>
+      </button>
+      <div>
+        <div class="margin-title">Margin</div>
+        <div class="margin-subtitle">Your annotations appear here</div>
+      </div>
+      <button class="btn-clear-margin" id="btn-clear-margin">Clear all</button>
+    </div>
+
+    <div class="margin-body" id="margin-body">
+      <div class="margin-empty" id="margin-empty">
+        <div class="margin-empty-glyph">✦</div>
+        <div class="margin-empty-text">Select a passage in the reading pane, then choose Illuminate, Council, or Connect.</div>
+      </div>
+      <!-- Annotation cards are appended here in reading order -->
+    </div>
+
+    <!-- Navigation pills: absolutely positioned over the margin panel -->
+    <!-- Top pill: jump back to earlier annotations -->
+    <div class="margin-scroll-nudge-top" id="margin-scroll-nudge-top">
+      <button class="margin-nudge-btn" id="margin-nudge-top-btn" aria-label="Scroll to top of annotations">
+        ↑ <span>earlier annotations</span>
+      </button>
+    </div>
+    <!-- Bottom pill: jump to latest annotation -->
+    <div class="margin-scroll-nudge" id="margin-scroll-nudge">
+      <button class="margin-nudge-btn" id="margin-nudge-btn" aria-label="Scroll to latest annotation">
+        ↓ <span id="nudge-label">latest annotation</span> <span class="nudge-count" id="nudge-count" style="display:none"></span>
+      </button>
+    </div>
+
+    <div class="margin-footer">
+      <div style="display:flex;gap:6px;width:100%">
+        <button class="btn-save-session" id="btn-save-session" disabled>↓ Save session</button>
+        <button class="btn-copy-session" id="btn-copy-session" disabled title="Copy all annotations to clipboard" aria-label="Copy all annotations to clipboard">⎘</button>
+      </div>
+      <button class="btn-send-to-builder" id="btn-send-to-builder" disabled
+              title="Open Activity Builder with this chapter's annotations as activity seeds"
+              aria-label="Send annotations to Activity Builder">
+        ⬡ Send to Activity Builder
+      </button>
+    </div>
+
+  </aside>
+
+</div><!-- /app-shell -->
+
+<!-- Mobile toolbar (visible only on small screens) -->
+<div class="mobile-toolbar" id="mobile-toolbar" style="display:none" role="toolbar" aria-label="Companion navigation">
+  <button class="mobile-toolbar-btn" id="tb-sources" aria-expanded="false" aria-controls="source-panel">
+    <span class="tb-icon">📚</span>Sources
+  </button>
+  <button class="mobile-toolbar-btn" id="tb-read" aria-label="Reading view">
+    <span class="tb-icon">📖</span>Read
+  </button>
+  <button class="mobile-toolbar-btn" id="tb-margins" aria-expanded="false" aria-controls="margin-panel">
+    <span class="tb-icon">✦</span>Margins
+  </button>
+</div>
+<!-- Backdrop for mobile drawers -->
+<div class="mobile-backdrop" id="mobile-backdrop"></div>
+
+<!-- Selection popup (floats over text) -->
+<div id="selection-popup" role="toolbar" aria-label="Companion modes">
+  <button class="popup-btn popup-btn-illuminate" id="popup-illuminate">
+    <span>✦</span> Illuminate
+  </button>
+  <button class="popup-btn popup-btn-council" id="popup-council">
+    <span>⊛</span> Council
+  </button>
+  <button class="popup-btn popup-btn-connect" id="popup-connect">
+    <span>⬡</span> Connect
+  </button>
+  <button class="popup-btn popup-btn-note" id="popup-note">
+    <span>✎</span> Note
+  </button>
+  <button class="popup-btn popup-btn-speak" id="popup-speak">
+    <span>🔊</span> Speak
+  </button>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+//  COMPANION — State
+// ══════════════════════════════════════════════════════════
+
+const PROXY_BASE_DEFAULT = 'http://localhost:3001';
+
+let state = {
+  connected: false,
+  allBooks:  [],
+  bookUrl:   null,
+  bookTitle: null,
+  chapterId: null,
+  chapterTitle: null,
+  loadedText: null,  // kept for compatibility
+  // Multi-source
+  sources: [],       // [{ id, label, icon, text, wordCount }]
+  activeMode: null,  // 'illuminate' | 'council' | 'connect'
+  annotations: [],   // [{id, mode, excerpt, response, ts}]
+  annotationCounter: 0,
+};
+
+// ══════════════════════════════════════════════════════════
+//  UTILITIES
+// ══════════════════════════════════════════════════════════
+
+function esc(str) {
+  return String(str ?? '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function wordCount(txt) {
+  return txt.trim().split(/\s+/).filter(Boolean).length.toLocaleString() + ' words';
+}
+
+function getProxyUrl() {
+  return (document.getElementById('proxy-url').value.trim()
+    || `${PROXY_BASE_DEFAULT}/api/generate`);
+}
+
+function getProxyBase() {
+  return getProxyUrl().replace(/\/api\/generate\/?$/, '');
+}
+
+function getOerText() {
+  const parts = [];
+  state.sources.forEach(s => {
+    parts.push(`=== ${s.label} ===\n${s.text}`);
+  });
+  const pasted = (document.getElementById('oer-text')?.value || '').trim();
+  if (pasted) parts.push(`=== Pasted text ===\n${pasted}`);
+  return parts.join('\n\n');
+}
+
+// ── Multi-source helpers ──
+let _sourceIdCounter = 0;
+
+function addSource(label, icon, text) {
+  const wc = text.trim().split(/\s+/).filter(Boolean).length;
+  state.sources.push({ id: ++_sourceIdCounter, label, icon, text, wordCount: wc });
+  renderSourceTray();
+  updateLoadReadingBtn();
+}
+
+function removeSource(id) {
+  state.sources = state.sources.filter(s => s.id !== id);
+  renderSourceTray();
+  updateLoadReadingBtn();
+}
+
+function renderSourceTray() {
+  const tray = document.getElementById('source-tray');
+  if (!tray) return;
+  if (!state.sources.length) { tray.innerHTML = ''; return; }
+  tray.innerHTML = state.sources.map(s => `
+    <div class="source-chip" data-id="${s.id}">
+      <span class="source-chip-icon">${s.icon}</span>
+      <div class="source-chip-body">
+        <div class="source-chip-label" title="${esc(s.label)}">${esc(s.label)}</div>
+        <div class="source-chip-meta">${s.wordCount.toLocaleString()} words</div>
+      </div>
+      <button class="source-chip-remove" title="Remove this source" data-remove="${s.id}">✕</button>
+    </div>`).join('');
+  tray.querySelectorAll('[data-remove]').forEach(btn =>
+    btn.addEventListener('click', () => removeSource(Number(btn.dataset.remove))));
+}
+
+async function fetchUrl() {
+  const input  = document.getElementById('url-fetch-input');
+  const status = document.getElementById('url-fetch-status');
+  const btn    = document.getElementById('btn-fetch-url');
+  const url    = input.value.trim();
+  if (!url) return;
+  btn.disabled = true; btn.textContent = '…';
+  status.textContent = 'Fetching…'; status.style.color = 'var(--text-dim)';
+  try {
+    const res = await fetch(`${getProxyBase()}/api/fetch-url`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url }),
+    });
+    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error || `HTTP ${res.status}`); }
+    const data = await res.json();
+    if (!data.text) throw new Error('No text returned.');
+    const label = data.title || new URL(url).hostname;
+    addSource(label, '🌐', data.text);
+    status.textContent = `✓ Added "${label}"`;
+    status.style.color = 'var(--amber)';
+    input.value = '';
+  } catch(err) {
+    status.textContent = `✗ ${err.message}`;
+    status.style.color = 'var(--copper)';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Fetch';
+  }
+}
+
+async function handleFileUpload(file) {
+  const status = document.getElementById('file-upload-status');
+  if (!file) return;
+  status.textContent = 'Reading file…'; status.style.color = 'var(--text-dim)';
+  try {
+    const buf = await file.arrayBuffer();
+    let text = '';
+    if (file.name.endsWith('.pdf')) {
+      if (!window.pdfjsLib) throw new Error('PDF library not loaded yet — try again in a moment.');
+      const pdf = await window.pdfjsLib.getDocument({ data: buf }).promise;
+      const pages = [];
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        pages.push(content.items.map(it => it.str).join(' '));
+      }
+      text = pages.join('\n\n');
+    } else if (file.name.match(/\.docx?$/i)) {
+      if (!window.mammoth) throw new Error('Word library not loaded yet — try again in a moment.');
+      const result = await window.mammoth.extractRawText({ arrayBuffer: buf });
+      text = result.value;
+    } else {
+      throw new Error('Unsupported file type. Use PDF or .docx.');
+    }
+    if (!text.trim()) throw new Error('No text could be extracted from this file.');
+    addSource(file.name, '📄', text);
+    status.textContent = `✓ Added "${file.name}"`;
+    status.style.color = 'var(--amber)';
+  } catch(err) {
+    status.textContent = `✗ ${err.message}`;
+    status.style.color = 'var(--copper)';
+  }
+}
+
+function getModeColors(mode) {
+  const map = {
+    illuminate: { accent: 'var(--lilac)', dim: 'var(--lilac-dim)', label: 'Illuminate', icon: '✦' },
+    council:    { accent: 'var(--copper)', dim: 'var(--copper-dim)', label: 'Council', icon: '⊛' },
+    connect:    { accent: 'var(--sage)', dim: 'var(--sage-dim)', label: 'Connect', icon: '⬡' },
+    note:       { accent: 'var(--honey)', dim: 'var(--honey-dim)', label: 'Note', icon: '✎' },
+  };
+  return map[mode] || map.illuminate;
+}
+
+// ══════════════════════════════════════════════════════════
+//  AI
+// ══════════════════════════════════════════════════════════
+
+async function callClaude(prompt) {
+  const res = await fetch(getProxyUrl(), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || `HTTP ${res.status}`);
+  }
+  const body = await res.json();
+  const text = body?.content?.[0]?.text;
+  if (!text) throw new Error('Empty response from Claude.');
+  return text.trim();
+}
+
+// ══════════════════════════════════════════════════════════
+//  CONNECTION
+// ══════════════════════════════════════════════════════════
+
+async function testConnection() {
+  const pill = document.getElementById('status-pill');
+  const txt  = document.getElementById('status-text');
+  const msg  = document.getElementById('connect-msg');
+  const btn  = document.getElementById('btn-connect');
+  btn.disabled = true; btn.textContent = '…'; txt.textContent = 'Connecting…';
+  msg.textContent = 'Connecting to proxy…'; msg.style.color = 'var(--text-dim)';
+  try {
+    const healthUrl = getProxyBase() + '/api/health';
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+    const res = await fetch(healthUrl, { signal: controller.signal }).finally(() => clearTimeout(timeout));
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (data?.status !== 'ok') throw new Error('Unexpected response');
+    state.connected = true;
+    pill.classList.add('connected');
+    txt.textContent = 'Connected';
+    msg.textContent = 'AI ready. Load a chapter, select a passage, and start annotating.';
+    msg.style.color = 'var(--amber)';
+    if (state.allBooks.length === 0) loadBooks();
+  } catch(err) {
+    state.connected = false;
+    pill.classList.remove('connected');
+    txt.textContent = 'Not connected';
+    msg.innerHTML = `Can't reach proxy (${err.message}). Run: <code>node server.js</code>`;
+    msg.style.color = 'var(--copper)';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Connect';
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  BOOK BROWSER
+// ══════════════════════════════════════════════════════════
+
+async function loadBooks() {
+  document.getElementById('books-loading').classList.remove('hidden');
+  document.getElementById('books-error').classList.add('hidden');
+  document.getElementById('books-ready').classList.add('hidden');
+  try {
+    const res = await fetch(`${getProxyBase()}/api/books`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    state.allBooks = await res.json();
+    document.getElementById('books-loading').classList.add('hidden');
+    document.getElementById('books-ready').classList.remove('hidden');
+    renderBookList(state.allBooks);
+  } catch(err) {
+    document.getElementById('books-loading').classList.add('hidden');
+    document.getElementById('books-error').classList.remove('hidden');
+  }
+}
+
+function renderBookList(books) {
+  const list = document.getElementById('book-list');
+  const countEl = document.getElementById('book-count');
+  countEl.textContent = `${books.length} book${books.length !== 1 ? 's' : ''} available`;
+  list.innerHTML = books.map(b => {
+    const subject = Array.isArray(b.subject) ? b.subject.join(', ') : (b.subject || '');
+    const author  = Array.isArray(b.author)  ? b.author.map(a => a.name || a).join(', ') : (b.author || '');
+    return `<button class="book-item" data-url="${esc(b.link||b.url||'')}" data-title="${esc(b.title)}" data-subject="${esc(subject)}">
+      <div class="book-item-title">${esc(b.title)}</div>
+      <div class="book-item-meta">
+        ${subject ? `<span class="book-subject-badge">${esc(subject.split(',')[0].trim())}</span>` : ''}
+        ${author  ? `<span class="book-item-author">${esc(author)}</span>` : ''}
+      </div>
+    </button>`;
+  }).join('');
+  list.querySelectorAll('.book-item').forEach(btn =>
+    btn.addEventListener('click', () => selectBook(btn.dataset.url, btn.dataset.title, btn.dataset.subject)));
+}
+
+function filterBooks(q) {
+  const ql = q.toLowerCase().trim();
+  if (!ql) { renderBookList(state.allBooks); return; }
+  renderBookList(state.allBooks.filter(b => {
+    const t = b.title.toLowerCase();
+    const s = Array.isArray(b.subject) ? b.subject.join(' ').toLowerCase() : (b.subject?.toLowerCase()||'');
+    const a = Array.isArray(b.author) ? b.author.map(x=>x.name||x).join(' ').toLowerCase() : (b.author?.toLowerCase()||'');
+    return t.includes(ql)||s.includes(ql)||a.includes(ql);
+  }));
+}
+
+function selectBook(bookUrl, bookTitle, bookSubject) {
+  state.bookUrl = bookUrl; state.bookTitle = bookTitle;
+  state.chapterId = null;
+  document.getElementById('book-list-view').classList.add('hidden');
+  document.getElementById('book-focus-view').classList.remove('hidden');
+  document.getElementById('selected-book-card').innerHTML =
+    `<div class="selected-book-title">${esc(bookTitle)}</div>
+     ${bookSubject ? `<div class="selected-book-subject">${esc(bookSubject.split(',')[0].trim())}</div>` : ''}`;
+  document.getElementById('toc-selectors').classList.add('hidden');
+  document.getElementById('chapter-notice').classList.add('hidden');
+  updateLoadReadingBtn();
+  loadToc(bookUrl);
+}
+
+async function loadToc(bookUrl) {
+  const loadEl = document.getElementById('toc-loading');
+  const selEl  = document.getElementById('toc-selectors');
+  loadEl.classList.remove('hidden'); selEl.classList.add('hidden');
+  try {
+    const res = await fetch(`${getProxyBase()}/api/toc?bookUrl=${encodeURIComponent(bookUrl)}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const parts = await res.json();
+    loadEl.classList.add('hidden');
+    const partSel = document.getElementById('part-select');
+    partSel.innerHTML = '<option value="">— select a part —</option>' +
+      parts.map(p => `<option value="${esc(String(p.id))}">${esc(p.title)}</option>`).join('');
+    document.getElementById('chapter-select').innerHTML = '<option value="">— select a chapter —</option>';
+    document.getElementById('chapter-select').disabled = true;
+    document.getElementById('chapter-meta').classList.add('hidden');
+    document.getElementById('btn-load-chapter').classList.add('hidden');
+    selEl.classList.remove('hidden');
+    // store for later
+    state._tocData = parts;
+  } catch(err) {
+    loadEl.classList.add('hidden');
+    const n = document.getElementById('chapter-notice');
+    n.className = 'chapter-notice error'; n.textContent = `Could not load contents: ${err.message}`;
+    n.classList.remove('hidden');
+  }
+}
+
+function onPartSelected() {
+  const partId = document.getElementById('part-select').value;
+  const chSel  = document.getElementById('chapter-select');
+  document.getElementById('chapter-meta').classList.add('hidden');
+  document.getElementById('btn-load-chapter').classList.add('hidden');
+  document.getElementById('chapter-notice').classList.add('hidden');
+  state.chapterId = null;
+  if (!partId) { chSel.innerHTML='<option value="">— select a chapter —</option>'; chSel.disabled=true; updateLoadReadingBtn(); return; }
+  const part = (state._tocData||[]).find(p => String(p.id) === partId);
+  if (!part?.chapters?.length) { chSel.innerHTML='<option value="">No chapters</option>'; chSel.disabled=true; return; }
+  chSel.innerHTML = '<option value="">— select a chapter —</option>' +
+    part.chapters.map(c => {
+      const wc = c.wordCount ? ` (${Number(c.wordCount).toLocaleString()} words)` : '';
+      return `<option value="${esc(String(c.id))}" data-link="${esc(c.link||'')}" data-wc="${esc(String(c.wordCount||0))}" data-title="${esc(c.title)}">${esc(c.title)}${wc}</option>`;
+    }).join('');
+  chSel.disabled = false;
+}
+
+function onChapterSelected() {
+  const chSel = document.getElementById('chapter-select');
+  const opt   = chSel.selectedOptions[0];
+  document.getElementById('chapter-meta').classList.add('hidden');
+  document.getElementById('btn-load-chapter').classList.add('hidden');
+  document.getElementById('chapter-notice').classList.add('hidden');
+  state.chapterId = null; state.chapterTitle = null;
+  updateLoadReadingBtn();
+  if (!chSel.value) return;
+  state.chapterId = chSel.value;
+  state.chapterTitle = opt?.dataset.title || chSel.options[chSel.selectedIndex].text.replace(/\s*\(\d[\d,]* words\)/, '').trim();
+  const wc = opt?.dataset.wc; const link = opt?.dataset.link;
+  const metaEl = document.getElementById('chapter-meta');
+  metaEl.innerHTML =
+    (wc&&wc!=='0' ? `<span class="chapter-wc-pill">${Number(wc).toLocaleString()} words</span>` : '') +
+    (link ? `<a class="chapter-link" href="${esc(link)}" target="_blank" rel="noopener">View in Pressbooks ↗</a>` : '');
+  metaEl.classList.remove('hidden');
+  document.getElementById('btn-load-chapter').classList.remove('hidden');
+}
+
+async function loadChapter() {
+  const btn = document.getElementById('btn-load-chapter');
+  const notice = document.getElementById('chapter-notice');
+  btn.disabled = true; btn.textContent = 'Loading…'; notice.classList.add('hidden');
+  try {
+    const res = await fetch(`${getProxyBase()}/api/chapter?bookUrl=${encodeURIComponent(state.bookUrl)}&chapterId=${encodeURIComponent(state.chapterId)}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (!data.text) throw new Error('No text returned.');
+    if (data.title) state.chapterTitle = data.title;
+    const chapterTitle = data.title || state.chapterTitle || 'Chapter';
+    addSource(chapterTitle, '📖', data.text);
+    const wc = data.wordCount || data.text.split(/\s+/).filter(Boolean).length;
+    notice.className = 'chapter-notice success';
+    notice.textContent = `✓ Added "${chapterTitle}" — ${Number(wc).toLocaleString()} words`;
+    notice.classList.remove('hidden');
+  } catch(err) {
+    notice.className = 'chapter-notice error';
+    notice.textContent = `Failed: ${err.message}`;
+    notice.classList.remove('hidden');
+  } finally {
+    btn.disabled = false; btn.textContent = '+ Add chapter to sources';
+  }
+}
+
+function updateLoadReadingBtn() {
+  const btn = document.getElementById('btn-load-reading');
+  const hasText = state.sources.length > 0 || !!(document.getElementById('oer-text')?.value.trim());
+  btn.disabled = !hasText;
+}
+
+// ══════════════════════════════════════════════════════════
+//  READING PANE
+// ══════════════════════════════════════════════════════════
+
+function openForReading() {
+  const text = getOerText();
+  if (!text) return;
+  const title = state.chapterTitle || 'Pasted text';
+  document.getElementById('reading-chapter-title').textContent = title;
+  document.getElementById('reading-hint').textContent = 'Select text, then choose a mode →';
+  // Stop any active TTS before replacing chapter content
+  if (typeof window.ttsStop === 'function') window.ttsStop();
+  // Render text into reading body
+  const readingBody = document.getElementById('reading-body');
+  readingBody.innerHTML = `<div class="chapter-text" id="chapter-text">${renderChapterText(text)}</div>`;
+  // Reveal mode toolbar hint
+  document.getElementById('mode-toolbar').querySelectorAll('.btn-mode').forEach(b => {
+    b.style.opacity = '1';
+  });
+  // Update save button
+  updateSaveBtn();
+  // Attempt to restore any previously saved session for this chapter
+  restoreSession();
+  // Auto-collapse the source panel to maximise reading space
+  if (typeof window._collapseSourcePanel === 'function') window._collapseSourcePanel();
+}
+
+function renderChapterText(text) {
+  // Convert plain text to readable HTML paragraphs
+  const lines = text.split(/\n+/);
+  let html = '';
+  for (const line of lines) {
+    const t = line.trim();
+    if (!t) continue;
+    if (/^#{1,3}\s/.test(t)) {
+      const level = t.match(/^(#+)/)[1].length;
+      const content = esc(t.replace(/^#+\s*/, ''));
+      html += `<h${Math.min(level+1, 3)}>${content}</h${Math.min(level+1, 3)}>`;
+    } else {
+      html += `<p>${esc(t)}</p>`;
+    }
+  }
+  return html || `<p>${esc(text)}</p>`;
+}
+
+// ══════════════════════════════════════════════════════════
+//  MODE SELECTION
+// ══════════════════════════════════════════════════════════
+
+function setActiveMode(mode) {
+  state.activeMode = mode;
+  document.querySelectorAll('.btn-mode').forEach(b => {
+    b.className = 'btn-mode';
+    if (b.dataset.mode === mode) b.classList.add(`active-${mode}`);
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+//  SELECTION POPUP
+// ══════════════════════════════════════════════════════════
+
+let _lastSelection = null;
+let _lastRange = null;  // saved DOM Range for highlight wrapping
+
+function showSelectionPopup(x, y, selectedText) {
+  const popup = document.getElementById('selection-popup');
+  _lastSelection = selectedText;
+  // Snapshot the Range now — it will be cleared when the user clicks the popup
+  try {
+    const sel = window.getSelection();
+    _lastRange = (sel && sel.rangeCount > 0) ? sel.getRangeAt(0).cloneRange() : null;
+  } catch(e) { _lastRange = null; }
+  // Position above the selection, clamped within the viewport
+  const popupW = 280;
+  const clampedX = Math.max(8, Math.min(x, window.innerWidth - popupW - 8));
+  const aboveY = y - 52;
+  popup.style.left = `${clampedX}px`;
+  popup.style.top  = `${Math.max(8, aboveY)}px`;
+  popup.classList.add('visible');
+}
+
+function hideSelectionPopup() {
+  document.getElementById('selection-popup').classList.remove('visible');
+  _lastSelection = null;
+}
+
+document.addEventListener('mouseup', (e) => {
+  // Don't trigger from within the popup itself or margin panel
+  if (e.target.closest('#selection-popup') || e.target.closest('.margin-panel')) return;
+
+  setTimeout(() => {
+    const sel = window.getSelection();
+    const text = sel?.toString().trim();
+    if (!text || text.length < 8 || !document.getElementById('chapter-text')) {
+      hideSelectionPopup();
+      return;
+    }
+    // Only show when selection is inside the reading body
+    const range = sel.getRangeAt(0);
+    const container = range.commonAncestorContainer;
+    if (!document.getElementById('chapter-text')?.contains(container)) {
+      hideSelectionPopup();
+      return;
+    }
+    const rect = range.getBoundingClientRect();
+    showSelectionPopup(rect.left + rect.width / 2 - 100, rect.top, text);
+  }, 10);
+});
+
+document.addEventListener('mousedown', (e) => {
+  if (!e.target.closest('#selection-popup')) hideSelectionPopup();
+});
+
+document.getElementById('popup-illuminate').addEventListener('click', () => {
+  if (_lastSelection) triggerAnnotation('illuminate', _lastSelection);
+  hideSelectionPopup();
+});
+document.getElementById('popup-council').addEventListener('click', () => {
+  if (_lastSelection) triggerAnnotation('council', _lastSelection);
+  hideSelectionPopup();
+});
+document.getElementById('popup-connect').addEventListener('click', () => {
+  if (_lastSelection) triggerAnnotation('connect', _lastSelection);
+  hideSelectionPopup();
+});
+document.getElementById('popup-note').addEventListener('click', () => {
+  if (_lastSelection) triggerAnnotation('note', _lastSelection);
+  hideSelectionPopup();
+});
+
+// Mode toolbar buttons also work for full-chapter context
+document.querySelectorAll('.btn-mode').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const mode = btn.dataset.mode;
+    setActiveMode(mode);
+    const sel = window.getSelection()?.toString().trim();
+    if (sel && sel.length >= 8 && document.getElementById('chapter-text')) {
+      triggerAnnotation(mode, sel);
+    }
+  });
+});
+
+// ══════════════════════════════════════════════════════════
+//  ANNOTATION ENGINE
+// ══════════════════════════════════════════════════════════
+
+// Wrap the saved selection range with a highlight span + clickable marker badge.
+// Returns the marker element, or null if wrapping failed.
+function wrapRangeWithHighlight(range, mode, annId) {
+  if (!range) return null;
+  try {
+    // Wrap the selected content in a highlight span
+    const highlight = document.createElement('span');
+    highlight.className = `ann-highlight mode-${mode}`;
+    highlight.dataset.annId = annId;
+    range.surroundContents(highlight);
+
+    // Append the small superscript badge inside the highlight
+    const marker = document.createElement('span');
+    marker.className = `ann-marker mode-${mode}`;
+    marker.textContent = annId;
+    marker.dataset.annId = annId;
+    marker.title = 'Jump to annotation';
+    highlight.appendChild(marker);
+
+    // Click on either highlight or marker → scroll margin to card
+    function jumpToCard(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const card = document.getElementById(`ann-${annId}`);
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        // Brief flash on the card
+        card.style.outline = '2px solid var(--amber)';
+        setTimeout(() => { card.style.outline = ''; }, 800);
+      }
+    }
+    marker.addEventListener('click', jumpToCard);
+    highlight.addEventListener('click', (e) => {
+      // Only jump if user clicked the highlight itself, not selected text
+      if (e.target === highlight || e.target === marker) jumpToCard(e);
+    });
+
+    return marker;
+  } catch (err) {
+    // surroundContents fails if range crosses element boundaries — silently skip
+    return null;
+  }
+}
+
+async function triggerAnnotation(mode, excerpt) {
+  // Note mode: no AI needed, just open an editable card
+  if (mode === 'note') {
+    const id = ++state.annotationCounter;
+    const savedRange = _lastRange;
+    _lastRange = null;
+    addNoteCard(id, excerpt);
+    wrapRangeWithHighlight(savedRange, 'note', id);
+    // Persist highlight position immediately (note text saved separately on "Save note" click)
+    state.annotations.push({ id, mode: 'note', excerpt, response: '', ts: new Date().toISOString() });
+    persistSession();
+    return;
+  }
+
+  if (!state.connected) {
+    showMarginError('Connect to the proxy server first.');
+    return;
+  }
+  const text = getOerText();
+  if (!text) {
+    showMarginError('Load a chapter first.');
+    return;
+  }
+
+  const id = ++state.annotationCounter;
+  const savedRange = _lastRange;
+  _lastRange = null;
+
+  // Create a pending annotation card immediately
+  addAnnotationCard(id, mode, excerpt, null); // null = loading
+
+  // Wrap the selected text with a highlight + marker badge
+  wrapRangeWithHighlight(savedRange, mode, id);
+  // Persist highlight position immediately so a reload shows the card position
+  // (response will be null until the AI call completes; persistSession() is called again after)
+  state.annotations.push({ id, mode, excerpt, response: null, ts: new Date().toISOString() });
+  persistSession();
+
+  // Build the prompt
+  const prompt = buildPrompt(mode, excerpt, text);
+
+  // Fetch response
+  try {
+    const response = await callClaude(prompt);
+    updateAnnotationCard(id, response);
+    // Update state entry that was pre-pushed before the API call
+    const existingAnn = state.annotations.find(a => a.id === id);
+    if (existingAnn) {
+      existingAnn.response = response;
+    } else {
+      state.annotations.push({ id, mode, excerpt, response, ts: new Date().toISOString() });
+    }
+    updateSaveBtn();
+    persistSession();
+  } catch(err) {
+    updateAnnotationCard(id, null, `Error: ${err.message}`);
+  }
+}
+
+function addNoteCard(id, excerpt) {
+  const mc = getModeColors('note');
+  const empty = document.getElementById('margin-empty');
+  if (empty) empty.classList.add('hidden');
+
+  const card = document.createElement('div');
+  card.className = 'annotation-card mode-note';
+  card.id = `ann-${id}`;
+
+  const excerptShort = excerpt.length > 50 ? excerpt.slice(0, 50) + '…' : excerpt;
+
+  card.innerHTML = `
+    <div class="annotation-header">
+      <div class="annotation-mode-tag" style="color:${mc.accent}">
+        <span>${mc.icon}</span> ${mc.label}
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="annotation-excerpt">"${esc(excerptShort)}"</div>
+        <button class="btn-collapse" title="Collapse">−</button>
+      </div>
+    </div>
+    <div class="annotation-body">
+      <div class="annotation-passage">"${esc(excerpt)}"</div>
+      <div id="ann-note-editor-${id}">
+        <textarea class="note-textarea" id="ann-note-ta-${id}"
+                  placeholder="Write your thought, reaction, or question…"
+                  rows="3"></textarea>
+        <div class="note-save-row">
+          <span class="note-char-count" id="ann-note-cc-${id}">0 chars</span>
+          <button class="btn-note-save" id="ann-note-save-${id}">Save note</button>
+        </div>
+      </div>
+      <div id="ann-note-saved-${id}" class="hidden">
+        <div class="note-saved-text" id="ann-note-text-${id}"></div>
+        <div style="margin-top:6px;display:flex;justify-content:flex-end">
+          <button class="note-edit-btn" id="ann-note-edit-${id}">✎ Edit</button>
+        </div>
+      </div>
+    </div>`;
+
+  const marginBody = document.getElementById('margin-body');
+  marginBody.appendChild(card);
+  if (typeof window._onAnnotationAdded === 'function') window._onAnnotationAdded();
+
+  // Collapse
+  card.querySelector('.btn-collapse').addEventListener('click', () => {
+    card.classList.toggle('collapsed');
+    card.querySelector('.btn-collapse').textContent = card.classList.contains('collapsed') ? '+' : '−';
+  });
+
+  // Character count
+  const ta = document.getElementById(`ann-note-ta-${id}`);
+  const cc = document.getElementById(`ann-note-cc-${id}`);
+  ta.addEventListener('input', () => {
+    cc.textContent = `${ta.value.length} chars`;
+  });
+
+  // Save note
+  const saveNoteCard = () => {
+    const text = ta.value.trim();
+    if (!text) return;
+    // Show saved view
+    document.getElementById(`ann-note-editor-${id}`).classList.add('hidden');
+    const savedDiv = document.getElementById(`ann-note-saved-${id}`);
+    savedDiv.classList.remove('hidden');
+    document.getElementById(`ann-note-text-${id}`).textContent = text;
+    // Store in state
+    const existing = state.annotations.find(a => a.id === id);
+    if (existing) {
+      existing.response = text;
+    } else {
+      state.annotations.push({ id, mode: 'note', excerpt, response: text, ts: new Date().toISOString() });
+    }
+    updateSaveBtn();
+    persistSession();
+  };
+
+  document.getElementById(`ann-note-save-${id}`).addEventListener('click', saveNoteCard);
+  ta.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) saveNoteCard();
+  });
+
+  // Edit note
+  document.getElementById(`ann-note-edit-${id}`).addEventListener('click', () => {
+    const existing = state.annotations.find(a => a.id === id);
+    ta.value = existing?.response || '';
+    cc.textContent = `${ta.value.length} chars`;
+    document.getElementById(`ann-note-saved-${id}`).classList.add('hidden');
+    document.getElementById(`ann-note-editor-${id}`).classList.remove('hidden');
+    ta.focus();
+  });
+
+  // Focus textarea immediately
+  setTimeout(() => ta.focus(), 50);
+}
+
+function buildPrompt(mode, excerpt, fullText) {
+  const textPreview = fullText.length > 3000 ? fullText.slice(0, 3000) + '…' : fullText;
+
+  if (mode === 'illuminate') {
+    return `You are a reading companion helping a student understand a passage from an open educational resource. Your job is to illuminate — to make the difficult clear without making it trivial.
+
+CHAPTER CONTEXT (first 3000 characters):
+---
+${textPreview}
+---
+
+PASSAGE THE STUDENT SELECTED:
+"${excerpt}"
+
+Respond in 3-5 short paragraphs (plain text, no bullet points, no headers).
+- First: explain what the passage is actually saying in plain language
+- Second: give a concrete example or analogy that makes the core idea vivid
+- Third: connect it to something the reader might already know or have experienced
+- Optional fourth/fifth: one surprising implication or nuance they might not have noticed
+
+Tone: a brilliant friend who's read everything, not a textbook. Be clear, warm, occasionally surprising. No fluff.`;
+
+  } else if (mode === 'council') {
+    return `You are a reading companion helping a student see multiple legitimate perspectives on a passage.
+
+CHAPTER CONTEXT (first 3000 characters):
+---
+${textPreview}
+---
+
+PASSAGE THE STUDENT SELECTED:
+"${excerpt}"
+
+Give this passage to four very different voices. Each should be 2-3 sentences. Format:
+
+**The [Role]:** [What they'd say about this passage — grounded in their perspective, not a caricature]
+
+Roles to use:
+1. A practitioner working in this field every day (skeptical of abstraction, focused on what actually happens)
+2. A critical theorist or someone from a marginalized community (who this framing might exclude or misrepresent)
+3. A student from a completely different culture or discipline (who finds something obvious or strange)
+4. Someone from the future looking back (who sees what this moment got right or catastrophically wrong)
+
+After the four voices, one sentence: "What navigating these perspectives requires of you as the reader."
+
+No preamble, no conclusion beyond that final line.`;
+
+  } else { // connect
+    return `You are a reading companion helping a student see how a passage connects beyond the page.
+
+CHAPTER CONTEXT (first 3000 characters):
+---
+${textPreview}
+---
+
+PASSAGE THE STUDENT SELECTED:
+"${excerpt}"
+
+Write 3-4 short paragraphs (plain text, no bullets):
+- A vivid real-world example of this idea in action — specific, recent, surprising
+- A connection to a different field or discipline that illuminates this from an unexpected angle
+- A current debate, movement, or situation where this idea is actively contested or applied
+- Optional: a question this passage raises that the chapter doesn't answer, that the student might actually be able to investigate
+
+Be specific. Name real places, movements, people, dates where possible. This should feel like discovering a live wire, not reading a textbook.`;
+  }
+}
+
+function addAnnotationCard(id, mode, excerpt, response) {
+  const mc = getModeColors(mode);
+  const empty = document.getElementById('margin-empty');
+  if (empty) empty.classList.add('hidden');
+
+  const card = document.createElement('div');
+  card.className = `annotation-card mode-${mode}`;
+  card.id = `ann-${id}`;
+
+  const excerptShort = excerpt.length > 50 ? excerpt.slice(0, 50) + '…' : excerpt;
+
+  card.innerHTML = `
+    <div class="annotation-header">
+      <div class="annotation-mode-tag" style="color:${mc.accent}">
+        <span>${mc.icon}</span> ${mc.label}
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="annotation-excerpt">"${esc(excerptShort)}"</div>
+        <button class="btn-collapse" data-id="${id}" title="Collapse">−</button>
+      </div>
+    </div>
+    <div class="annotation-body">
+      <div class="annotation-passage">"${esc(excerpt)}"</div>
+      <div class="annotation-thinking" id="ann-thinking-${id}">
+        <span>Thinking</span>
+        <span class="thinking-dots">
+          <span></span><span></span><span></span>
+        </span>
+      </div>
+      <div class="annotation-text hidden" id="ann-text-${id}"></div>
+      <div class="annotation-followup hidden" id="ann-followup-${id}">
+        <input class="followup-input" id="ann-input-${id}" placeholder="Ask a follow-up…" type="text">
+        <button class="btn-followup" data-id="${id}">↗</button>
+      </div>
+    </div>`;
+
+  const marginBody = document.getElementById('margin-body');
+  marginBody.appendChild(card);
+  if (typeof window._onAnnotationAdded === 'function') window._onAnnotationAdded();
+
+  // Collapse button
+  card.querySelector('.btn-collapse').addEventListener('click', () => {
+    card.classList.toggle('collapsed');
+    card.querySelector('.btn-collapse').textContent = card.classList.contains('collapsed') ? '+' : '−';
+  });
+
+  // Follow-up button (wired after content loads)
+}
+
+function updateAnnotationCard(id, response, error) {
+  const thinking = document.getElementById(`ann-thinking-${id}`);
+  const textEl   = document.getElementById(`ann-text-${id}`);
+  const followup = document.getElementById(`ann-followup-${id}`);
+
+  if (thinking) thinking.classList.add('hidden');
+  if (textEl) {
+    textEl.classList.remove('hidden');
+    if (error) {
+      textEl.innerHTML = `<span style="color:var(--copper)">${esc(error)}</span>`;
+    } else {
+      // Render response — convert simple markdown-like formatting
+      textEl.innerHTML = renderAnnotationText(response);
+    }
+  }
+  if (followup && !error) {
+    followup.classList.remove('hidden');
+    // Wire follow-up button
+    const btn = followup.querySelector('.btn-followup');
+    const input = followup.querySelector('.followup-input');
+    if (btn && input) {
+      btn.addEventListener('click', () => handleFollowUp(id, input.value.trim()));
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') handleFollowUp(id, input.value.trim());
+      });
+    }
+  }
+}
+
+function renderAnnotationText(text) {
+  // Handle **bold**, paragraph breaks, and role formatting "**Name:**"
+  let html = text
+    .split(/\n\n+/)
+    .map(para => {
+      const t = para.trim();
+      if (!t) return '';
+      // Check if it's a role line starting with **...
+      if (/^\*\*[^*]+\*\*:/.test(t)) {
+        const formatted = t.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+        return `<p>${formatted}</p>`;
+      }
+      const formatted = t.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      return `<p>${formatted}</p>`;
+    })
+    .filter(Boolean)
+    .join('');
+  return html || `<p>${esc(text)}</p>`;
+}
+
+async function handleFollowUp(annId, question) {
+  if (!question) return;
+  const followupEl = document.getElementById(`ann-followup-${annId}`);
+  const input = followupEl?.querySelector('.followup-input');
+  const btn   = followupEl?.querySelector('.btn-followup');
+  if (!input || !btn) return;
+
+  const original = state.annotations.find(a => a.id === annId);
+  const excerpt = original?.excerpt || '';
+  const mode    = original?.mode    || 'illuminate';
+  const prevResponse = original?.response || '';
+
+  input.disabled = true; btn.disabled = true; btn.textContent = '…';
+
+  const prompt = `A student is reading an OER text. They selected this passage: "${excerpt}"
+
+The companion gave this ${mode} response:
+"${prevResponse.slice(0, 600)}${prevResponse.length > 600 ? '…' : ''}"
+
+The student follows up with: "${question}"
+
+Respond in 2-4 sentences. Stay in the same mode (${mode}). Build on what was already said. Be precise and direct.`;
+
+  try {
+    const reply = await callClaude(prompt);
+    // Append the follow-up exchange
+    const textEl = document.getElementById(`ann-text-${annId}`);
+    if (textEl) {
+      const exchange = document.createElement('div');
+      exchange.style.cssText = 'margin-top:10px;padding-top:9px;border-top:1px solid var(--border)';
+      exchange.innerHTML = `
+        <div style="font-size:0.7rem;font-weight:600;color:var(--text-faint);margin-bottom:5px;letter-spacing:0.05em;text-transform:uppercase">Follow-up</div>
+        <div style="font-size:0.77rem;color:var(--text-dim);font-style:italic;margin-bottom:6px">"${esc(question)}"</div>
+        <div style="font-size:0.82rem;line-height:1.65;color:var(--text)">${renderAnnotationText(reply)}</div>`;
+      textEl.appendChild(exchange);
+    }
+    // Update stored annotation
+    if (original) original.response += '\n\nFollow-up: ' + question + '\n' + reply;
+  } catch(err) {
+    btn.textContent = '✕';
+    setTimeout(() => { btn.textContent = '↗'; }, 2000);
+  } finally {
+    input.value = ''; input.disabled = false; btn.disabled = false; btn.textContent = '↗';
+    // Scroll to bottom of annotation
+    const card = document.getElementById(`ann-${annId}`);
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+function showMarginError(msg) {
+  const marginBody = document.getElementById('margin-body');
+  const err = document.createElement('div');
+  err.className = 'annotation-card mode-council';
+  err.innerHTML = `<div class="annotation-header"><div class="annotation-mode-tag" style="color:var(--copper)">⚠ Error</div></div>
+    <div class="annotation-body"><div class="annotation-text"><span style="color:var(--copper)">${esc(msg)}</span></div></div>`;
+  marginBody.appendChild(err);
+  document.getElementById('margin-empty')?.classList.add('hidden');
+  setTimeout(() => err.remove(), 4000);
+}
+
+// ══════════════════════════════════════════════════════════
+//  CLEAR MARGIN
+// ══════════════════════════════════════════════════════════
+
+function clearMargin() {
+  state.annotations = [];
+  state.annotationCounter = 0;
+  clearPersistedSession();
+  const marginBody = document.getElementById('margin-body');
+  // Remove all annotation cards
+  marginBody.querySelectorAll('.annotation-card').forEach(c => c.remove());
+  // Remove all inline text highlights from the reading pane
+  document.querySelectorAll('.ann-highlight').forEach(h => {
+    // Unwrap: replace the highlight span with its text content (minus the marker badge)
+    const marker = h.querySelector('.ann-marker');
+    if (marker) marker.remove();
+    const parent = h.parentNode;
+    while (h.firstChild) parent.insertBefore(h.firstChild, h);
+    parent.removeChild(h);
+  });
+  // Restore empty state if not already present
+  if (!document.getElementById('margin-empty')) {
+    const empty = document.createElement('div');
+    empty.className = 'margin-empty'; empty.id = 'margin-empty';
+    empty.innerHTML = `<div class="margin-empty-glyph">✦</div>
+      <div class="margin-empty-text">Select a passage in the reading pane, then choose Illuminate, Council, or Connect.</div>`;
+    marginBody.appendChild(empty);
+  } else {
+    document.getElementById('margin-empty').classList.remove('hidden');
+  }
+  // Hide nudge pills
+  const _nb = document.getElementById('margin-scroll-nudge');
+  const _nt = document.getElementById('margin-scroll-nudge-top');
+  if (_nb) _nb.style.display = 'none';
+  if (_nt) _nt.style.display = 'none';
+  updateSaveBtn();
+}
+
+// ══════════════════════════════════════════════════════════
+//  SESSION PERSISTENCE  (localStorage auto-save / restore)
+// ══════════════════════════════════════════════════════════
+
+const SESSION_KEY = 'companion-session-v1';
+
+/**
+ * Convert a DOM Range's start point into a character offset within
+ * the #chapter-text element's full textContent.  Used so we can
+ * re-wrap highlights after the chapter is re-rendered.
+ */
+function getRangeCharOffset(range, root) {
+  let offset = 0;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+  let node;
+  while ((node = walker.nextNode())) {
+    if (node === range.startContainer) {
+      return offset + range.startOffset;
+    }
+    offset += node.textContent.length;
+  }
+  return -1;
+}
+
+/**
+ * Given a character offset within root's textContent, return a
+ * [textNode, offsetWithinNode] pair suitable for building a Range.
+ */
+function charOffsetToNodeOffset(root, charOffset) {
+  let remaining = charOffset;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+  let node;
+  while ((node = walker.nextNode())) {
+    if (remaining <= node.textContent.length) {
+      return [node, remaining];
+    }
+    remaining -= node.textContent.length;
+  }
+  return null;
+}
+
+/**
+ * Persist the current session (annotations + highlight positions) to
+ * localStorage so it can be restored after a page reload.
+ * Called automatically after every annotation is added/saved/cleared.
+ */
+function persistSession() {
+  try {
+    // Build highlight position index from currently-rendered highlights
+    const highlights = [];
+    document.querySelectorAll('.ann-highlight').forEach(span => {
+      const annId = parseInt(span.dataset.annId, 10);
+      const root  = document.getElementById('chapter-text');
+      if (!root || isNaN(annId)) return;
+      // Record the char offset of the highlight's first text position
+      const range = document.createRange();
+      range.selectNodeContents(span);
+      // We need the range start relative to the root — build via treewalker
+      let charOffset = -1;
+      let offset = 0;
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+      let node;
+      outer: while ((node = walker.nextNode())) {
+        // Skip text nodes that are inside .ann-marker badges
+        if (node.parentElement?.classList.contains('ann-marker')) { offset += node.textContent.length; continue; }
+        // Is this node inside our highlight span?
+        if (span.contains(node)) {
+          charOffset = offset;
+          break outer;
+        }
+        offset += node.textContent.length;
+      }
+      highlights.push({ annId, charOffset });
+    });
+
+    const payload = {
+      v: 1,
+      chapterTitle:     state.chapterTitle || null,
+      bookTitle:        state.bookTitle    || null,
+      bookUrl:          state.bookUrl      || null,
+      chapterId:        state.chapterId    || null,
+      annotationCounter: state.annotationCounter,
+      annotations:      state.annotations.map(a => ({...a})),
+      highlights,       // [{annId, charOffset}]
+      ts:               Date.now(),
+    };
+    localStorage.setItem(SESSION_KEY, JSON.stringify(payload));
+  } catch(e) {
+    // localStorage may be unavailable in private browsing — silently skip
+  }
+}
+
+/**
+ * Clear the persisted session from localStorage.
+ */
+function clearPersistedSession() {
+  try { localStorage.removeItem(SESSION_KEY); } catch(e) {}
+}
+
+/**
+ * After the chapter has been rendered into #chapter-text, attempt to
+ * restore a previously saved session.  Restores annotation cards and
+ * re-wraps inline highlights using saved char offsets (primary) or
+ * excerpt text search (fallback).
+ */
+function restoreSession() {
+  let saved;
+  try {
+    const raw = localStorage.getItem(SESSION_KEY);
+    if (!raw) return;
+    saved = JSON.parse(raw);
+  } catch(e) { return; }
+
+  // Version guard
+  if (!saved || saved.v !== 1) return;
+
+  // We only restore if the chapter matches what was saved
+  // (match on chapterId if available, else chapterTitle)
+  const titleMatch = saved.chapterTitle && saved.chapterTitle === state.chapterTitle;
+  const idMatch    = saved.chapterId    && saved.chapterId    === state.chapterId;
+  if (!titleMatch && !idMatch) return;
+  if (!Array.isArray(saved.annotations) || saved.annotations.length === 0) return;
+
+  const root = document.getElementById('chapter-text');
+  if (!root) return;
+
+  // Build a lookup of highlight charOffsets by annId
+  const hlMap = {};
+  if (Array.isArray(saved.highlights)) {
+    saved.highlights.forEach(h => { hlMap[h.annId] = h.charOffset; });
+  }
+
+  // Restore state
+  state.annotations      = saved.annotations.map(a => ({...a}));
+  state.annotationCounter = saved.annotationCounter || saved.annotations.reduce((m,a) => Math.max(m, a.id), 0);
+
+  // Rebuild annotation cards and highlights in id order
+  const sorted = [...state.annotations].sort((a, b) => a.id - b.id);
+
+  sorted.forEach(ann => {
+    if (ann.mode === 'note') {
+      addNoteCard(ann.id, ann.excerpt);
+      // Pre-fill note text if saved
+      if (ann.response) {
+        const ta    = document.getElementById(`ann-note-ta-${ann.id}`);
+        const editor  = document.getElementById(`ann-note-editor-${ann.id}`);
+        const savedDiv = document.getElementById(`ann-note-saved-${ann.id}`);
+        const textEl  = document.getElementById(`ann-note-text-${ann.id}`);
+        const cc    = document.getElementById(`ann-note-cc-${ann.id}`);
+        if (ta && editor && savedDiv && textEl) {
+          ta.value = ann.response;
+          if (cc) cc.textContent = `${ann.response.length} chars`;
+          editor.classList.add('hidden');
+          savedDiv.classList.remove('hidden');
+          textEl.textContent = ann.response;
+        }
+      }
+    } else {
+      addAnnotationCard(ann.id, ann.mode, ann.excerpt, ann.response || null);
+      if (ann.response) {
+        updateAnnotationCard(ann.id, ann.response);
+      } else {
+        // Response never completed (page was refreshed mid-request)
+        updateAnnotationCard(ann.id, null, 'Session was refreshed before a response was received. Select the passage again to re-annotate.');
+      }
+    }
+
+    // Re-wrap highlight
+    _rewrapHighlight(root, ann.id, ann.mode, ann.excerpt, hlMap[ann.id]);
+  });
+
+  updateSaveBtn();
+
+  // Show restore banner
+  _showRestoreBanner(sorted.length);
+}
+
+/**
+ * Re-wrap a single highlight using saved char offset (primary) or
+ * excerpt text search (fallback).
+ */
+function _rewrapHighlight(root, annId, mode, excerpt, charOffset) {
+  try {
+    let range = null;
+
+    // Primary: use saved char offset
+    if (typeof charOffset === 'number' && charOffset >= 0) {
+      const start = charOffsetToNodeOffset(root, charOffset);
+      const end   = charOffsetToNodeOffset(root, charOffset + excerpt.length);
+      if (start && end) {
+        range = document.createRange();
+        range.setStart(start[0], start[1]);
+        range.setEnd(end[0], end[1]);
+      }
+    }
+
+    // Fallback: search for excerpt text in root textContent
+    if (!range) {
+      const fullText = root.textContent;
+      const idx = fullText.indexOf(excerpt);
+      if (idx >= 0) {
+        const start = charOffsetToNodeOffset(root, idx);
+        const end   = charOffsetToNodeOffset(root, idx + excerpt.length);
+        if (start && end) {
+          range = document.createRange();
+          range.setStart(start[0], start[1]);
+          range.setEnd(end[0], end[1]);
+        }
+      }
+    }
+
+    if (range) {
+      wrapRangeWithHighlight(range, mode, annId);
+    }
+  } catch(e) {
+    // Silently skip — card is still present without highlight
+  }
+}
+
+/**
+ * Show a dismissable banner at the top of the reading pane
+ * confirming that annotations have been restored.
+ */
+function _showRestoreBanner(count) {
+  const readingPane = document.getElementById('reading-pane');
+  if (!readingPane) return;
+
+  // Remove any existing banner
+  readingPane.querySelector('.session-restore-banner')?.remove();
+
+  const noun = count === 1 ? 'annotation' : 'annotations';
+  const banner = document.createElement('div');
+  banner.className = 'session-restore-banner';
+  banner.innerHTML = `
+    <span class="restore-icon">✦</span>
+    <span class="restore-msg"><strong>Session restored</strong> — ${count} ${noun} from your last visit.</span>
+    <button class="btn-restore-dismiss" title="Dismiss this banner">OK</button>
+    <button class="btn-restore-clear" title="Clear all annotations and start fresh">Clear</button>
+  `;
+
+  // Insert at top of reading pane (before reading-body)
+  const readingBody = document.getElementById('reading-body');
+  readingPane.insertBefore(banner, readingBody);
+
+  banner.querySelector('.btn-restore-dismiss').addEventListener('click', () => banner.remove());
+  banner.querySelector('.btn-restore-clear').addEventListener('click', () => {
+    banner.remove();
+    clearMargin();
+    clearPersistedSession();
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+//  SAVE SESSION
+// ══════════════════════════════════════════════════════════
+
+function updateSaveBtn() {
+  const hasAnns = state.annotations.length > 0;
+  document.getElementById('btn-save-session').disabled = !hasAnns;
+  document.getElementById('btn-copy-session').disabled = !hasAnns;
+  document.getElementById('btn-send-to-builder').disabled = !hasAnns;
+}
+
+function buildSessionMarkdown() {
+  const title = state.chapterTitle || 'Reading Session';
+  const ts = new Date().toLocaleString();
+  let md = `# Companion — ${title}\n\n**Saved:** ${ts}\n${state.bookTitle ? `**Book:** ${state.bookTitle}\n` : ''}\n---\n\n`;
+  const sorted = [...state.annotations].sort((a, b) => a.id - b.id);
+  sorted.forEach((ann, i) => {
+    const mc = getModeColors(ann.mode);
+    md += `## ${mc.icon} ${mc.label} — ${ann.mode === 'note' ? 'Reader Note' : 'Annotation'} ${i + 1}\n\n`;
+    md += `**Passage:** "${ann.excerpt}"\n\n`;
+    md += ann.response + '\n\n---\n\n';
+  });
+  return md;
+}
+
+function saveSession() {
+  if (state.annotations.length === 0) return;
+  const md = buildSessionMarkdown();
+  const title = state.chapterTitle || 'Reading Session';
+  const slug = title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').slice(0, 40);
+  const filename = `companion-${slug}-${Date.now()}.md`;
+  const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  const btn = document.getElementById('btn-save-session');
+  const orig = btn.innerHTML;
+  btn.innerHTML = '✓ Saved';
+  btn.classList.add('save-done');
+  setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('save-done'); }, 2000);
+}
+
+async function copySession() {
+  if (state.annotations.length === 0) return;
+  const md = buildSessionMarkdown();
+  try {
+    await navigator.clipboard.writeText(md);
+    const btn = document.getElementById('btn-copy-session');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓';
+    btn.classList.add('copy-done');
+    setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copy-done'); }, 2000);
+  } catch(err) {
+    // Fallback: select a temporary textarea
+    const ta = document.createElement('textarea');
+    ta.value = md; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    const btn = document.getElementById('btn-copy-session');
+    const orig = btn.innerHTML; btn.innerHTML = '✓';
+    btn.classList.add('copy-done');
+    setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copy-done'); }, 2000);
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  SEND TO ACTIVITY BUILDER
+// ══════════════════════════════════════════════════════════
+
+function sendToActivityBuilder() {
+  if (state.annotations.length === 0) return;
+
+  const chapterText = getOerText();
+  const payload = {
+    v: 1,
+    chapterTitle: state.chapterTitle || 'Reading Session',
+    bookTitle: state.bookTitle || null,
+    chapterText: chapterText,
+    annotations: state.annotations.map(ann => ({
+      mode: ann.mode,
+      excerpt: ann.excerpt,
+      response: ann.response,
+    })),
+    ts: Date.now(),
+  };
+
+  try {
+    localStorage.setItem('companion-activity-seed', JSON.stringify(payload));
+  } catch (e) {
+    alert('Could not write to localStorage. Your browser may have storage disabled.');
+    return;
+  }
+
+  const btn = document.getElementById('btn-send-to-builder');
+  btn.innerHTML = '✓ Opening…';
+  btn.classList.add('send-done');
+  setTimeout(() => {
+    btn.innerHTML = '⬡ Send to Activity Builder';
+    btn.classList.remove('send-done');
+  }, 2500);
+
+  window.open('../tru-oer-activity-builder.html', '_blank');
+}
+
+// ══════════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════════
+
+function init() {
+  // Connect
+  document.getElementById('btn-connect').addEventListener('click', testConnection);
+
+  // Proxy URL change
+  document.getElementById('proxy-url').addEventListener('change', () => {
+    state.connected = false; state.allBooks = [];
+    document.getElementById('status-pill').classList.remove('connected');
+    document.getElementById('status-text').textContent = 'Not connected';
+    document.getElementById('books-loading').classList.remove('hidden');
+    document.getElementById('books-ready').classList.add('hidden');
+  });
+
+  // Book search
+  document.getElementById('book-search').addEventListener('input', e => filterBooks(e.target.value));
+
+  // Books retry
+  document.getElementById('books-retry').addEventListener('click', loadBooks);
+
+  // Book back button
+  document.getElementById('book-back').addEventListener('click', () => {
+    state.bookUrl = null; state.bookTitle = null;
+    state.chapterId = null; state.chapterTitle = null;
+    document.getElementById('book-focus-view').classList.add('hidden');
+    document.getElementById('book-list-view').classList.remove('hidden');
+    document.getElementById('chapter-notice').classList.add('hidden');
+    updateLoadReadingBtn();
+  });
+
+  // TOC selectors
+  document.getElementById('part-select').addEventListener('change', onPartSelected);
+  document.getElementById('chapter-select').addEventListener('change', onChapterSelected);
+  document.getElementById('btn-load-chapter').addEventListener('click', loadChapter);
+
+  // Paste toggle
+  document.getElementById('paste-toggle').addEventListener('click', () => {
+    const section = document.getElementById('paste-section');
+    const btn     = document.getElementById('paste-toggle');
+    const isOpen  = !section.classList.contains('hidden');
+    section.classList.toggle('hidden', isOpen);
+    btn.classList.toggle('active', !isOpen);
+    btn.textContent = isOpen ? '✎ Paste text instead' : '✕ Close paste panel';
+  });
+
+  // Paste textarea word count + enable load button
+  const oerTextarea = document.getElementById('oer-text');
+  oerTextarea.addEventListener('input', () => {
+    document.getElementById('word-count').textContent = wordCount(oerTextarea.value);
+    updateLoadReadingBtn();
+  });
+
+  // URL fetch
+  document.getElementById('btn-fetch-url').addEventListener('click', fetchUrl);
+  document.getElementById('url-fetch-input').addEventListener('keydown', e => { if (e.key === 'Enter') fetchUrl(); });
+
+  // File upload
+  document.getElementById('btn-file-upload').addEventListener('click', () => document.getElementById('file-upload-input').click());
+  document.getElementById('file-upload-input').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (file) { handleFileUpload(file); e.target.value = ''; }
+  });
+
+  // Load for reading
+  document.getElementById('btn-load-reading').addEventListener('click', openForReading);
+
+  // ── Margin navigation pills + auto-scroll to latest ─────────────────────
+  (function() {
+    const readingBody = document.getElementById('reading-body');
+    const marginBody  = document.getElementById('margin-body');
+    const nudgeBot    = document.getElementById('margin-scroll-nudge');
+    const nudgeBotBtn = document.getElementById('margin-nudge-btn');
+    const nudgeLabel  = document.getElementById('nudge-label');
+    const nudgeCount  = document.getElementById('nudge-count');
+    const nudgeTop    = document.getElementById('margin-scroll-nudge-top');
+    const nudgeTopBtn = document.getElementById('margin-nudge-top-btn');
+
+    let newBelow = 0;  // annotations added below the current margin viewport
+
+    // ── Helpers ───────────────────────────────────────────────
+    function isNearBottom(el, slack) {
+      return el.scrollTop + el.clientHeight >= el.scrollHeight - (slack || 20);
+    }
+    function hasAnnotations() {
+      return marginBody.querySelectorAll('.annotation-card').length > 0;
+    }
+    function showEl(el)  { el.style.display = 'flex'; }
+    function hideEl(el)  { el.style.display = 'none'; }
+
+    // ── Update pill visibility after any scroll or mutation ───
+    function refreshPills() {
+      const scrolled = marginBody.scrollTop > 60;
+      const atBot    = isNearBottom(marginBody, 20);
+      if (atBot) newBelow = 0;
+
+      // Top pill: visible when scrolled down and there are cards above
+      if (scrolled && hasAnnotations()) showEl(nudgeTop);
+      else hideEl(nudgeTop);
+
+      // Bottom pill: visible when there are unseen new annotations below
+      if (newBelow > 0 && !atBot) {
+        nudgeCount.textContent  = newBelow;
+        nudgeCount.style.display = 'inline-block';
+        nudgeLabel.textContent  = newBelow === 1 ? 'new annotation' : 'new annotations';
+        showEl(nudgeBot);
+      } else {
+        hideEl(nudgeBot);
+        nudgeCount.style.display = 'none';
+      }
+    }
+
+    // ── Pill click handlers ───────────────────────────────────
+    nudgeBotBtn.addEventListener('click', () => {
+      marginBody.scrollTo({ top: marginBody.scrollHeight, behavior: 'smooth' });
+      newBelow = 0;
+      setTimeout(refreshPills, 400);
+    });
+
+    nudgeTopBtn.addEventListener('click', () => {
+      marginBody.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(refreshPills, 400);
+    });
+
+    marginBody.addEventListener('scroll', refreshPills, { passive: true });
+
+    // ── Auto-scroll margin when reading pane scrolls ──────────
+    // Strategy: when the user scrolls the reading pane, scroll the margin
+    // to its bottom after a short debounce — this keeps the latest annotation
+    // visible as reading progresses downward. If the user has manually scrolled
+    // the margin up to review earlier annotations, we nudge instead.
+    let readScrollTimer = null;
+    let userScrolledMarginUp = false;
+
+    // Track if the user manually scrolled the margin UP
+    marginBody.addEventListener('scroll', () => {
+      // If margin scroll was not triggered by our own scrollTo calls,
+      // and it's scrolled upward, set the flag
+      if (!_marginAutoScrolling) {
+        userScrolledMarginUp = !isNearBottom(marginBody, 60);
+      }
+    }, { passive: true });
+
+    let _marginAutoScrolling = false;
+    function autoScrollMargin() {
+      if (userScrolledMarginUp) {
+        // User is reviewing earlier notes — just bump the new-below count
+        // (already handled by _onAnnotationAdded; nothing to do on plain scroll)
+        return;
+      }
+      if (!hasAnnotations()) return;
+      _marginAutoScrolling = true;
+      marginBody.scrollTo({ top: marginBody.scrollHeight, behavior: 'smooth' });
+      setTimeout(() => { _marginAutoScrolling = false; }, 600);
+    }
+
+    if (readingBody) {
+      readingBody.addEventListener('scroll', () => {
+        clearTimeout(readScrollTimer);
+        readScrollTimer = setTimeout(autoScrollMargin, 120);
+      }, { passive: true });
+    }
+
+    // ── Called when a new annotation card is inserted ─────────
+    window._onAnnotationAdded = () => {
+      // Small delay so the DOM has painted the new card height
+      setTimeout(() => {
+        if (isNearBottom(marginBody, 120) || !userScrolledMarginUp) {
+          // Follow the new card automatically
+          _marginAutoScrolling = true;
+          marginBody.scrollTo({ top: marginBody.scrollHeight, behavior: 'smooth' });
+          setTimeout(() => { _marginAutoScrolling = false; }, 600);
+          newBelow = 0;
+        } else {
+          // User scrolled up to review; notify them instead
+          newBelow++;
+        }
+        refreshPills();
+      }, 60);
+    };
+
+    // Initialise: hide both pills until there's something to navigate
+    hideEl(nudgeBot);
+    hideEl(nudgeTop);
+  })();
+
+  // Panel collapse/expand toggle
+  (function() {
+    const panel = document.querySelector('.source-panel');
+    const btn   = document.getElementById('panel-collapse-btn');
+    function setCollapsed(collapsed) {
+      panel.classList.toggle('collapsed', collapsed);
+      const icon = btn.querySelector('.collapse-icon');
+      const label = btn.querySelector('.collapse-label');
+      if (icon)  icon.textContent  = collapsed ? '›' : '‹';
+      if (label) label.textContent = collapsed ? 'Open' : 'Close';
+      btn.title = collapsed ? 'Expand source panel' : 'Collapse source panel';
+      btn.setAttribute('aria-label', collapsed ? 'Expand source panel' : 'Collapse source panel');
+    }
+    btn.addEventListener('click', () => setCollapsed(!panel.classList.contains('collapsed')));
+    // Expose so openForReading can trigger it
+    window._collapseSourcePanel = () => setCollapsed(true);
+  })();
+
+  // Margin panel collapse/expand toggle
+  (function() {
+    const panel = document.querySelector('.margin-panel');
+    const btn   = document.getElementById('margin-collapse-btn');
+    if (!btn) return;
+    function setMarginCollapsed(collapsed) {
+      panel.classList.toggle('collapsed', collapsed);
+      const icon  = btn.querySelector('.collapse-icon');
+      const label = btn.querySelector('.collapse-label');
+      if (icon)  icon.textContent  = collapsed ? '‹' : '›';
+      btn.title = collapsed ? 'Expand annotations panel' : 'Collapse annotations panel';
+      btn.setAttribute('aria-label', collapsed ? 'Expand annotations panel' : 'Collapse annotations panel');
+      try { localStorage.setItem('companion-margin-collapsed', collapsed ? '1' : '0'); } catch(e) {}
+    }
+    btn.addEventListener('click', () => setMarginCollapsed(!panel.classList.contains('collapsed')));
+    // Restore persisted state
+    try {
+      if (localStorage.getItem('companion-margin-collapsed') === '1') setMarginCollapsed(true);
+    } catch(e) {}
+  })();
+
+  // Mode buttons (handled inline above)
+
+  // Clear margin
+  document.getElementById('btn-clear-margin').addEventListener('click', clearMargin);
+
+  // Save session
+  document.getElementById('btn-save-session').addEventListener('click', saveSession);
+
+  // Copy session
+  document.getElementById('btn-copy-session').addEventListener('click', copySession);
+
+  // Send to Activity Builder
+  document.getElementById('btn-send-to-builder').addEventListener('click', sendToActivityBuilder);
+
+  // Theme switcher
+  document.querySelectorAll('.btn-theme').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const theme = btn.dataset.theme;
+      document.documentElement.setAttribute('data-theme', theme === 'dark' ? '' : theme);
+      document.querySelectorAll('.btn-theme').forEach(b => b.classList.toggle('active', b === btn));
+      // Sync suite-nav toggle (dark/light only — sepia stays companion-specific)
+      const sb = document.getElementById('btn-suite-theme');
+      if (sb) {
+        sb.textContent = theme === 'dark' ? '☀' : '🌙';
+        sb.title = theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+      }
+      try {
+        localStorage.setItem('companion-theme', theme);
+        if (theme === 'dark' || theme === 'light') localStorage.setItem('om-theme', theme);
+      } catch(e) {}
+    });
+  });
+
+  // Restore saved theme (companion-theme → om-theme → prefers-color-scheme)
+  try {
+    const saved = localStorage.getItem('companion-theme')
+               || localStorage.getItem('om-theme')
+               || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    if (saved && saved !== 'dark') {
+      document.documentElement.setAttribute('data-theme', saved);
+    }
+    document.querySelectorAll('.btn-theme').forEach(b =>
+      b.classList.toggle('active', b.dataset.theme === (saved || 'dark')));
+    // Sync suite-nav button
+    const sb = document.getElementById('btn-suite-theme');
+    if (sb) {
+      sb.textContent = (saved === 'dark' || !saved) ? '☀' : '🌙';
+      sb.title = (saved === 'dark' || !saved) ? 'Switch to light theme' : 'Switch to dark theme';
+    }
+  } catch(e) {}
+
+  // Reading controls — text size
+  const readingBody = document.getElementById('reading-body');
+  document.querySelectorAll('.btn-size').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const size = btn.dataset.size;
+      readingBody.dataset.size = size;
+      document.querySelectorAll('.btn-size').forEach(b => b.classList.toggle('active', b === btn));
+      try { localStorage.setItem('companion-size', size); } catch(e) {}
+    });
+  });
+
+  // Reading controls — font family
+  document.querySelectorAll('.btn-font').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const font = btn.dataset.font;
+      readingBody.dataset.font = font;
+      document.querySelectorAll('.btn-font').forEach(b => b.classList.toggle('active', b === btn));
+      try { localStorage.setItem('companion-font', font); } catch(e) {}
+    });
+  });
+
+  // Restore saved reading preferences
+  try {
+    const savedSize = localStorage.getItem('companion-size');
+    if (savedSize) {
+      readingBody.dataset.size = savedSize;
+      document.querySelectorAll('.btn-size').forEach(b => b.classList.toggle('active', b.dataset.size === savedSize));
+    } else {
+      readingBody.dataset.size = 'md';
+    }
+    const savedFont = localStorage.getItem('companion-font');
+    if (savedFont) {
+      readingBody.dataset.font = savedFont;
+      document.querySelectorAll('.btn-font').forEach(b => b.classList.toggle('active', b.dataset.font === savedFont));
+    } else {
+      readingBody.dataset.font = 'serif';
+    }
+  } catch(e) {
+    readingBody.dataset.size = 'md';
+    readingBody.dataset.font = 'serif';
+  }
+
+  // ── Line-focus ruler ──
+  (function initLineFocus() {
+    const pane    = document.getElementById('reading-pane');
+    const overlay = document.getElementById('line-focus-overlay');
+    const btn     = document.getElementById('btn-line-focus');
+    if (!pane || !overlay || !btn) return;
+
+    const RULER_HEIGHT = 38;   // px — height of the "clear" band
+    let active = false;
+
+    // Restore saved preference
+    try {
+      if (localStorage.getItem('companion-line-focus') === '1') activate();
+    } catch(e) {}
+
+    function setRulerMidpoint() {
+      // Position ruler at vertical centre of visible pane on activation
+      const rect  = pane.getBoundingClientRect();
+      const mid   = rect.height / 2;
+      const half  = RULER_HEIGHT / 2;
+      overlay.style.setProperty('--ruler-start', `${Math.max(0, mid - half)}px`);
+      overlay.style.setProperty('--ruler-end',   `${mid + half}px`);
+    }
+
+    function activate() {
+      active = true;
+      pane.classList.add('line-focus-active');
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
+      setRulerMidpoint();
+      overlay.style.display = 'block';
+    }
+
+    function deactivate() {
+      active = false;
+      pane.classList.remove('line-focus-active');
+      btn.classList.remove('active');
+      btn.setAttribute('aria-pressed', 'false');
+      overlay.style.display = 'none';
+    }
+
+    btn.addEventListener('click', () => {
+      active ? deactivate() : activate();
+      try { localStorage.setItem('companion-line-focus', active ? '1' : '0'); } catch(e) {}
+    });
+
+    // Move ruler to follow pointer Y relative to the pane's visible area
+    // (overlay is position:absolute on the pane, so y is pane-relative viewport coords)
+    pane.addEventListener('pointermove', e => {
+      if (!active) return;
+      const rect  = pane.getBoundingClientRect();
+      const y     = e.clientY - rect.top;   // viewport-relative within pane
+      const half  = RULER_HEIGHT / 2;
+      const start = Math.max(0, y - half);
+      const end   = y + half;
+      overlay.style.setProperty('--ruler-start', `${start}px`);
+      overlay.style.setProperty('--ruler-end',   `${end}px`);
+    });
+
+    // On scroll, nudge the ruler to stay put visually
+    // (overlay is position:absolute so it scrolls with content — no correction needed)
+  })();
+
+  // Auto-connect
+  testConnection();
+
+  // ── Mobile toolbar ───────────────────────────────────────────
+  (function initMobileToolbar() {
+    const MQ = window.matchMedia('(max-width: 768px)');
+    const toolbar   = document.getElementById('mobile-toolbar');
+    const backdrop  = document.getElementById('mobile-backdrop');
+    const sourcePanel = document.querySelector('.source-panel');
+    const marginPanel = document.querySelector('.margin-panel');
+    const tbSources = document.getElementById('tb-sources');
+    const tbRead    = document.getElementById('tb-read');
+    const tbMargins = document.getElementById('tb-margins');
+
+    function openDrawer(panel, btn) {
+      closeAll();
+      panel.classList.add('mobile-open');
+      btn.classList.add('active');
+      btn.setAttribute('aria-expanded', 'true');
+      backdrop.classList.add('visible');
+    }
+    function closeAll() {
+      [sourcePanel, marginPanel].forEach(p => p && p.classList.remove('mobile-open'));
+      [tbSources, tbRead, tbMargins].forEach(b => { b.classList.remove('active'); b.setAttribute('aria-expanded','false'); });
+      backdrop.classList.remove('visible');
+    }
+    function applyMobile(mobile) {
+      toolbar.style.display = mobile ? 'flex' : 'none';
+      if (!mobile) closeAll();
+    }
+
+    tbSources.addEventListener('click', () => {
+      sourcePanel.classList.contains('mobile-open') ? closeAll() : openDrawer(sourcePanel, tbSources);
+    });
+    tbRead.addEventListener('click', closeAll);
+    tbMargins.addEventListener('click', () => {
+      marginPanel.classList.contains('mobile-open') ? closeAll() : openDrawer(marginPanel, tbMargins);
+    });
+    backdrop.addEventListener('click', closeAll);
+
+    MQ.addEventListener('change', e => applyMobile(e.matches));
+    applyMobile(MQ.matches);
+  })();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+
+// ── Suite-nav theme button (synced with 3-button Dark/Light/Sepia group) ──
+(function() {
+  var btn = document.getElementById('btn-suite-theme');
+  if (!btn) return;
+  btn.addEventListener('click', function() {
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    // Map empty/dark → dark; anything else is light or sepia
+    var isDark = (cur === 'dark' || cur === '');
+    var next = isDark ? 'light' : 'dark';
+    // Apply theme
+    document.documentElement.setAttribute('data-theme', next === 'dark' ? '' : next);
+    // Sync 3-button group
+    document.querySelectorAll('.btn-theme').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.theme === next);
+    });
+    btn.textContent = next === 'dark' ? '☀' : '🌙';
+    btn.title = next === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+    try {
+      localStorage.setItem('companion-theme', next);
+      localStorage.setItem('om-theme', next);
+    } catch(e) {}
+  });
+})();
+
+// ── TTS (Text-to-Speech) ────────────────────────────────────
+(function() {
+  if (!window.speechSynthesis) return; // not supported
+  const $ = id => document.getElementById(id); // local shorthand
+
+  const tts = {
+    active: false,
+    paused: false,
+    sentences: [],
+    currentIdx: 0,
+    rate: 1.0,
+    voice: null,
+    highlightEl: null,
+  };
+
+  // ── Sentence parsing ──
+  function ttsParseSentences() {
+    const root = document.getElementById('chapter-text');
+    if (!root) return [];
+    const fullText = root.innerText || root.textContent || '';
+    const results = [];
+    // Match sentences ending in . ! ? (with optional closing quote/paren), followed by space or end
+    const regex = /[^.!?]*(?:[.!?]+['")\]]?\s*)/g;
+    let m;
+    while ((m = regex.exec(fullText)) !== null) {
+      const text = m[0].trim();
+      if (text.length > 4) {
+        results.push({ text, start: m.index, end: m.index + m[0].length });
+      }
+    }
+    return results;
+  }
+
+  // ── Highlighting (reuses existing charOffsetToNodeOffset) ──
+  function ttsHighlight(idx) {
+    ttsRemoveHighlight();
+    const root = document.getElementById('chapter-text');
+    if (!root || !tts.sentences[idx]) return;
+    const { start, end } = tts.sentences[idx];
+    try {
+      const [sn, so] = charOffsetToNodeOffset(root, start);
+      const [en, eo] = charOffsetToNodeOffset(root, Math.min(end, (root.innerText||root.textContent).length));
+      if (!sn || !en) return;
+      const range = document.createRange();
+      range.setStart(sn, so);
+      range.setEnd(en, eo);
+      const mark = document.createElement('mark');
+      mark.className = 'tts-active-sentence';
+      range.surroundContents(mark);
+      tts.highlightEl = mark;
+      mark.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    } catch(e) { /* range may span element boundaries — skip highlight for this sentence */ }
+  }
+
+  function ttsRemoveHighlight() {
+    if (!tts.highlightEl) return;
+    const parent = tts.highlightEl.parentNode;
+    if (parent) {
+      while (tts.highlightEl.firstChild) parent.insertBefore(tts.highlightEl.firstChild, tts.highlightEl);
+      parent.removeChild(tts.highlightEl);
+      parent.normalize();
+    }
+    tts.highlightEl = null;
+  }
+
+  // ── Speak one sentence (sentence-by-sentence avoids Chrome's ~15s utterance limit) ──
+  function ttsSpeakSentence(idx) {
+    if (!tts.active || idx >= tts.sentences.length) { ttsStop(); return; }
+    tts.currentIdx = idx;
+    ttsHighlight(idx);
+    const utt = new SpeechSynthesisUtterance(tts.sentences[idx].text);
+    utt.rate  = tts.rate;
+    if (tts.voice) utt.voice = tts.voice;
+    utt.onend   = () => { if (tts.active && !tts.paused) ttsSpeakSentence(idx + 1); };
+    utt.onerror = (e)  => { if (e.error !== 'interrupted' && e.error !== 'canceled') ttsStop(); };
+    window.speechSynthesis.speak(utt);
+  }
+
+  // ── Controls ──
+  function ttsStartChapter() {
+    ttsStop();
+    tts.sentences = ttsParseSentences();
+    if (!tts.sentences.length) return;
+    tts.active = true; tts.paused = false; tts.currentIdx = 0;
+    document.getElementById('tts-reader-bar').classList.remove('hidden');
+    $('btn-tts-play').classList.add('hidden');
+    $('btn-tts-pause').classList.remove('hidden');
+    $('btn-tts-resume').classList.add('hidden');
+    ttsSpeakSentence(0);
+  }
+
+  function ttsPause() {
+    if (!tts.active || tts.paused) return;
+    tts.paused = true;
+    window.speechSynthesis.pause();
+    $('btn-tts-pause').classList.add('hidden');
+    $('btn-tts-resume').classList.remove('hidden');
+  }
+
+  function ttsResume() {
+    if (!tts.active || !tts.paused) return;
+    tts.paused = false;
+    window.speechSynthesis.resume();
+    $('btn-tts-pause').classList.remove('hidden');
+    $('btn-tts-resume').classList.add('hidden');
+  }
+
+  function ttsStop() {
+    tts.active = false; tts.paused = false;
+    window.speechSynthesis.cancel();
+    ttsRemoveHighlight();
+    const play = $('btn-tts-play'), pause = $('btn-tts-pause'), resume = $('btn-tts-resume');
+    if (play)   play.classList.remove('hidden');
+    if (pause)  pause.classList.add('hidden');
+    if (resume) resume.classList.add('hidden');
+  }
+
+  // Speak arbitrary text once (selection popup)
+  window.ttsSpeak = function(text) {
+    window.speechSynthesis.cancel();
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.rate = tts.rate;
+    if (tts.voice) utt.voice = tts.voice;
+    window.speechSynthesis.speak(utt);
+  };
+
+  // Expose stop so openForReading can call it on chapter change
+  window.ttsStop = ttsStop;
+
+  // ── Voice selector ──
+  function ttsPopulateVoices() {
+    const sel = document.getElementById('tts-voice-select');
+    if (!sel) return;
+    const voices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
+    if (!voices.length) return;
+    sel.innerHTML = '';
+    voices.forEach((v, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = v.name.length > 28 ? v.name.slice(0, 26) + '…' : v.name;
+      if (v.default && !tts.voice) { opt.selected = true; tts.voice = v; }
+      sel.appendChild(opt);
+    });
+    if (!tts.voice && voices.length) tts.voice = voices[0];
+    sel.addEventListener('change', () => {
+      const v = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
+      tts.voice = v[parseInt(sel.value)] || null;
+    });
+  }
+  window.speechSynthesis.onvoiceschanged = ttsPopulateVoices;
+  ttsPopulateVoices();
+
+  // ── Event wiring ──
+  // Topbar 🔊 button
+  document.getElementById('btn-tts-open').addEventListener('click', () => {
+    if (!document.getElementById('chapter-text')) return;
+    document.getElementById('tts-reader-bar').classList.remove('hidden');
+    ttsStartChapter();
+  });
+
+  // Reader bar buttons
+  $('btn-tts-play').addEventListener('click', ttsStartChapter);
+  $('btn-tts-pause').addEventListener('click', ttsPause);
+  $('btn-tts-resume').addEventListener('click', ttsResume);
+  $('btn-tts-stop').addEventListener('click', ttsStop);
+  $('btn-tts-close').addEventListener('click', () => {
+    ttsStop();
+    document.getElementById('tts-reader-bar').classList.add('hidden');
+  });
+
+  // Speed buttons
+  document.querySelectorAll('.btn-tts-speed').forEach(btn => {
+    btn.addEventListener('click', () => {
+      tts.rate = parseFloat(btn.dataset.rate);
+      document.querySelectorAll('.btn-tts-speed').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (tts.active && !tts.paused) {
+        window.speechSynthesis.cancel();
+        ttsSpeakSentence(tts.currentIdx);
+      }
+    });
+  });
+
+  // Speak selected text from popup
+  document.getElementById('popup-speak').addEventListener('click', () => {
+    if (typeof _lastSelection !== 'undefined' && _lastSelection) window.ttsSpeak(_lastSelection);
+    hideSelectionPopup();
+  });
+})();
+</script>
+</body>
+</html>

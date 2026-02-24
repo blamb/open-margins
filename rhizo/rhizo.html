@@ -1,0 +1,3271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>(function(){var t=localStorage.getItem('om-theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);})();</script>
+<title>Rhizo — Learning in Abundance · TRU Open Press</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════
+   RHIZO — Learning in Abundance
+   Inspired by Dave Cormier's rhizomatic learning philosophy
+   TRU Open Press · The community is the curriculum
+   ══════════════════════════════════════════════════════════ */
+
+:root {
+  /* Soil tones — earthy, organic, not techy */
+  --soil:   #0f0d09;
+  --humus:  #181410;
+  --loam:   #211c14;
+  --bark:   #2e2618;
+  --stone:  #3d3525;
+
+  /* Growth accents */
+  --moss:   #7db87a;
+  --moss-dim: rgba(125,184,122,0.13);
+  --moss-glow: rgba(125,184,122,0.35);
+  --lichen: #c8b560;
+  --lichen-dim: rgba(200,181,96,0.13);
+  --lichen-glow: rgba(200,181,96,0.35);
+  --spore:  #b07ab8;
+  --spore-dim: rgba(176,122,184,0.13);
+  --rust:   #c27050;
+  --rust-dim: rgba(194,112,80,0.13);
+  --sky:    #7aaec8;
+  --sky-dim: rgba(122,174,200,0.13);
+
+  /* Text */
+  --text:      #e8e2d4;
+  --text-dim:  #9e9480;
+  --text-faint:#7a7060;
+
+  /* Borders */
+  --border:    rgba(255,255,255,0.07);
+  --border-hi: rgba(255,255,255,0.13);
+
+  --r: 10px;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; scroll-behavior: smooth; }
+/* Focus ring — keyboard users only, overrides outline:none on inputs/buttons */
+:focus-visible { outline: 2px solid #7db87a; outline-offset: 2px; border-radius: 3px; }
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--soil);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--humus); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+/* ── TOPBAR ── */
+.topbar {
+  background: rgba(15,13,9,0.94);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  flex-shrink: 0;
+}
+
+.topbar-brand { display: flex; align-items: center; gap: 14px; }
+.topbar-logo { height: 34px; width: 34px; object-fit: contain; filter: drop-shadow(0 0 6px rgba(125,184,122,0.3)); }
+
+.brand-text { display: flex; flex-direction: column; }
+.brand-rhizo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--moss);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.brand-sub {
+  font-size: 0.63rem;
+  color: var(--moss);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+
+.status-pill {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.67rem; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  background: var(--loam); border: 1px solid var(--border);
+  color: var(--text-dim); transition: all var(--transition);
+}
+.status-pill.connected { border-color: rgba(125,184,122,0.4); color: var(--moss); }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.status-pill.connected .status-dot { box-shadow: 0 0 6px currentColor; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+.topbar-badge {
+  padding: 4px 12px; border-radius: 20px;
+  font-size: 0.63rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  background: linear-gradient(135deg, rgba(125,184,122,0.15), rgba(200,181,96,0.15));
+  border: 1px solid rgba(125,184,122,0.25);
+  color: var(--moss);
+}
+
+/* ── APP SHELL ── */
+.app-shell {
+  display: flex; flex: 1;
+  height: calc(100vh - 58px - 34px); /* topbar 58px + suite-nav 34px */
+  overflow: hidden;
+}
+
+/* ── LEFT PANEL ── */
+.context-panel {
+  width: 300px;
+  background: var(--humus);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow: hidden; flex-shrink: 0;
+}
+
+.context-header {
+  padding: 16px 18px 13px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.section-label {
+  font-size: 0.59rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-faint); margin-bottom: 9px;
+}
+
+.proxy-row { display: flex; gap: 6px; align-items: center; margin-bottom: 7px; }
+
+.proxy-input {
+  flex: 1; background: var(--loam);
+  border: 1px solid var(--border); border-radius: 6px;
+  padding: 7px 10px;
+  font-family: 'DM Mono', monospace; font-size: 0.68rem;
+  color: var(--text); outline: none;
+  transition: border-color var(--transition);
+}
+.proxy-input:focus { border-color: rgba(125,184,122,0.4); }
+
+.btn-connect {
+  padding: 7px 12px;
+  background: var(--moss-dim); border: 1px solid rgba(125,184,122,0.3);
+  border-radius: 6px; color: var(--moss);
+  font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 600;
+  cursor: pointer; transition: all var(--transition); white-space: nowrap;
+}
+.btn-connect:hover { background: rgba(125,184,122,0.22); }
+
+.context-body { flex: 1; overflow-y: auto; padding: 14px 18px; }
+
+.field-label {
+  font-size: 0.67rem; font-weight: 600;
+  color: var(--text-dim); letter-spacing: 0.04em;
+  margin-bottom: 6px; display: block;
+}
+
+/* Book browser */
+.books-loading { display: flex; align-items: center; gap: 8px; padding: 12px 0; color: var(--text-dim); font-size: 0.77rem; }
+.books-spinner { width: 13px; height: 13px; border: 2px solid var(--border-hi); border-top-color: var(--moss); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.books-error { padding: 10px 0; font-size: 0.77rem; color: var(--rust); }
+.books-retry-btn { background: none; border: none; color: var(--moss); font-size: 0.77rem; cursor: pointer; text-decoration: underline; padding: 0; font-family: inherit; }
+
+.book-search {
+  width: 100%; background: var(--loam);
+  border: 1px solid var(--border); border-radius: 7px;
+  padding: 8px 10px 8px 30px; font-family: 'DM Sans', sans-serif;
+  font-size: 0.79rem; color: var(--text); outline: none;
+  transition: border-color var(--transition);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%239e9480' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: 9px center; margin-bottom: 7px;
+}
+.book-search:focus { border-color: rgba(125,184,122,0.4); }
+.book-search::placeholder { color: var(--text-dim); }
+
+.book-count { font-size: 0.61rem; color: var(--text-faint); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 7px; }
+
+.book-list { display: flex; flex-direction: column; gap: 4px; max-height: 280px; overflow-y: auto; }
+
+.book-item {
+  padding: 9px 11px;
+  background: var(--loam); border: 1px solid var(--border); border-radius: 7px;
+  cursor: pointer; transition: all var(--transition); text-align: left; width: 100%;
+  font-family: 'DM Sans', sans-serif;
+}
+.book-item:hover { border-color: rgba(125,184,122,0.3); background: var(--bark); }
+.book-item-title { font-size: 0.79rem; font-weight: 600; color: var(--text); line-height: 1.3; margin-bottom: 3px; }
+.book-item-meta { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.book-subject-badge {
+  font-size: 0.57rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+  padding: 2px 6px; border-radius: 9px;
+  background: var(--lichen-dim); color: var(--lichen); border: 1px solid rgba(200,181,96,0.2);
+}
+.book-item-author { font-size: 0.67rem; color: var(--text-dim); }
+
+/* Focus view */
+.book-back-btn {
+  background: none; border: none; color: var(--moss);
+  font-size: 0.71rem; font-family: 'DM Sans', sans-serif; font-weight: 600;
+  cursor: pointer; padding: 0; margin-bottom: 9px;
+  transition: color var(--transition);
+}
+.book-back-btn:hover { color: var(--text); }
+
+.selected-book-card {
+  background: linear-gradient(135deg, rgba(125,184,122,0.08), rgba(200,181,96,0.06));
+  border: 1px solid rgba(125,184,122,0.2); border-radius: 9px;
+  padding: 11px 13px; margin-bottom: 13px;
+}
+.selected-book-title { font-family: 'Fraunces', serif; font-size: 0.88rem; font-weight: 600; color: var(--text); line-height: 1.3; margin-bottom: 3px; }
+.selected-book-subject { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--lichen); }
+
+.toc-loading { display: flex; align-items: center; gap: 8px; padding: 9px 0; color: var(--text-dim); font-size: 0.77rem; }
+
+.toc-select {
+  width: 100%; background: var(--loam); border: 1px solid var(--border);
+  border-radius: 7px; padding: 8px 28px 8px 10px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.79rem; color: var(--text);
+  outline: none; transition: border-color var(--transition);
+  -webkit-appearance: none; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239e9480' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 9px center;
+}
+.toc-select:focus { border-color: rgba(125,184,122,0.4); }
+.toc-select:disabled { opacity: 0.4; cursor: not-allowed; }
+.toc-select option { background: var(--loam); color: var(--text); }
+
+.chapter-meta { display: flex; align-items: center; gap: 7px; margin-top: 7px; flex-wrap: wrap; }
+.chapter-wc-pill { font-size: 0.63rem; font-weight: 600; padding: 2px 8px; border-radius: 9px; background: var(--moss-dim); color: var(--moss); border: 1px solid rgba(125,184,122,0.22); }
+.chapter-link { font-size: 0.63rem; color: var(--text-dim); text-decoration: none; transition: color var(--transition); }
+.chapter-link:hover { color: var(--moss); }
+
+.btn-load-chapter {
+  width: 100%; margin-top: 11px; padding: 8px 13px;
+  background: var(--moss-dim); border: 1px solid rgba(125,184,122,0.3);
+  border-radius: 7px; color: var(--moss);
+  font-family: 'DM Sans', sans-serif; font-size: 0.79rem; font-weight: 600;
+  cursor: pointer; transition: all var(--transition);
+}
+.btn-load-chapter:hover { background: rgba(125,184,122,0.2); }
+.btn-load-chapter:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Source tray (multi-source chips) ── */
+.source-tray {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: 10px; margin-bottom: 2px;
+}
+.source-chip {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--moss-dim);
+  border: 1px solid rgba(125,184,122,0.3);
+  border-radius: 20px;
+  padding: 4px 8px 4px 10px;
+  font-size: 0.73rem; color: var(--moss);
+  font-family: 'DM Sans', sans-serif;
+  max-width: 100%; animation: chipIn 0.15s ease;
+}
+@keyframes chipIn { from { opacity:0; transform:scale(0.85); } to { opacity:1; transform:scale(1); } }
+.source-chip-icon { font-size: 0.85em; }
+.source-chip-body { display:flex; flex-direction:column; gap:1px; min-width:0; }
+.source-chip-label { font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:160px; }
+.source-chip-meta { color: var(--text-faint); font-size:0.68rem; white-space:nowrap; }
+.source-chip-remove {
+  margin-left: 2px; padding: 0 2px;
+  background: none; border: none; cursor: pointer;
+  color: rgba(125,184,122,0.45); font-size: 1rem; line-height:1;
+  transition: color 0.15s;
+}
+.source-chip-remove:hover { color: var(--rust); }
+
+/* ── URL fetch row ── */
+.url-fetch-row {
+  display: flex; gap: 6px; margin-top: 10px; align-items: center;
+}
+.url-fetch-input {
+  flex: 1; padding: 7px 10px;
+  background: var(--surface); border: 1px solid var(--border-hi);
+  border-radius: 7px; color: var(--text);
+  font-family: 'DM Mono', monospace; font-size: 0.72rem;
+  outline: none; transition: border-color 0.18s;
+}
+.url-fetch-input:focus { border-color: rgba(125,184,122,0.5); }
+.url-fetch-input::placeholder { color: var(--text-faint); }
+.btn-fetch-url {
+  padding: 7px 11px; white-space: nowrap;
+  background: var(--moss-dim); border: 1px solid rgba(125,184,122,0.3);
+  border-radius: 7px; color: var(--moss);
+  font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 600;
+  cursor: pointer; transition: all 0.18s;
+}
+.btn-fetch-url:hover { background: rgba(125,184,122,0.2); }
+.btn-fetch-url:disabled { opacity: 0.45; cursor: not-allowed; }
+.url-fetch-status {
+  font-size: 0.7rem; color: var(--text-faint);
+  margin-top: 4px; min-height: 1em;
+}
+.url-fetch-status.error { color: var(--rust); }
+.url-fetch-status.success { color: var(--moss); }
+
+/* ── File upload button ── */
+.file-upload-btn {
+  width: 100%; margin-top: 8px; padding: 8px 14px;
+  background: rgba(90,120,200,0.08);
+  border: 1px dashed rgba(90,120,200,0.35);
+  border-radius: 8px; color: #8ab0e8;
+  font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 600;
+  cursor: pointer; transition: all 0.18s; text-align: center;
+}
+.file-upload-btn:hover { background: rgba(90,120,200,0.15); border-style: solid; }
+.file-upload-status {
+  font-size: 0.7rem; color: var(--text-faint);
+  margin-top: 4px; min-height: 1em;
+}
+.file-upload-status.error { color: var(--rust); }
+.file-upload-status.success { color: var(--moss); }
+#file-upload-input { display: none; }
+
+/* ── Source section separator label ── */
+.oer-source-sep {
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.07em;
+  text-transform: uppercase; color: var(--text-faint);
+  margin-top: 12px; margin-bottom: 2px; padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.chapter-notice { margin-top: 9px; padding: 8px 11px; border-radius: 7px; font-size: 0.77rem; line-height: 1.5; }
+.chapter-notice.success { background: var(--moss-dim); border: 1px solid rgba(125,184,122,0.28); color: var(--moss); }
+.chapter-notice.error { background: var(--rust-dim); border: 1px solid rgba(194,112,80,0.28); color: var(--rust); }
+
+.paste-toggle-btn {
+  background: none; border: none; color: var(--text-faint);
+  font-size: 0.69rem; font-family: 'DM Sans', sans-serif; font-weight: 500;
+  cursor: pointer; padding: 0; transition: color var(--transition); letter-spacing: 0.02em;
+}
+.paste-toggle-btn:hover { color: var(--text-dim); }
+.paste-toggle-btn.active { color: var(--lichen); }
+
+.oer-textarea {
+  width: 100%; min-height: 160px;
+  background: var(--loam); border: 1px solid var(--border); border-radius: 7px;
+  padding: 10px 12px; font-family: 'DM Sans', sans-serif;
+  font-size: 0.79rem; line-height: 1.6; color: var(--text);
+  resize: vertical; outline: none; transition: border-color var(--transition);
+}
+.oer-textarea:focus { border-color: rgba(125,184,122,0.35); }
+.oer-textarea::placeholder { color: var(--text-dim); }
+
+.word-count { font-size: 0.63rem; color: var(--text-faint); text-align: right; margin-top: 4px; }
+.context-divider { height: 1px; background: var(--border); margin: 14px 0; }
+
+.objective-input {
+  width: 100%; background: var(--loam); border: 1px solid var(--border);
+  border-radius: 6px; padding: 8px 10px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.79rem;
+  color: var(--text); outline: none; transition: border-color var(--transition);
+}
+.objective-input:focus { border-color: rgba(125,184,122,0.35); }
+.objective-input::placeholder { color: var(--text-dim); }
+
+/* ── CENTRE ── */
+.centre { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+/* ── ACTIVITY RIBBON ── */
+.activity-ribbon {
+  display: flex; gap: 6px; padding: 11px 16px;
+  border-bottom: 1px solid var(--border); background: var(--humus);
+  overflow-x: auto; flex-shrink: 0;
+}
+.activity-ribbon::-webkit-scrollbar { height: 0; }
+
+.activity-tile {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 10px 14px; border-radius: 9px; cursor: pointer;
+  border: 1px solid var(--border); background: var(--loam);
+  transition: all var(--transition); white-space: nowrap; min-width: 120px;
+  font-family: 'DM Sans', sans-serif;
+}
+.activity-tile:hover { border-color: var(--border-hi); background: var(--bark); }
+.activity-tile.active {
+  border-color: var(--tile-color, var(--moss));
+  background: var(--tile-bg, var(--moss-dim));
+  box-shadow: 0 0 18px var(--tile-glow, var(--moss-glow));
+}
+
+.tile-icon { font-size: 1.35rem; line-height: 1; }
+.tile-name { font-size: 0.69rem; font-weight: 600; color: var(--text-dim); letter-spacing: 0.02em; }
+.activity-tile.active .tile-name { color: var(--tile-color, var(--moss)); }
+.tile-tag { font-size: 0.54rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tile-color, var(--moss)); opacity: 0.65; }
+
+/* ── STAGE ── */
+.stage { flex: 1; overflow-y: auto; position: relative; }
+
+.stage-idle {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  height: 100%; padding: 40px; text-align: center; gap: 18px;
+}
+.idle-mark {
+  font-family: 'Fraunces', serif; font-size: 4.5rem; font-weight: 700;
+  color: var(--moss); opacity: 0.1; letter-spacing: -0.04em; user-select: none;
+}
+.idle-title { font-family: 'Fraunces', serif; font-size: 1.45rem; font-weight: 600; color: var(--text); max-width: 520px; line-height: 1.3; }
+.idle-sub { font-size: 0.87rem; color: var(--text-dim); max-width: 440px; line-height: 1.75; }
+.idle-quote {
+  font-family: 'Fraunces', serif; font-style: italic; font-size: 0.95rem;
+  color: var(--lichen); opacity: 0.8; max-width: 400px; line-height: 1.6;
+  border-left: 2px solid rgba(200,181,96,0.3); padding-left: 14px; text-align: left;
+}
+.idle-attr { font-size: 0.65rem; color: var(--text-faint); margin-top: 4px; letter-spacing: 0.05em; }
+
+.idle-activities {
+  display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 580px;
+}
+.idle-activity-hint {
+  padding: 5px 13px; border-radius: 20px; font-size: 0.74rem;
+  border: 1px solid var(--border-hi); color: var(--text-dim); background: var(--loam);
+}
+
+/* ── GENERATE BAR ── */
+.generate-bar {
+  padding: 11px 16px; border-top: 1px solid var(--border); background: var(--humus);
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+
+.btn-generate {
+  flex: 1; padding: 12px 20px;
+  background: linear-gradient(135deg, #1a2e1a 0%, #234023 100%);
+  border: 1px solid rgba(125,184,122,0.2); border-radius: 9px;
+  color: var(--moss); font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem; font-weight: 600; cursor: pointer;
+  transition: all var(--transition);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  position: relative; overflow: hidden;
+}
+.btn-generate::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(125,184,122,0.12), rgba(200,181,96,0.08));
+  opacity: 0; transition: opacity var(--transition);
+}
+.btn-generate:hover::before { opacity: 1; }
+.btn-generate:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(10,40,10,0.5); }
+.btn-generate:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+
+/* ── GENERATING OVERLAY ── */
+.generating-overlay {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 400px; gap: 18px; padding: 60px;
+}
+.rhizo-spinner { width: 54px; height: 54px; position: relative; }
+.rhizo-spinner::before, .rhizo-spinner::after {
+  content: ''; position: absolute; border-radius: 50%; border: 2px solid transparent;
+}
+.rhizo-spinner::before { inset: 0; border-top-color: var(--moss); animation: spin 1s linear infinite; }
+.rhizo-spinner::after { inset: 8px; border-top-color: var(--lichen); animation: spin 0.65s linear infinite reverse; }
+
+.gen-title { font-family: 'Fraunces', serif; font-size: 1.1rem; color: var(--text); opacity: 0.8; }
+.gen-sub { font-size: 0.81rem; color: var(--text-dim); text-align: center; max-width: 360px; line-height: 1.65; }
+
+/* ── ERROR STATE ── */
+.error-state {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 300px; gap: 12px; padding: 40px; text-align: center;
+}
+.error-icon { font-size: 2.2rem; opacity: 0.5; }
+.error-title { font-size: 0.98rem; font-weight: 600; color: var(--rust); }
+.error-msg { font-size: 0.81rem; color: var(--text-dim); max-width: 380px; line-height: 1.6; }
+
+/* ══════════════════════════════════════════════════════════
+   ACTIVITY 1: WEED THE GARDEN
+   What the text left out, contested, silenced, or assumed
+   ══════════════════════════════════════════════════════════ */
+
+.garden-wrap { padding: 24px 22px; display: flex; flex-direction: column; gap: 22px; }
+
+.garden-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.garden-title { font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 600; color: var(--text); }
+.garden-subtitle { font-size: 0.8rem; color: var(--text-dim); margin-top: 3px; line-height: 1.5; }
+
+.garden-official {
+  background: var(--loam); border: 1px solid var(--border); border-radius: 11px; padding: 18px 20px;
+}
+.garden-official-label {
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-faint); margin-bottom: 10px;
+}
+.garden-official-text { font-family: 'Fraunces', serif; font-style: italic; font-size: 0.93rem; line-height: 1.65; color: var(--text-dim); }
+
+.weeds-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.weed-card {
+  background: var(--loam); border: 1px solid var(--border); border-radius: 11px; padding: 16px 18px;
+  transition: all var(--transition); position: relative; overflow: hidden;
+}
+.weed-card::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%;
+  background: var(--weed-color, var(--moss));
+}
+.weed-card:hover { border-color: var(--border-hi); }
+
+.weed-type {
+  font-size: 0.58rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--weed-color, var(--moss)); margin-bottom: 8px;
+}
+.weed-content { font-size: 0.84rem; line-height: 1.65; color: var(--text); margin-bottom: 12px; }
+
+.weed-prompt-label { font-size: 0.63rem; font-weight: 600; color: var(--text-dim); margin-bottom: 5px; }
+.weed-response {
+  width: 100%; min-height: 60px; background: var(--bark); border: 1px solid var(--border);
+  border-radius: 6px; padding: 8px 10px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.8rem; color: var(--text);
+  resize: vertical; outline: none; transition: border-color var(--transition);
+}
+.weed-response:focus { border-color: rgba(125,184,122,0.35); }
+.weed-response::placeholder { color: var(--text-dim); }
+
+.btn-weed-reflect {
+  margin-top: 8px; padding: 6px 14px;
+  background: none; border: 1px solid var(--border-hi); border-radius: 6px;
+  color: var(--text-dim); font-family: 'DM Sans', sans-serif;
+  font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: all var(--transition);
+}
+.btn-weed-reflect:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+
+.weed-feedback {
+  margin-top: 9px; padding: 10px 13px; border-radius: 7px; font-size: 0.8rem; line-height: 1.65;
+  background: var(--bark); border: 1px solid var(--border-hi); color: var(--text);
+  animation: fadeUp 0.3s ease;
+}
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ══════════════════════════════════════════════════════════
+   ACTIVITY 2: UNCERTAINTY MAP
+   A concept map of what we DON'T know
+   ══════════════════════════════════════════════════════════ */
+
+.uncertainty-wrap { padding: 22px; display: flex; flex-direction: column; gap: 18px; }
+
+.umap-intro {
+  font-size: 0.84rem; color: var(--text-dim); line-height: 1.7;
+  background: var(--loam); border: 1px solid var(--border); border-radius: 9px; padding: 14px 16px;
+}
+
+.umap-question-grid { display: flex; flex-direction: column; gap: 10px; }
+
+.uq-card {
+  background: var(--loam); border: 1px solid var(--border); border-radius: 11px;
+  padding: 16px 18px; transition: all var(--transition); cursor: default;
+}
+.uq-card:hover { border-color: var(--border-hi); }
+
+.uq-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+
+.uq-type {
+  font-size: 0.58rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 9px;
+  border: 1px solid var(--uq-border, rgba(125,184,122,0.3));
+  color: var(--uq-color, var(--moss)); background: var(--uq-bg, var(--moss-dim));
+}
+.uq-stakes { font-size: 0.7rem; color: var(--text-faint); font-style: italic; }
+
+.uq-question { font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 600; color: var(--text); line-height: 1.4; margin-bottom: 8px; }
+.uq-why { font-size: 0.8rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 12px; }
+
+.uq-positions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.uq-position {
+  padding: 5px 11px; border-radius: 7px; font-size: 0.76rem; line-height: 1.4;
+  background: var(--bark); border: 1px solid var(--border); color: var(--text-dim);
+}
+.uq-position-label { font-weight: 700; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-faint); display: block; margin-bottom: 2px; }
+
+.uq-your-take-label { font-size: 0.63rem; font-weight: 600; color: var(--text-dim); margin-bottom: 5px; }
+.uq-your-take {
+  width: 100%; min-height: 52px; background: var(--bark); border: 1px solid var(--border);
+  border-radius: 6px; padding: 8px 10px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.8rem; color: var(--text);
+  resize: vertical; outline: none; transition: border-color var(--transition);
+}
+.uq-your-take:focus { border-color: rgba(200,181,96,0.4); }
+.uq-your-take::placeholder { color: var(--text-dim); }
+
+/* ══════════════════════════════════════════════════════════
+   ACTIVITY 3: THE WICKED PROBLEM COUNCIL
+   Five voices, no consensus, the student must navigate
+   ══════════════════════════════════════════════════════════ */
+
+.council-wrap { padding: 22px; display: flex; flex-direction: column; gap: 18px; }
+
+.council-problem {
+  background: linear-gradient(135deg, rgba(176,122,184,0.1), rgba(200,181,96,0.07));
+  border: 1px solid rgba(176,122,184,0.25); border-radius: 12px; padding: 20px 22px; text-align: center;
+}
+.council-problem-label {
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--spore); margin-bottom: 9px;
+}
+.council-problem-text {
+  font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 600; font-style: italic;
+  color: var(--text); line-height: 1.5; max-width: 560px; margin: 0 auto;
+}
+
+.council-voices { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+
+.voice-card {
+  background: var(--loam); border: 1px solid var(--border); border-radius: 11px; padding: 16px 17px;
+  position: relative;
+}
+.voice-avatar {
+  width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; margin-bottom: 9px;
+  background: var(--voice-bg, var(--loam)); border: 1px solid var(--voice-border, var(--border));
+}
+.voice-role {
+  font-size: 0.61rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--voice-color, var(--text-dim)); margin-bottom: 7px;
+}
+.voice-says { font-size: 0.82rem; line-height: 1.65; color: var(--text); }
+
+.council-navigation {
+  background: var(--loam); border: 1px solid var(--border); border-radius: 11px; padding: 18px 20px;
+}
+.council-nav-title {
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--text-dim); margin-bottom: 12px;
+}
+.council-nav-prompt { font-family: 'Fraunces', serif; font-size: 0.95rem; color: var(--text); line-height: 1.5; margin-bottom: 14px; }
+
+.council-response {
+  width: 100%; min-height: 90px; background: var(--bark); border: 1px solid var(--border);
+  border-radius: 7px; padding: 10px 12px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.83rem; color: var(--text);
+  resize: vertical; outline: none; transition: border-color var(--transition); margin-bottom: 10px;
+}
+.council-response:focus { border-color: rgba(176,122,184,0.4); }
+.council-response::placeholder { color: var(--text-dim); }
+
+.btn-council-respond {
+  padding: 9px 20px;
+  background: var(--spore-dim); border: 1px solid rgba(176,122,184,0.35); border-radius: 8px;
+  color: var(--spore); font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all var(--transition);
+}
+.btn-council-respond:hover { background: rgba(176,122,184,0.2); }
+
+.council-synthesis {
+  margin-top: 14px; padding: 16px 18px; border-radius: 9px; font-size: 0.83rem; line-height: 1.7;
+  background: linear-gradient(135deg, rgba(176,122,184,0.1), rgba(125,184,122,0.06));
+  border: 1px solid rgba(176,122,184,0.25); color: var(--text); animation: fadeUp 0.3s ease;
+}
+.council-synthesis-title { font-weight: 700; color: var(--spore); margin-bottom: 8px; font-size: 0.78rem; letter-spacing: 0.04em; }
+
+/* ══════════════════════════════════════════════════════════
+   ACTIVITY 4: NOMAD'S ENTRY POINTS
+   Five ways in; which one is yours, and why?
+   ══════════════════════════════════════════════════════════ */
+
+.nomad-wrap { padding: 22px; display: flex; flex-direction: column; gap: 18px; }
+
+.nomad-intro { font-size: 0.84rem; color: var(--text-dim); line-height: 1.7; }
+
+.entry-grid { display: flex; flex-direction: column; gap: 9px; }
+
+.entry-card {
+  background: var(--loam); border: 1px solid var(--border); border-radius: 11px;
+  padding: 16px 18px; cursor: pointer; transition: all var(--transition);
+  position: relative; overflow: hidden;
+}
+.entry-card::after {
+  content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 3px;
+  background: var(--entry-color, var(--moss)); opacity: 0; transition: opacity var(--transition);
+}
+.entry-card:hover { border-color: var(--border-hi); background: var(--bark); }
+.entry-card:hover::after { opacity: 1; }
+.entry-card.chosen { border-color: var(--entry-color, var(--moss)); background: var(--bark); }
+.entry-card.chosen::after { opacity: 1; }
+
+.entry-mode {
+  font-size: 0.58rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--entry-color, var(--moss)); margin-bottom: 7px;
+}
+.entry-content { font-family: 'Fraunces', serif; font-size: 0.95rem; line-height: 1.55; color: var(--text); margin-bottom: 5px; }
+.entry-why { font-size: 0.76rem; color: var(--text-dim); line-height: 1.5; font-style: italic; }
+
+.chosen-reflect {
+  background: var(--loam); border: 1px solid var(--border-hi); border-radius: 11px; padding: 18px 20px;
+  animation: fadeUp 0.35s ease;
+}
+.chosen-reflect-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--lichen); margin-bottom: 10px; }
+.chosen-reflect-prompt { font-family: 'Fraunces', serif; font-size: 0.97rem; color: var(--text); line-height: 1.5; margin-bottom: 12px; }
+
+.reflect-textarea {
+  width: 100%; min-height: 80px; background: var(--bark); border: 1px solid var(--border);
+  border-radius: 6px; padding: 9px 11px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.82rem; color: var(--text);
+  resize: vertical; outline: none; transition: border-color var(--transition); margin-bottom: 10px;
+}
+.reflect-textarea:focus { border-color: rgba(200,181,96,0.4); }
+.reflect-textarea::placeholder { color: var(--text-dim); }
+
+.btn-reflect-send {
+  padding: 8px 18px; background: var(--lichen-dim);
+  border: 1px solid rgba(200,181,96,0.35); border-radius: 7px;
+  color: var(--lichen); font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all var(--transition);
+}
+.btn-reflect-send:hover { background: rgba(200,181,96,0.22); }
+
+.reflect-response {
+  margin-top: 12px; padding: 14px 16px; border-radius: 8px;
+  background: linear-gradient(135deg, rgba(200,181,96,0.09), rgba(125,184,122,0.06));
+  border: 1px solid rgba(200,181,96,0.22); font-size: 0.82rem; line-height: 1.7;
+  color: var(--text); animation: fadeUp 0.3s ease;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ACTIVITY 5: COMMUNITY CONTRACT
+   What I bring, what I need, what I refuse to accept
+   ══════════════════════════════════════════════════════════ */
+
+.contract-wrap { padding: 22px; display: flex; flex-direction: column; gap: 18px; }
+
+.contract-intro {
+  background: linear-gradient(135deg, rgba(122,174,200,0.09), rgba(125,184,122,0.06));
+  border: 1px solid rgba(122,174,200,0.2); border-radius: 11px; padding: 18px 20px;
+}
+.contract-intro-title { font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 600; color: var(--sky); margin-bottom: 8px; }
+.contract-intro-text { font-size: 0.83rem; color: var(--text-dim); line-height: 1.7; }
+
+.contract-topic {
+  background: var(--loam); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px 16px; text-align: center;
+}
+.contract-topic-label { font-size: 0.59rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 7px; }
+.contract-topic-text { font-family: 'Fraunces', serif; font-size: 1.05rem; font-weight: 600; font-style: italic; color: var(--text); }
+
+.contract-sections { display: flex; flex-direction: column; gap: 11px; }
+
+.contract-section {
+  background: var(--loam); border: 1px solid var(--border); border-radius: 11px;
+  padding: 16px 18px; position: relative; overflow: hidden;
+}
+.contract-section::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--cs-color, var(--moss));
+}
+.contract-section-label {
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--cs-color, var(--moss)); margin-bottom: 6px;
+}
+.contract-section-prompt { font-size: 0.84rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 10px; }
+.contract-input {
+  width: 100%; min-height: 68px; background: var(--bark); border: 1px solid var(--border);
+  border-radius: 6px; padding: 9px 11px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.82rem; color: var(--text);
+  resize: vertical; outline: none; transition: border-color var(--transition);
+}
+.contract-input:focus { border-color: var(--cs-color, rgba(125,184,122,0.4)); }
+.contract-input::placeholder { color: var(--text-dim); }
+
+.btn-generate-contract {
+  width: 100%; padding: 11px 20px;
+  background: linear-gradient(135deg, rgba(122,174,200,0.15), rgba(125,184,122,0.1));
+  border: 1px solid rgba(122,174,200,0.3); border-radius: 9px;
+  color: var(--sky); font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all var(--transition);
+}
+.btn-generate-contract:hover { background: rgba(122,174,200,0.22); }
+
+.contract-result {
+  background: linear-gradient(135deg, rgba(122,174,200,0.08), rgba(125,184,122,0.06));
+  border: 1px solid rgba(122,174,200,0.25); border-radius: 12px; padding: 22px 24px;
+  animation: fadeUp 0.35s ease;
+}
+.contract-result-title { font-family: 'Fraunces', serif; font-size: 1.05rem; font-weight: 600; color: var(--sky); margin-bottom: 14px; }
+.contract-clause { margin-bottom: 14px; }
+.contract-clause-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 5px; }
+.contract-clause-text { font-size: 0.86rem; line-height: 1.7; color: var(--text); }
+.contract-signed { font-family: 'Fraunces', serif; font-style: italic; font-size: 0.85rem; color: var(--text-dim); margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
+
+/* ══════════════════════════════════════════════════════════
+   ACTIVITY 6: INFORMED TRUST AUDIT
+══════════════════════════════════════════════════════════ */
+.trust-wrap { padding: 22px; display: flex; flex-direction: column; gap: 20px; }
+.trust-intro { font-size: 0.84rem; color: var(--text-dim); line-height: 1.75; border-left: 3px solid var(--moss); padding-left: 14px; }
+.trust-claims-grid { display: flex; flex-direction: column; gap: 14px; }
+.trust-claim {
+  background: var(--bark); border: 1px solid var(--border);
+  border-radius: 11px; padding: 18px 20px;
+  display: flex; flex-direction: column; gap: 12px;
+  transition: border-color 0.2s;
+}
+.trust-claim:hover { border-color: var(--border-hi); }
+.trust-claim-header { display: flex; align-items: flex-start; gap: 10px; }
+.trust-claim-badge {
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; margin-top: 2px;
+  background: var(--trust-bg, rgba(125,184,122,0.12));
+  color: var(--trust-color, #7db87a);
+  border: 1px solid var(--trust-border, rgba(125,184,122,0.3));
+}
+.trust-claim-text { font-size: 0.88rem; font-weight: 600; color: var(--text); line-height: 1.5; }
+.trust-basis { font-size: 0.81rem; color: var(--text-dim); line-height: 1.65; }
+.trust-basis strong { color: var(--text); font-weight: 600; }
+.trust-audit-row { display: flex; flex-direction: column; gap: 6px; }
+.trust-audit-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-faint); }
+.trust-audit-q { font-size: 0.82rem; color: var(--text-dim); font-style: italic; line-height: 1.55; }
+.trust-response {
+  width: 100%; background: var(--loam); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 13px; color: var(--text);
+  font-family: 'DM Sans', sans-serif; font-size: 0.83rem; resize: vertical;
+  line-height: 1.6; transition: border-color 0.2s;
+}
+.trust-response:focus { outline: none; border-color: rgba(125,184,122,0.35); }
+.trust-response::placeholder { color: var(--text-faint); }
+.btn-trust-reflect {
+  align-self: flex-start; font-size: 0.77rem; font-weight: 600;
+  padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border);
+  background: none; color: var(--text-dim); cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-trust-reflect:hover { color: var(--moss); border-color: rgba(125,184,122,0.4); }
+.trust-feedback {
+  font-size: 0.82rem; line-height: 1.7; color: var(--text-dim);
+  background: rgba(125,184,122,0.06); border: 1px solid rgba(125,184,122,0.18);
+  border-radius: 8px; padding: 12px 14px; animation: fadeUp 0.3s ease;
+}
+.trust-synthesis {
+  background: linear-gradient(135deg, rgba(125,184,122,0.07), rgba(200,181,96,0.06));
+  border: 1px solid rgba(125,184,122,0.22); border-radius: 12px; padding: 20px 22px;
+}
+.trust-synthesis-title { font-family: 'Fraunces', serif; font-size: 0.9rem; font-weight: 600; color: var(--moss); margin-bottom: 10px; }
+.trust-synthesis-q { font-size: 0.84rem; color: var(--text-dim); font-style: italic; line-height: 1.65; margin-bottom: 12px; }
+.trust-final {
+  width: 100%; background: var(--loam); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 13px; color: var(--text);
+  font-family: 'DM Sans', sans-serif; font-size: 0.83rem; resize: vertical; line-height: 1.6;
+  transition: border-color 0.2s;
+}
+.trust-final:focus { outline: none; border-color: rgba(125,184,122,0.35); }
+.trust-final::placeholder { color: var(--text-faint); }
+.btn-trust-final {
+  margin-top: 10px; font-size: 0.82rem; font-weight: 600;
+  padding: 9px 18px; border-radius: 20px;
+  border: 1px solid rgba(125,184,122,0.35);
+  background: rgba(125,184,122,0.08); color: var(--moss); cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-trust-final:hover { background: rgba(125,184,122,0.18); border-color: rgba(125,184,122,0.55); }
+.trust-final-response {
+  margin-top: 12px; font-size: 0.83rem; line-height: 1.75; color: var(--text-dim);
+  animation: fadeUp 0.3s ease;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ACTIVITY 7: ABUNDANCE CHECK
+══════════════════════════════════════════════════════════ */
+.abundance-wrap { padding: 22px; display: flex; flex-direction: column; gap: 20px; }
+.abundance-premise {
+  background: var(--bark); border: 1px solid var(--border);
+  border-radius: 11px; padding: 18px 20px;
+}
+.abundance-premise-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--lichen); margin-bottom: 8px; }
+.abundance-premise-text { font-size: 0.86rem; color: var(--text); line-height: 1.65; }
+.abundance-hidden-grid { display: flex; flex-direction: column; gap: 13px; }
+.abundance-card {
+  background: var(--bark); border: 1px solid var(--border);
+  border-left: 3px solid var(--ab-color, var(--lichen));
+  border-radius: 11px; padding: 16px 18px;
+  display: flex; flex-direction: column; gap: 10px;
+  transition: border-color 0.2s;
+}
+.abundance-card:hover { border-color: var(--border-hi); }
+.abundance-type {
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ab-color, var(--lichen));
+}
+.abundance-hidden-label { font-size: 0.75rem; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.abundance-hidden-text { font-size: 0.83rem; color: var(--text-dim); line-height: 1.65; }
+.abundance-surface { font-size: 0.8rem; color: var(--text-faint); font-style: italic; line-height: 1.55; border-top: 1px solid var(--border); padding-top: 9px; }
+.abundance-surface strong { color: var(--text-dim); font-style: normal; }
+.abundance-respond {
+  width: 100%; background: var(--loam); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 13px; color: var(--text);
+  font-family: 'DM Sans', sans-serif; font-size: 0.83rem; resize: vertical; line-height: 1.6;
+  transition: border-color 0.2s;
+}
+.abundance-respond:focus { outline: none; border-color: rgba(200,181,96,0.35); }
+.abundance-respond::placeholder { color: var(--text-faint); }
+.btn-abundance-reflect {
+  align-self: flex-start; font-size: 0.77rem; font-weight: 600;
+  padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border);
+  background: none; color: var(--text-dim); cursor: pointer; transition: all 0.2s;
+}
+.btn-abundance-reflect:hover { color: var(--lichen); border-color: rgba(200,181,96,0.4); }
+.abundance-fb {
+  font-size: 0.82rem; line-height: 1.7; color: var(--text-dim);
+  background: rgba(200,181,96,0.07); border: 1px solid rgba(200,181,96,0.2);
+  border-radius: 8px; padding: 12px 14px; animation: fadeUp 0.3s ease;
+}
+.abundance-closing {
+  background: linear-gradient(135deg, rgba(200,181,96,0.07), rgba(125,184,122,0.05));
+  border: 1px solid rgba(200,181,96,0.22); border-radius: 12px; padding: 18px 20px;
+}
+.abundance-closing-q { font-size: 0.84rem; color: var(--text-dim); font-style: italic; line-height: 1.65; margin-bottom: 12px; }
+.abundance-sit {
+  width: 100%; background: var(--loam); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 13px; color: var(--text);
+  font-family: 'DM Sans', sans-serif; font-size: 0.83rem; resize: vertical; line-height: 1.6;
+  transition: border-color 0.2s;
+}
+.abundance-sit:focus { outline: none; border-color: rgba(200,181,96,0.35); }
+.abundance-sit::placeholder { color: var(--text-faint); }
+
+/* ══════════════════════════════════════════════════════════
+   ACTIVITY 8: BREADCRUMB TRAIL
+══════════════════════════════════════════════════════════ */
+.breadcrumb-wrap { padding: 22px; display: flex; flex-direction: column; gap: 20px; }
+.breadcrumb-intro { font-size: 0.84rem; color: var(--text-dim); line-height: 1.75; border-left: 3px solid var(--rust); padding-left: 14px; }
+.breadcrumb-claims { display: flex; flex-direction: column; gap: 16px; }
+.bc-claim {
+  background: var(--bark); border: 1px solid var(--border);
+  border-radius: 11px; padding: 18px 20px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.bc-claim-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.bc-claim-num {
+  font-size: 0.7rem; font-weight: 700; color: var(--rust);
+  background: rgba(194,112,80,0.12); border: 1px solid rgba(194,112,80,0.25);
+  border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+}
+.bc-claim-text { font-size: 0.88rem; font-weight: 600; color: var(--text); line-height: 1.5; flex: 1; }
+.bc-type-badge {
+  font-size: 0.58rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 20px; white-space: nowrap; flex-shrink: 0;
+  background: rgba(194,112,80,0.1); color: var(--rust); border: 1px solid rgba(194,112,80,0.25);
+}
+.bc-trail { display: flex; flex-direction: column; gap: 8px; }
+.bc-trail-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-faint); }
+.bc-questions { display: flex; flex-direction: column; gap: 5px; }
+.bc-question { font-size: 0.81rem; color: var(--text-dim); font-style: italic; line-height: 1.5; padding-left: 10px; border-left: 2px solid var(--border); }
+.bc-response {
+  width: 100%; background: var(--loam); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 13px; color: var(--text);
+  font-family: 'DM Sans', sans-serif; font-size: 0.83rem; resize: vertical; line-height: 1.6;
+  transition: border-color 0.2s;
+}
+.bc-response:focus { outline: none; border-color: rgba(194,112,80,0.35); }
+.bc-response::placeholder { color: var(--text-faint); }
+.btn-bc-check {
+  align-self: flex-start; font-size: 0.77rem; font-weight: 600;
+  padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border);
+  background: none; color: var(--text-dim); cursor: pointer; transition: all 0.2s;
+}
+.btn-bc-check:hover { color: var(--rust); border-color: rgba(194,112,80,0.4); }
+.bc-feedback {
+  font-size: 0.82rem; line-height: 1.7; color: var(--text-dim);
+  background: rgba(194,112,80,0.07); border: 1px solid rgba(194,112,80,0.2);
+  border-radius: 8px; padding: 12px 14px; animation: fadeUp 0.3s ease;
+}
+.bc-build {
+  background: linear-gradient(135deg, rgba(194,112,80,0.07), rgba(200,181,96,0.05));
+  border: 1px solid rgba(194,112,80,0.22); border-radius: 12px; padding: 20px 22px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.bc-build-title { font-family: 'Fraunces', serif; font-size: 0.95rem; font-weight: 600; color: var(--rust); }
+.bc-build-prompt { font-size: 0.83rem; color: var(--text-dim); line-height: 1.65; }
+.bc-own-claim {
+  width: 100%; background: var(--loam); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 13px; color: var(--text);
+  font-family: 'DM Sans', sans-serif; font-size: 0.83rem; resize: vertical; line-height: 1.6;
+  transition: border-color 0.2s;
+}
+.bc-own-claim:focus { outline: none; border-color: rgba(194,112,80,0.35); }
+.bc-own-claim::placeholder { color: var(--text-faint); }
+.btn-bc-build {
+  align-self: flex-start; font-size: 0.82rem; font-weight: 600;
+  padding: 9px 18px; border-radius: 20px;
+  border: 1px solid rgba(194,112,80,0.35);
+  background: rgba(194,112,80,0.08); color: var(--rust); cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-bc-build:hover { background: rgba(194,112,80,0.18); border-color: rgba(194,112,80,0.55); }
+.bc-own-response {
+  font-size: 0.83rem; line-height: 1.75; color: var(--text-dim); animation: fadeUp 0.3s ease;
+}
+
+/* ── UTILITIES ── */
+.hidden { display: none !important; }
+button { cursor: pointer; }
+.activity-content { animation: fadeUp 0.35s ease; }
+
+/* ── SAVE BUTTON ── */
+.btn-save {
+  padding: 10px 16px;
+  background: rgba(200,181,96,0.08);
+  border: 1px solid rgba(200,181,96,0.28);
+  border-radius: 9px;
+  color: var(--lichen);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; white-space: nowrap;
+  transition: all var(--transition);
+  display: flex; align-items: center; gap: 6px;
+}
+.btn-save:hover { background: rgba(200,181,96,0.18); border-color: rgba(200,181,96,0.45); transform: translateY(-1px); }
+.btn-save.save-done { color: var(--moss); border-color: rgba(125,184,122,0.4); background: rgba(125,184,122,0.1); }
+
+/* ── SUITE NAV ── */
+.suite-nav {
+  background: rgba(15,13,9,0.7);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  position: sticky;
+  top: 58px; /* sits below the 58px topbar */
+  z-index: 199;
+  backdrop-filter: blur(8px);
+  flex-shrink: 0;
+}
+.suite-nav-home {
+  font-size: 0.63rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.18s;
+  flex-shrink: 0;
+}
+.suite-nav-home:hover { color: var(--text); }
+.suite-nav-tools { display: flex; align-items: center; gap: 4px; }
+.suite-nav-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.63rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+/* inactive pills — solid legible text (≥4.5:1 on soil #0f0d09) */
+.suite-nav-pill.pill-companion { color: #e8cc6a; border-color: rgba(232,204,106,0.45); }
+.suite-nav-pill.pill-companion:hover { background: rgba(232,204,106,0.12); border-color: rgba(232,204,106,0.65); color: #f5de88; }
+.suite-nav-pill.pill-builder   { color: #c8d8ec; border-color: rgba(200,216,236,0.35); }
+.suite-nav-pill.pill-builder:hover   { background: rgba(200,216,236,0.1); border-color: rgba(200,216,236,0.55); color: #e8eef8; }
+.suite-nav-pill.pill-nova      { color: #e8cc6a; border-color: rgba(232,204,106,0.45); }
+.suite-nav-pill.pill-nova:hover      { background: rgba(232,204,106,0.12); border-color: rgba(232,204,106,0.65); color: #f5de88; }
+.suite-nav-pill.pill-rhizo     { color: #8fd48c; border-color: rgba(143,212,140,0.45); }
+.suite-nav-pill.pill-rhizo:hover     { background: rgba(143,212,140,0.1); border-color: rgba(143,212,140,0.65); color: #aae8a8; }
+.suite-nav-pill.pill-active { cursor: default; pointer-events: none; }
+.suite-nav-pill.pill-rhizo.pill-active { background: rgba(143,212,140,0.15); border-color: rgba(143,212,140,0.55); color: #aae8a8; font-weight: 700; }
+.suite-nav-pill.pill-sylva     { color: #a8e6c8; border-color: rgba(168,230,200,0.35); }
+.suite-nav-pill.pill-sylva:hover     { background: rgba(168,230,200,0.1); border-color: rgba(168,230,200,0.55); color: #c0f0d8; }
+.suite-nav-pill.pill-sylva.pill-active { background: rgba(168,230,200,0.12); border-color: rgba(168,230,200,0.45); color: #a8e6c8; font-weight: 700; }
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE — TABLET & MOBILE
+   ══════════════════════════════════════════════════════════ */
+
+@media (max-width: 1024px) {
+  .context-panel { width: 240px; }
+  .suite-nav-pill { padding: 3px 8px; font-size: 0.65rem; }
+}
+
+@media (max-width: 768px) {
+  .suite-nav-tools { display: none; }
+}
+
+/* ── Light theme suite-nav background ── */
+[data-theme="light"] .suite-nav {
+  background: rgba(237,232,223,0.92);
+}
+
+/* ── Light theme: suite-nav home & pills need dark colours on light bg ── */
+[data-theme="light"] .suite-nav-home { color: #5a5040; }
+[data-theme="light"] .suite-nav-home:hover { color: #1a1610; }
+[data-theme="light"] .suite-nav-pill.pill-companion { color: #7a4e00; border-color: rgba(122,78,0,0.35); }
+[data-theme="light"] .suite-nav-pill.pill-companion:hover { background: rgba(122,78,0,0.08); border-color: rgba(122,78,0,0.55); color: #5a3800; }
+[data-theme="light"] .suite-nav-pill.pill-builder   { color: #003865; border-color: rgba(0,56,101,0.35); }
+[data-theme="light"] .suite-nav-pill.pill-builder:hover   { background: rgba(0,56,101,0.08); border-color: rgba(0,56,101,0.55); color: #002244; }
+[data-theme="light"] .suite-nav-pill.pill-nova      { color: #7a4e00; border-color: rgba(122,78,0,0.35); }
+[data-theme="light"] .suite-nav-pill.pill-nova:hover      { background: rgba(122,78,0,0.08); border-color: rgba(122,78,0,0.55); color: #5a3800; }
+[data-theme="light"] .suite-nav-pill.pill-rhizo     { color: #1e5c1a; border-color: rgba(30,92,26,0.35); }
+[data-theme="light"] .suite-nav-pill.pill-rhizo:hover     { background: rgba(30,92,26,0.08); border-color: rgba(30,92,26,0.55); color: #133d10; }
+[data-theme="light"] .suite-nav-pill.pill-rhizo.pill-active { background: rgba(30,92,26,0.10); border-color: rgba(30,92,26,0.45); color: #1e5c1a; }
+[data-theme="light"] .suite-nav-pill.pill-sylva     { color: #1a5c3a; border-color: rgba(26,92,58,0.35); }
+[data-theme="light"] .suite-nav-pill.pill-sylva:hover     { background: rgba(26,92,58,0.08); border-color: rgba(26,92,58,0.55); color: #0f3d26; }
+[data-theme="light"] .suite-nav-pill.pill-sylva.pill-active { background: rgba(26,92,58,0.10); border-color: rgba(26,92,58,0.45); color: #1a5c3a; }
+
+/* ── Light theme override ── */
+[data-theme="light"] {
+  --soil:   #f5f2ec;
+  --humus:  #ede8df;
+  --loam:   #ffffff;
+  --bark:   #f0ebe0;
+  --stone:  #e4ddd0;
+
+  --moss:       #3d7a3a;
+  --moss-dim:   rgba(61,122,58,0.10);
+  --moss-glow:  rgba(61,122,58,0.25);
+  --lichen:     #7a6a10;
+  --lichen-dim: rgba(122,106,16,0.10);
+  --lichen-glow:rgba(122,106,16,0.25);
+  --spore:      #6a3a78;
+  --spore-dim:  rgba(106,58,120,0.10);
+  --rust:       #8a3818;
+  --rust-dim:   rgba(138,56,24,0.10);
+  --sky:        #1e5a88;
+  --sky-dim:    rgba(30,90,136,0.10);
+
+  --text:       #1a1610;
+  --text-dim:   #5a5040;
+  --text-faint: #786858;
+
+  --border:     rgba(0,0,0,0.08);
+  --border-hi:  rgba(0,0,0,0.14);
+}
+
+/* ── Suite theme toggle button ── */
+.suite-nav-guide {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--moss);
+  text-decoration: none;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(125,184,122,0.4);
+  background: rgba(125,184,122,0.08);
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
+  flex-shrink: 0;
+}
+.suite-nav-guide:hover { background: rgba(125,184,122,0.18); border-color: rgba(125,184,122,0.65); color: #a8d8a4; }
+
+.btn-suite-theme {
+  background: transparent;
+  border: 1px solid rgba(128,128,128,0.25);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.65;
+  transition: opacity 0.2s, background 0.2s;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.btn-suite-theme:hover { opacity: 1; background: rgba(128,128,128,0.12); }
+
+  .app-shell {
+    flex-direction: column;
+    position: relative;
+  }
+
+  .context-panel {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    width: 100% !important;
+    max-height: 72vh;
+    z-index: 200;
+    border-right: none;
+    border-top: 1px solid var(--border);
+    border-radius: 16px 16px 0 0;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    overflow-y: auto;
+  }
+  .context-panel.mobile-open { transform: translateY(0); }
+
+  .main-content { flex: 1; width: 100%; }
+
+  /* Activity ribbon */
+  .activity-ribbon { gap: 6px; padding: 0 10px; }
+  .activity-tile { flex-shrink: 0; padding: 8px 10px; }
+  .tile-tag { display: none; }
+
+  /* Stage */
+  .stage { padding: 12px; }
+  .generate-bar { padding: 10px 12px; gap: 8px; }
+
+  /* Mobile open-panel FAB */
+  .btn-open-panel {
+    display: flex !important;
+    position: fixed;
+    bottom: 72px; left: 16px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--moss);
+    border: none;
+    color: #000;
+    font-size: 1.2rem;
+    align-items: center; justify-content: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    z-index: 210;
+    cursor: pointer;
+  }
+
+  .mobile-backdrop {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 199;
+  }
+  .mobile-backdrop.visible { display: block; }
+
+  .topbar { padding: 0 12px; }
+}
+
+</style>
+<!-- PDF.js for client-side PDF text extraction -->
+<script type="module">
+  import * as pdfjs from 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.min.mjs';
+  pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.worker.min.mjs';
+  window.pdfjsLib = pdfjs;
+</script>
+<!-- mammoth.js for client-side .docx text extraction -->
+<script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar" role="banner">
+  <div class="topbar-brand">
+    <img src="https://openpress.trubox.ca/wp-content/uploads/sites/2142/2023/10/cropped-openpress_logo_colour-1.png"
+         alt="TRU Open Press" class="topbar-logo"
+         onerror="this.style.display='none'">
+    <div class="brand-text">
+      <span class="brand-rhizo">Rhizo</span>
+      <span class="brand-sub">Learning in Abundance · TRU Open Press</span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="status-pill" id="status-pill">
+      <span class="status-dot"></span>
+      <span id="status-text">Not connected</span>
+    </div>
+    <span class="topbar-badge">∿ Community as Curriculum</span>
+  </div>
+</header>
+
+<!-- SUITE NAV -->
+<nav class="suite-nav" aria-label="Open Margins suite">
+  <a href="../index.html" class="suite-nav-home">← Open Margins</a>
+  <div class="suite-nav-tools">
+    <a href="../companion/companion.html" class="suite-nav-pill pill-companion">✦ Companion</a>
+    <a href="../tru-oer-activity-builder.html" class="suite-nav-pill pill-builder">⬡ Activity Builder</a>
+    <a href="../nova/nova.html" class="suite-nav-pill pill-nova">✺ Nova</a>
+    <span class="suite-nav-pill pill-rhizo pill-active" aria-current="page">∿ Rhizo</span>
+    <a href="../sylva/sylva.html" class="suite-nav-pill pill-sylva">⟡ Sylva</a>
+  </div>
+  <a href="rhizo-guide.html" class="suite-nav-guide" title="Rhizo guide — how to use each activity" aria-label="Rhizo guide">? guide</a>
+  <button class="btn-suite-theme" id="btn-suite-theme" aria-label="Toggle theme" title="Toggle theme">🌙</button>
+</nav>
+
+<div class="app-shell">
+
+  <!-- LEFT: Context Panel -->
+  <aside class="context-panel" aria-label="OER Content and Settings">
+
+    <div class="context-header">
+      <div class="section-label">Proxy Server</div>
+      <div class="proxy-row">
+        <input type="url" class="proxy-input" id="proxy-url"
+               value="http://localhost:3001/api/generate"
+               placeholder="http://localhost:3001/api/generate"
+               aria-label="Proxy server URL">
+        <button class="btn-connect" id="btn-connect" type="button">Connect</button>
+      </div>
+      <div style="font-size:0.67rem;color:var(--text-dim);margin-top:4px;" id="connect-msg">Connecting…</div>
+    </div>
+
+    <div class="context-body">
+
+      <!-- Book Browser -->
+      <div id="book-browser">
+
+        <div id="book-list-view">
+          <div class="books-loading" id="books-loading">
+            <div class="books-spinner"></div>
+            <span>Fetching books from Pressbooks — takes ~5 seconds…</span>
+          </div>
+          <div id="books-ready" class="hidden">
+            <input type="search" class="book-search" id="book-search"
+                   placeholder="Search by title, subject, or author…"
+                   aria-label="Search books">
+            <div class="book-count" id="book-count"></div>
+            <div class="book-list" id="book-list" role="listbox" aria-label="TRU Open Press books"></div>
+          </div>
+          <div id="books-error" class="books-error hidden">
+            Could not load books. <button class="books-retry-btn" id="books-retry">Retry</button>
+          </div>
+        </div>
+
+        <div id="book-focus-view" class="hidden">
+          <button class="book-back-btn" id="book-back" type="button">← Change book</button>
+          <div class="selected-book-card" id="selected-book-card"></div>
+          <div class="toc-loading hidden" id="toc-loading">
+            <div class="books-spinner"></div>
+            <span>Loading chapters…</span>
+          </div>
+          <div id="toc-selectors" class="hidden">
+            <label class="field-label" for="part-select">Part</label>
+            <select class="toc-select" id="part-select" aria-label="Select a part">
+              <option value="">— select a part —</option>
+            </select>
+            <label class="field-label" for="chapter-select" style="margin-top:9px">Chapter</label>
+            <select class="toc-select" id="chapter-select" aria-label="Select a chapter" disabled>
+              <option value="">— select a chapter —</option>
+            </select>
+            <div id="chapter-meta" class="chapter-meta hidden"></div>
+            <button class="btn-load-chapter hidden" id="btn-load-chapter" type="button">+ Add chapter to sources</button>
+          </div>
+          <div id="chapter-notice" class="chapter-notice hidden"></div>
+        </div>
+
+      </div>
+
+      <!-- ── SOURCE TRAY ── -->
+      <div id="source-tray" class="source-tray"></div>
+
+      <!-- ── URL FETCH ── -->
+      <div class="oer-source-sep">Fetch from URL</div>
+      <div class="url-fetch-row">
+        <input type="url" class="url-fetch-input" id="url-fetch-input"
+               placeholder="https://example.com/article"
+               aria-label="URL to fetch text from">
+        <button class="btn-fetch-url" id="btn-fetch-url" type="button">Fetch</button>
+      </div>
+      <div class="url-fetch-status" id="url-fetch-status"></div>
+
+      <!-- ── FILE UPLOAD ── -->
+      <div class="oer-source-sep">Upload PDF or Word doc</div>
+      <button class="file-upload-btn" id="btn-file-upload" type="button">
+        ↑ Upload PDF or .docx file
+      </button>
+      <div class="file-upload-status" id="file-upload-status"></div>
+      <input type="file" id="file-upload-input" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+
+      <div class="context-divider"></div>
+      <div>
+        <button class="paste-toggle-btn" id="paste-toggle" type="button">✎ Paste text instead</button>
+      </div>
+      <div id="paste-section" class="hidden">
+        <label class="field-label" for="oer-text" style="margin-top:9px">OER Content</label>
+        <textarea class="oer-textarea" id="oer-text"
+          placeholder="Paste a chapter from any TRU Open Press book here. Aim for 300–1200 words."></textarea>
+        <div class="word-count"><span id="word-count">0</span> words</div>
+      </div>
+
+      <div class="context-divider"></div>
+
+      <label class="field-label" for="objective">Your focus <span style="color:var(--text-faint);font-weight:400">(optional)</span></label>
+      <input type="text" class="objective-input" id="objective"
+             placeholder="e.g. What does this mean for your community?">
+
+    </div>
+
+  </aside>
+
+  <!-- CENTRE: Stage -->
+  <div class="centre">
+
+    <div class="activity-ribbon" role="tablist" aria-label="Activity types">
+
+      <button class="activity-tile active" data-activity="garden" role="tab" aria-selected="true"
+              style="--tile-color:var(--moss);--tile-bg:var(--moss-dim);--tile-glow:var(--moss-glow)">
+        <span class="tile-icon">🌿</span>
+        <span class="tile-name">Weed the Garden</span>
+        <span class="tile-tag">what's missing</span>
+      </button>
+
+      <button class="activity-tile" data-activity="uncertainty" role="tab" aria-selected="false"
+              style="--tile-color:var(--lichen);--tile-bg:var(--lichen-dim);--tile-glow:var(--lichen-glow)">
+        <span class="tile-icon">🌫</span>
+        <span class="tile-name">Uncertainty Map</span>
+        <span class="tile-tag">what we don't know</span>
+      </button>
+
+      <button class="activity-tile" data-activity="council" role="tab" aria-selected="false"
+              style="--tile-color:var(--spore);--tile-bg:var(--spore-dim);--tile-glow:rgba(176,122,184,0.35)">
+        <span class="tile-icon">🗣</span>
+        <span class="tile-name">Wicked Council</span>
+        <span class="tile-tag">no consensus</span>
+      </button>
+
+      <button class="activity-tile" data-activity="nomad" role="tab" aria-selected="false"
+              style="--tile-color:var(--rust);--tile-bg:var(--rust-dim);--tile-glow:rgba(194,112,80,0.35)">
+        <span class="tile-icon">🧭</span>
+        <span class="tile-name">Nomad's Entry</span>
+        <span class="tile-tag">your way in</span>
+      </button>
+
+      <button class="activity-tile" data-activity="contract" role="tab" aria-selected="false"
+              style="--tile-color:var(--sky);--tile-bg:var(--sky-dim);--tile-glow:rgba(122,174,200,0.35)">
+        <span class="tile-icon">📜</span>
+        <span class="tile-name">Community Contract</span>
+        <span class="tile-tag">your commitment</span>
+      </button>
+
+      <button class="activity-tile" data-activity="trust" role="tab" aria-selected="false"
+              style="--tile-color:var(--moss);--tile-bg:var(--moss-dim);--tile-glow:var(--moss-glow)">
+        <span class="tile-icon">🔎</span>
+        <span class="tile-name">Trust Audit</span>
+        <span class="tile-tag">who says so?</span>
+      </button>
+
+      <button class="activity-tile" data-activity="abundance" role="tab" aria-selected="false"
+              style="--tile-color:var(--lichen);--tile-bg:var(--lichen-dim);--tile-glow:var(--lichen-glow)">
+        <span class="tile-icon">🌊</span>
+        <span class="tile-name">Abundance Check</span>
+        <span class="tile-tag">hidden uncertainty</span>
+      </button>
+
+      <button class="activity-tile" data-activity="breadcrumb" role="tab" aria-selected="false"
+              style="--tile-color:var(--rust);--tile-bg:var(--rust-dim);--tile-glow:rgba(194,112,80,0.35)">
+        <span class="tile-icon">🍞</span>
+        <span class="tile-name">Breadcrumb Trail</span>
+        <span class="tile-tag">trace the knowing</span>
+      </button>
+
+    </div>
+
+    <div class="stage" id="stage">
+      <div class="stage-idle" id="stage-idle">
+        <div class="idle-mark" aria-hidden="true">∿</div>
+        <h1 class="idle-title">The community is the curriculum</h1>
+        <p class="idle-sub">Select a chapter from a TRU Open Press book, then choose an activity. These aren't assessments — they're invitations to notice what the text assumes, avoids, hides, or can't yet know.</p>
+        <blockquote class="idle-quote" id="cormier-quote"></blockquote>
+        <p class="idle-attr">— Dave Cormier, <em>Learning in a Time of Abundance</em></p>
+        <div class="idle-activities" aria-hidden="true">
+          <span class="idle-activity-hint">🌿 Find what the text left out</span>
+          <span class="idle-activity-hint">🌫 Map the unanswerable questions</span>
+          <span class="idle-activity-hint">🗣 Navigate five conflicting voices</span>
+          <span class="idle-activity-hint">🧭 Choose your own entry point</span>
+          <span class="idle-activity-hint">📜 Write your learning commitment</span>
+          <span class="idle-activity-hint">🔎 Audit who you're being asked to trust</span>
+          <span class="idle-activity-hint">🌊 Surface the hidden uncertainty</span>
+          <span class="idle-activity-hint">🍞 Trace a claim back to its source</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="generate-bar">
+      <button class="btn-generate" id="btn-generate" disabled>
+        <span aria-hidden="true">∿</span>
+        <span id="generate-label">Weed the Garden</span>
+      </button>
+      <button class="btn-save hidden" id="btn-save" type="button"
+              title="Save this session as a Markdown file"
+              aria-label="Save session">
+        <span>↓ Save</span>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Mobile panel toggle (small screens only) -->
+<button class="btn-open-panel" id="btn-open-panel" style="display:none" aria-label="Open source panel" aria-expanded="false">📚</button>
+<div class="mobile-backdrop" id="mobile-backdrop"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+//  RHIZO — State & Constants
+//  Inspired by Dave Cormier's rhizomatic learning
+// ══════════════════════════════════════════════════════════
+
+const PROXY_BASE = 'http://localhost:3001';
+
+const ACTIVITY_LABELS = {
+  garden:      'Weed the Garden',
+  uncertainty: 'Map the Uncertainty',
+  council:     'Convene the Council',
+  nomad:       'Find Your Entry Point',
+  contract:    'Write Your Contract',
+  trust:       'Run the Trust Audit',
+  abundance:   'Check the Abundance',
+  breadcrumb:  'Trace the Breadcrumbs',
+};
+
+let state = {
+  activity: 'garden',
+  connected: false,
+  // Book browser
+  bookUrl: null,
+  bookTitle: null,
+  chapterId: null,
+  loadedChapterText: null, // kept for compatibility
+  allBooks: [],
+  tocData: [],
+  // Multi-source
+  sources: [],             // [{ id, label, icon, text, wordCount }]
+  // Activity state
+  generatedData: null,
+  nomadChosen: null,
+};
+
+// ══════════════════════════════════════════════════════════
+//  UTILITIES
+// ══════════════════════════════════════════════════════════
+
+function esc(str) {
+  return String(str ?? '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function wordCount(txt) {
+  return txt.trim() ? txt.trim().split(/\s+/).length : 0;
+}
+
+function getOerText() {
+  const parts = [];
+  state.sources.forEach(s => {
+    parts.push(`=== ${s.label} ===\n${s.text}`);
+  });
+  const pasted = (document.getElementById('oer-text')?.value || '').trim();
+  if (pasted) parts.push(`=== Pasted text ===\n${pasted}`);
+  return parts.join('\n\n');
+}
+
+// ── Multi-source management ──────────────────────────────────────────────────
+
+let _sourceIdCounter = 0;
+
+function addSource(label, icon, text) {
+  const wc = text.trim().split(/\s+/).filter(Boolean).length;
+  const id  = ++_sourceIdCounter;
+  state.sources.push({ id, label, icon, text, wordCount: wc });
+  state.loadedChapterText = getOerText();
+  renderSourceTray();
+  document.getElementById('btn-generate').disabled = !state.connected;
+}
+
+function removeSource(id) {
+  state.sources = state.sources.filter(s => s.id !== id);
+  state.loadedChapterText = state.sources.length ? getOerText() : null;
+  renderSourceTray();
+  if (!state.sources.length) {
+    const pasted = (document.getElementById('oer-text')?.value || '').trim();
+    document.getElementById('btn-generate').disabled = !pasted || !state.connected;
+  }
+}
+
+function renderSourceTray() {
+  const tray = document.getElementById('source-tray');
+  if (!tray) return;
+  if (!state.sources.length) { tray.innerHTML = ''; return; }
+  tray.innerHTML = state.sources.map(s => `
+    <div class="source-chip" data-id="${s.id}">
+      <span class="source-chip-icon">${s.icon}</span>
+      <span class="source-chip-body">
+        <span class="source-chip-label" title="${esc(s.label)}">${esc(s.label)}</span>
+        <span class="source-chip-meta">${s.wordCount.toLocaleString()} words</span>
+      </span>
+      <button class="source-chip-remove" data-id="${s.id}" aria-label="Remove ${esc(s.label)}">✕</button>
+    </div>`).join('');
+  tray.querySelectorAll('.source-chip-remove').forEach(btn => {
+    btn.addEventListener('click', () => removeSource(Number(btn.dataset.id)));
+  });
+}
+
+async function fetchUrl() {
+  const input  = document.getElementById('url-fetch-input');
+  const status = document.getElementById('url-fetch-status');
+  const btn    = document.getElementById('btn-fetch-url');
+  const url    = input?.value.trim();
+  if (!url) { status.textContent = 'Enter a URL first.'; status.className = 'url-fetch-status error'; return; }
+  btn.disabled = true;
+  status.textContent = 'Fetching…'; status.className = 'url-fetch-status';
+  try {
+    const res  = await fetch(`${getProxyBase()}/api/fetch-url?url=${encodeURIComponent(url)}`);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+    addSource(data.title || url, '🔗', data.text);
+    status.textContent = `✓ Added "${data.title}" — ${(data.wordCount||0).toLocaleString()} words`;
+    status.className = 'url-fetch-status success';
+    input.value = '';
+  } catch (err) {
+    status.textContent = `Error: ${err.message}`;
+    status.className = 'url-fetch-status error';
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function handleFileUpload(file) {
+  const status = document.getElementById('file-upload-status');
+  if (!file) return;
+  status.textContent = `Reading ${file.name}…`; status.className = 'file-upload-status';
+  try {
+    const buf = await file.arrayBuffer();
+    let text = '';
+    if (file.name.toLowerCase().endsWith('.pdf')) {
+      if (!window.pdfjsLib) throw new Error('PDF library not loaded yet. Try again in a moment.');
+      const pdf    = await window.pdfjsLib.getDocument({ data: buf }).promise;
+      const pages  = [];
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page    = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        pages.push(content.items.map(it => it.str).join(' '));
+      }
+      text = pages.join('\n\n');
+    } else if (file.name.toLowerCase().endsWith('.docx')) {
+      if (!window.mammoth) throw new Error('Word library not loaded yet. Try again in a moment.');
+      const result = await window.mammoth.extractRawText({ arrayBuffer: buf });
+      text = result.value;
+    } else {
+      throw new Error('Only PDF and .docx files are supported.');
+    }
+    if (!text.trim()) throw new Error('No readable text found in file.');
+    addSource(file.name, file.name.toLowerCase().endsWith('.pdf') ? '📄' : '📝', text);
+    status.textContent = `✓ Added "${file.name}"`;
+    status.className = 'file-upload-status success';
+  } catch (err) {
+    status.textContent = `Error: ${err.message}`;
+    status.className = 'file-upload-status error';
+  }
+}
+
+function getObjective() { return document.getElementById('objective').value.trim(); }
+function getProxyUrl()  { return document.getElementById('proxy-url').value.trim() || `${PROXY_BASE}/api/generate`; }
+function getProxyBase() { return getProxyUrl().replace(/\/api\/generate\/?$/, ''); }
+
+function showStage(html) { document.getElementById('stage').innerHTML = html; }
+
+function showGenerating(what) {
+  showStage(`<div class="generating-overlay">
+    <div class="rhizo-spinner" aria-hidden="true"></div>
+    <div class="gen-title">Growing…</div>
+    <p class="gen-sub">${esc(what)}</p>
+  </div>`);
+}
+
+function showError(msg) {
+  showStage(`<div class="error-state">
+    <div class="error-icon" aria-hidden="true">∿</div>
+    <div class="error-title">Could not generate</div>
+    <p class="error-msg">${esc(msg)}</p>
+  </div>`);
+  document.getElementById('btn-generate').disabled = false;
+}
+
+async function callClaude(prompt, systemMsg = '') {
+  const url = getProxyUrl();
+  const fullPrompt = systemMsg ? `[SYSTEM]\n${systemMsg}\n\n[USER]\n${prompt}` : prompt;
+  const res = await fetch(url, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt: fullPrompt }),
+  });
+  if (!res.ok) {
+    const err = await res.text().catch(() => '');
+    throw new Error(`Proxy returned HTTP ${res.status}. ${err || 'Check server logs.'}`);
+  }
+  const data = await res.json();
+  const text = data?.content?.[0]?.text;
+  if (!text) throw new Error('Claude returned no content. Check your proxy server.');
+  return text;
+}
+
+function parseJSON(raw) {
+  const cleaned = raw.replace(/^```(?:json)?\s*/im,'').replace(/\s*```\s*$/im,'').trim();
+  return JSON.parse(cleaned);
+}
+
+// ══════════════════════════════════════════════════════════
+//  BOOK BROWSER
+// ══════════════════════════════════════════════════════════
+
+async function loadBooks() {
+  const loading = document.getElementById('books-loading');
+  const ready   = document.getElementById('books-ready');
+  const errDiv  = document.getElementById('books-error');
+  loading.classList.remove('hidden');
+  ready.classList.add('hidden');
+  errDiv.classList.add('hidden');
+  try {
+    const res = await fetch(`${getProxyBase()}/api/books`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const books = await res.json();
+    state.allBooks = books.sort((a, b) => a.title.localeCompare(b.title));
+    loading.classList.add('hidden');
+    ready.classList.remove('hidden');
+    renderBookList(state.allBooks);
+  } catch (err) {
+    loading.classList.add('hidden');
+    errDiv.classList.remove('hidden');
+  }
+}
+
+function renderBookList(books) {
+  const list  = document.getElementById('book-list');
+  const count = document.getElementById('book-count');
+  const total = state.allBooks.length;
+  count.textContent = books.length === total
+    ? `${total} book${total !== 1 ? 's' : ''}`
+    : `${books.length} of ${total} books`;
+  if (!books.length) {
+    list.innerHTML = '<div style="font-size:0.77rem;color:var(--text-dim);padding:9px 0">No books match.</div>';
+    return;
+  }
+  list.innerHTML = books.map(b => {
+    const author  = Array.isArray(b.author) ? b.author.map(a => a.name||a).join(', ') : (b.author||'');
+    const subject = Array.isArray(b.subject) ? b.subject[0] : (b.subject||'');
+    return `<button class="book-item" data-url="${esc(b.link)}" data-title="${esc(b.title)}" data-subject="${esc(subject)}">
+      <div class="book-item-title">${esc(b.title)}</div>
+      <div class="book-item-meta">
+        ${subject ? `<span class="book-subject-badge">${esc(subject)}</span>` : ''}
+        ${author  ? `<span class="book-item-author">${esc(author)}</span>` : ''}
+      </div>
+    </button>`;
+  }).join('');
+  list.querySelectorAll('.book-item').forEach(btn =>
+    btn.addEventListener('click', () => selectBook(btn.dataset.url, btn.dataset.title, btn.dataset.subject)));
+}
+
+function filterBooks(q) {
+  if (!q.trim()) { renderBookList(state.allBooks); return; }
+  const ql = q.toLowerCase();
+  renderBookList(state.allBooks.filter(b => {
+    const t = b.title?.toLowerCase()||'';
+    const s = Array.isArray(b.subject) ? b.subject.join(' ').toLowerCase() : (b.subject?.toLowerCase()||'');
+    const a = Array.isArray(b.author) ? b.author.map(x=>x.name||x).join(' ').toLowerCase() : (b.author?.toLowerCase()||'');
+    return t.includes(ql)||s.includes(ql)||a.includes(ql);
+  }));
+}
+
+function selectBook(bookUrl, bookTitle, bookSubject) {
+  state.bookUrl = bookUrl; state.bookTitle = bookTitle;
+  state.chapterId = null; state.loadedChapterText = null;
+  document.getElementById('book-list-view').classList.add('hidden');
+  document.getElementById('book-focus-view').classList.remove('hidden');
+  document.getElementById('selected-book-card').innerHTML =
+    `<div class="selected-book-title">${esc(bookTitle)}</div>
+     ${bookSubject ? `<div class="selected-book-subject">${esc(bookSubject)}</div>` : ''}`;
+  document.getElementById('toc-selectors').classList.add('hidden');
+  document.getElementById('chapter-notice').classList.add('hidden');
+  document.getElementById('btn-generate').disabled = true;
+  loadToc(bookUrl);
+}
+
+async function loadToc(bookUrl) {
+  const loadEl = document.getElementById('toc-loading');
+  const selEl  = document.getElementById('toc-selectors');
+  loadEl.classList.remove('hidden'); selEl.classList.add('hidden');
+  try {
+    const res = await fetch(`${getProxyBase()}/api/toc?bookUrl=${encodeURIComponent(bookUrl)}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const parts = await res.json();
+    state.tocData = parts;
+    loadEl.classList.add('hidden');
+    const partSel = document.getElementById('part-select');
+    partSel.innerHTML = '<option value="">— select a part —</option>' +
+      parts.map(p => `<option value="${esc(String(p.id))}">${esc(p.title)}</option>`).join('');
+    const chSel = document.getElementById('chapter-select');
+    chSel.innerHTML = '<option value="">— select a chapter —</option>';
+    chSel.disabled = true;
+    document.getElementById('chapter-meta').classList.add('hidden');
+    document.getElementById('btn-load-chapter').classList.add('hidden');
+    selEl.classList.remove('hidden');
+  } catch(err) {
+    loadEl.classList.add('hidden');
+    const n = document.getElementById('chapter-notice');
+    n.className = 'chapter-notice error';
+    n.textContent = `Could not load contents: ${err.message}`;
+    n.classList.remove('hidden');
+  }
+}
+
+function onPartSelected() {
+  const partId = document.getElementById('part-select').value;
+  const chSel  = document.getElementById('chapter-select');
+  document.getElementById('chapter-meta').classList.add('hidden');
+  document.getElementById('btn-load-chapter').classList.add('hidden');
+  document.getElementById('chapter-notice').classList.add('hidden');
+  state.chapterId = null;
+  if (!partId) { chSel.innerHTML='<option value="">— select a chapter —</option>'; chSel.disabled=true; if (!state.sources.length) document.getElementById('btn-generate').disabled=true; return; }
+  const part = state.tocData.find(p => String(p.id) === partId);
+  if (!part?.chapters?.length) { chSel.innerHTML='<option value="">No chapters available</option>'; chSel.disabled=true; return; }
+  chSel.innerHTML = '<option value="">— select a chapter —</option>' +
+    part.chapters.map(c => {
+      const wc = c.wordCount ? ` (${Number(c.wordCount).toLocaleString()} words)` : '';
+      return `<option value="${esc(String(c.id))}" data-link="${esc(c.link||'')}" data-wc="${esc(String(c.wordCount||0))}">${esc(c.title)}${wc}</option>`;
+    }).join('');
+  chSel.disabled = false;
+}
+
+function onChapterSelected() {
+  const chSel = document.getElementById('chapter-select');
+  const opt   = chSel.selectedOptions[0];
+  document.getElementById('chapter-meta').classList.add('hidden');
+  document.getElementById('btn-load-chapter').classList.add('hidden');
+  document.getElementById('chapter-notice').classList.add('hidden');
+  state.chapterId = null;
+  const hasSource = state.sources.length > 0 || (document.getElementById('oer-text')?.value || '').trim();
+  document.getElementById('btn-generate').disabled = !hasSource || !state.connected;
+  if (!chSel.value) return;
+  state.chapterId = chSel.value;
+  const wc = opt?.dataset.wc; const link = opt?.dataset.link;
+  const metaEl = document.getElementById('chapter-meta');
+  metaEl.innerHTML =
+    (wc&&wc!=='0' ? `<span class="chapter-wc-pill">${Number(wc).toLocaleString()} words</span>` : '') +
+    (link ? `<a class="chapter-link" href="${esc(link)}" target="_blank" rel="noopener">View in Pressbooks ↗</a>` : '');
+  metaEl.classList.remove('hidden');
+  document.getElementById('btn-load-chapter').classList.remove('hidden');
+}
+
+async function loadChapter() {
+  const btn = document.getElementById('btn-load-chapter');
+  const notice = document.getElementById('chapter-notice');
+  btn.disabled = true; btn.textContent = 'Adding…'; notice.classList.add('hidden');
+  try {
+    const res = await fetch(`${getProxyBase()}/api/chapter?bookUrl=${encodeURIComponent(state.bookUrl)}&chapterId=${encodeURIComponent(state.chapterId)}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (!data.text) throw new Error('No text returned.');
+    const chapterTitle = data.title || document.getElementById('chapter-select').selectedOptions[0]?.text || 'Chapter';
+    addSource(chapterTitle, '📖', data.text);
+    const wc = data.wordCount || data.text.split(/\s+/).filter(Boolean).length;
+    notice.className = 'chapter-notice success';
+    notice.textContent = `✓ Added "${chapterTitle}" — ${Number(wc).toLocaleString()} words`;
+    notice.classList.remove('hidden');
+  } catch(err) {
+    notice.className = 'chapter-notice error';
+    notice.textContent = `Failed: ${err.message}`;
+    notice.classList.remove('hidden');
+  } finally {
+    btn.disabled = false; btn.textContent = '+ Add chapter to sources';
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  CONNECTION TEST
+// ══════════════════════════════════════════════════════════
+
+async function testConnection() {
+  const pill = document.getElementById('status-pill');
+  const txt  = document.getElementById('status-text');
+  const msg  = document.getElementById('connect-msg');
+  const btn  = document.getElementById('btn-connect');
+  btn.disabled = true; btn.textContent = '…'; txt.textContent = 'Connecting…';
+  msg.textContent = 'Connecting to proxy…'; msg.style.color = 'var(--text-dim)';
+  try {
+    const healthUrl = (getProxyBase() || window.location.origin) + '/api/health';
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+    const res = await fetch(healthUrl, { signal: controller.signal }).finally(() => clearTimeout(timeout));
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (data?.status !== 'ok') throw new Error('Unexpected response');
+    state.connected = true;
+    pill.classList.add('connected');
+    txt.textContent = 'Connected';
+    msg.textContent = 'AI ready. Select a book and chapter, then grow something.';
+    msg.style.color = 'var(--moss)';
+    document.getElementById('btn-generate').disabled = !getOerText();
+    if (state.allBooks.length === 0) loadBooks();
+  } catch(err) {
+    state.connected = false;
+    pill.classList.remove('connected');
+    txt.textContent = 'Not connected';
+    msg.innerHTML = `Can't reach proxy (${err.message}). Is the server running? In Terminal: <code style="color:var(--moss)">node server.js</code>`;
+    msg.style.color = 'var(--rust)';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Connect';
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  ACTIVITY SELECTION
+// ══════════════════════════════════════════════════════════
+
+function selectActivity(name) {
+  state.activity = name;
+  document.querySelectorAll('.activity-tile').forEach(t => {
+    const a = t.dataset.activity === name;
+    t.classList.toggle('active', a);
+    t.setAttribute('aria-selected', a);
+  });
+  const lbl = document.getElementById('generate-label');
+  if (lbl) lbl.textContent = ACTIVITY_LABELS[name] || 'Generate';
+  const saveBtn = document.getElementById('btn-save');
+  if (saveBtn) saveBtn.classList.add('hidden');
+}
+
+// ══════════════════════════════════════════════════════════
+//  DISPATCH
+// ══════════════════════════════════════════════════════════
+
+async function generate() {
+  const text = getOerText();
+  if (!text) { showError('Load a chapter or paste text first.'); return; }
+  if (!state.connected) { showError('Connect to the proxy server first.'); return; }
+  const btn = document.getElementById('btn-generate');
+  const saveBtn = document.getElementById('btn-save');
+  btn.disabled = true;
+  if (saveBtn) saveBtn.classList.add('hidden');
+  document.getElementById('stage-idle')?.remove();
+  try {
+    switch (state.activity) {
+      case 'garden':      await generateGarden(text); break;
+      case 'uncertainty': await generateUncertainty(text); break;
+      case 'council':     await generateCouncil(text); break;
+      case 'nomad':       await generateNomad(text); break;
+      case 'contract':    await generateContract(text); break;
+      case 'trust':       await generateTrust(text); break;
+      case 'abundance':   await generateAbundance(text); break;
+      case 'breadcrumb':  await generateBreadcrumb(text); break;
+    }
+    if (saveBtn) saveBtn.classList.remove('hidden');
+  } catch(err) {
+    showError(err.message);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  ACTIVITY 1: WEED THE GARDEN
+// ══════════════════════════════════════════════════════════
+
+async function generateGarden(text) {
+  const obj = getObjective();
+  showGenerating('Finding the silences, assumptions, and contested ground in the text…');
+
+  const prompt = `You are a critical pedagogy facilitator influenced by Dave Cormier's rhizomatic learning philosophy and his concept of information abundance. Your job is NOT to summarize what a text says — it is to expose what the text ASSUMES, AVOIDS, CONTESTS, or CANNOT SEE from where it stands.
+
+Cormier argues that before the internet, uncertainty was hidden from us — we only encountered "finished products" with all the mess edited out. A textbook is a finished product. Your job is to find the mess it's hiding.
+
+OER TEXT:
+---
+${text}
+---
+${obj ? `\nFocus: ${obj}` : ''}
+
+Return ONLY valid JSON (no markdown, no code fences):
+{
+  "official_summary": "A 2-3 sentence official-sounding summary of what the text 'says' — dry, authoritative, as if written by the textbook itself. Should sound slightly absurd in its confidence.",
+  "weeds": [
+    {
+      "type": "silenced",
+      "label": "What got left out",
+      "content": "Something real and important that the text doesn't mention, doesn't have space for, or actively excludes. Be specific — name what's missing and who it matters to.",
+      "student_prompt": "A question that invites the learner to explore what's missing — no correct answer exists"
+    },
+    {
+      "type": "contested",
+      "label": "What's actually debated",
+      "content": "A claim the text presents as settled fact that is actively contested in the field or community. Name both the claim AND the disagreement — don't be vague.",
+      "student_prompt": "A question that puts the learner inside the actual debate"
+    },
+    {
+      "type": "assumed",
+      "label": "What the text assumes you already believe",
+      "content": "A hidden assumption built into the text's framing — about who the reader is, what values they hold, what counts as normal or obvious. This is the water the text swims in without knowing it.",
+      "student_prompt": "A question that surfaces the assumption so the learner can hold it at arm's length"
+    },
+    {
+      "type": "community",
+      "label": "What practitioners know that the text doesn't",
+      "content": "Knowledge that lives in communities of practice, lived experience, or local context — the kind of knowing Cormier describes as 'community as curriculum' — that no finished textbook can fully capture.",
+      "student_prompt": "A question that invites the learner to bring their community's knowledge into dialogue with the text"
+    }
+  ]
+}
+
+Rules:
+- Be genuinely critical — not hostile, but not gentle either
+- The weeds should be surprising and specific to THIS text, not generic critical-thinking platitudes
+- Student prompts should open genuine inquiry with no correct answers
+- The official summary should sound slightly absurd in its confidence — that's the point`;
+
+  const raw = await callClaude(prompt);
+  const data = parseJSON(raw);
+  state.generatedData = data;
+  renderGarden(data);
+}
+
+function renderGarden(data) {
+  const weedColors = {
+    silenced:  { color: 'var(--moss)',   weedBg: '' },
+    contested: { color: 'var(--lichen)', weedBg: '' },
+    assumed:   { color: 'var(--spore)',  weedBg: '' },
+    community: { color: 'var(--rust)',   weedBg: '' },
+  };
+
+  const weedCards = data.weeds.map((w, i) => {
+    const c = weedColors[w.type] || { color: 'var(--moss)' };
+    return `<div class="weed-card" style="--weed-color:${c.color}">
+      <div class="weed-type">${esc(w.label)}</div>
+      <div class="weed-content">${esc(w.content)}</div>
+      <div class="weed-prompt-label">Your turn:</div>
+      <div style="font-size:0.83rem;color:var(--text-dim);font-style:italic;margin-bottom:10px;line-height:1.5">${esc(w.student_prompt)}</div>
+      <textarea class="weed-response" id="weed-res-${i}" placeholder="Write your response…" rows="3"></textarea>
+      <div><button class="btn-weed-reflect" data-idx="${i}" style="--weed-color:${c.color}">Get feedback ↗</button></div>
+      <div class="weed-feedback hidden" id="weed-fb-${i}"></div>
+    </div>`;
+  }).join('');
+
+  showStage(`<div class="garden-wrap activity-content">
+    <div class="garden-header">
+      <div>
+        <div class="garden-title">Weed the Garden</div>
+        <div class="garden-subtitle">The text told you what it wanted you to know. These are the things it couldn't, wouldn't, or didn't.</div>
+      </div>
+    </div>
+    <div class="garden-official">
+      <div class="garden-official-label">What the text officially says</div>
+      <div class="garden-official-text">${esc(data.official_summary)}</div>
+    </div>
+    <div class="weeds-grid">${weedCards}</div>
+  </div>`);
+
+  document.querySelectorAll('.btn-weed-reflect').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const idx = btn.dataset.idx;
+      const response = document.getElementById(`weed-res-${idx}`)?.value?.trim();
+      if (!response) return;
+      const fb = document.getElementById(`weed-fb-${idx}`);
+      fb.classList.remove('hidden');
+      fb.textContent = 'Thinking…';
+      const weed = data.weeds[idx];
+      try {
+        const reply = await callClaude(
+          `The student is responding to this provocation:\n"${weed.student_prompt}"\n\nContext from the text: ${weed.content}\n\nStudent's response: "${response}"\n\nRespond in 2-3 sentences. Acknowledge genuinely what they've noticed. Push them one step further — not toward a correct answer, but toward a harder question or an edge case they haven't considered. Don't be a cheerleader. Be a thinking partner.`,
+          'You are a critical pedagogy facilitator who never has the final answer, only better questions.'
+        );
+        fb.classList.remove('hidden');
+        fb.textContent = reply;
+        fb.style.animation = 'none'; fb.offsetHeight; fb.style.animation = '';
+      } catch(err) { fb.textContent = `Error: ${err.message}`; }
+    });
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+//  ACTIVITY 2: UNCERTAINTY MAP
+// ══════════════════════════════════════════════════════════
+
+async function generateUncertainty(text) {
+  const obj = getObjective();
+  showGenerating("Surfacing the questions this text can't answer — the ones that matter most…");
+
+  const prompt = `You are a scholar of wicked problems and ill-structured domains, informed by Dave Cormier's argument that information abundance reveals the uncertainty that was always hiding beneath "finished products." Your task is to read this OER text and extract the genuine, deep uncertainties — not simple "we don't know yet" gaps, but questions that are structurally unanswerable because they depend on values, context, community, or contested evidence.
+
+Cormier distinguishes between questions that have answers (facts, calculations) and questions that live in uncertainty — where more data doesn't help, because the problem is that people's values, contexts, and communities lead them to legitimately different places. Find those questions in this text.
+
+OER TEXT:
+---
+${text}
+---
+${obj ? `\nFocus: ${obj}` : ''}
+
+Return ONLY valid JSON (no markdown):
+{
+  "intro": "1-2 sentences framing why THIS specific topic contains genuine, structural uncertainty — not just gaps we'll fill in later, but questions that depend on values, community, or contested frameworks",
+  "questions": [
+    {
+      "type": "wicked",
+      "type_label": "Wicked Problem",
+      "uq_color": "#7db87a",
+      "uq_bg": "rgba(125,184,122,0.12)",
+      "uq_border": "rgba(125,184,122,0.3)",
+      "question": "A question arising from this text that has no objectively correct answer — where getting more information doesn't resolve it, because the problem is structural, not informational",
+      "why_unanswerable": "Why this specific question can't be resolved by more data or research alone — what makes it structurally messy",
+      "stakes": "Who cares most about how this question gets answered, and what they stand to lose if it goes the wrong way",
+      "position_a": { "label": "One position", "text": "A legitimate, defensible view — grounded in real values or evidence, not a straw man" },
+      "position_b": { "label": "Another position", "text": "A genuinely different legitimate view — not just a weaker version of the first" }
+    },
+    {
+      "type": "contested",
+      "type_label": "Contested Evidence",
+      "uq_color": "#c8b560",
+      "uq_bg": "rgba(200,181,96,0.12)",
+      "uq_border": "rgba(200,181,96,0.3)",
+      "question": "A question from this text where the evidence genuinely points in multiple directions — where reasonable people reading the same data reach different conclusions",
+      "why_unanswerable": "What methodological, contextual, or interpretive differences cause the disagreement — this isn't just bias, it's structural",
+      "stakes": "What's at stake in getting this wrong, and for whom",
+      "position_a": { "label": "Reading A", "text": "How one community or discipline reads the evidence — specific, not vague" },
+      "position_b": { "label": "Reading B", "text": "How another community reads the same evidence differently — and why their reading is also defensible" }
+    },
+    {
+      "type": "values",
+      "type_label": "Values Conflict",
+      "uq_color": "#b07ab8",
+      "uq_bg": "rgba(176,122,184,0.12)",
+      "uq_border": "rgba(176,122,184,0.3)",
+      "question": "A question from this topic where the 'right' answer depends entirely on what you value most — where evidence can't adjudicate because the dispute is about what matters, not what's true",
+      "why_unanswerable": "The underlying value tension — name the two things in genuine conflict, not just 'different perspectives'",
+      "stakes": "What different communities lose depending on which value wins out — be concrete",
+      "position_a": { "label": "Value 1", "text": "What one value system says should be prioritized, and why that's a coherent position" },
+      "position_b": { "label": "Value 2", "text": "What a genuinely different value system says, and why that's also coherent" }
+    }
+  ]
+}
+
+Rules:
+- These must be REAL uncertainties, not fake "both sides" framing of settled questions (climate change is real; vaccines work — don't manufacture false uncertainty about those)
+- Questions should be directly grounded in THIS specific text, not generic
+- Positions should be genuinely different, not just degrees of the same view
+- The goal is productive discomfort — Cormier calls this learning to "deal with" uncertainty rather than "solve" it`;
+
+  const raw = await callClaude(prompt);
+  const data = parseJSON(raw);
+  state.generatedData = data;
+  renderUncertainty(data);
+}
+
+function renderUncertainty(data) {
+  const cards = data.questions.map((q, i) => `
+    <div class="uq-card">
+      <div class="uq-header">
+        <div class="uq-type" style="--uq-color:${esc(q.uq_color)};--uq-bg:${esc(q.uq_bg)};--uq-border:${esc(q.uq_border)}">${esc(q.type_label)}</div>
+        <div class="uq-stakes">${esc(q.stakes)}</div>
+      </div>
+      <div class="uq-question">${esc(q.question)}</div>
+      <div class="uq-why">${esc(q.why_unanswerable)}</div>
+      <div class="uq-positions">
+        <div class="uq-position" style="flex:1">
+          <span class="uq-position-label">${esc(q.position_a.label)}</span>
+          ${esc(q.position_a.text)}
+        </div>
+        <div class="uq-position" style="flex:1">
+          <span class="uq-position-label">${esc(q.position_b.label)}</span>
+          ${esc(q.position_b.text)}
+        </div>
+      </div>
+      <div class="uq-your-take-label">Where do you stand — and why?</div>
+      <textarea class="uq-your-take" placeholder="You don't need a final answer. Just: what makes this hard for you personally?" rows="3"></textarea>
+    </div>`).join('');
+
+  showStage(`<div class="uncertainty-wrap activity-content">
+    <div class="umap-intro">${esc(data.intro)}</div>
+    <div class="umap-question-grid">${cards}</div>
+  </div>`);
+}
+
+// ══════════════════════════════════════════════════════════
+//  ACTIVITY 3: WICKED COUNCIL
+// ══════════════════════════════════════════════════════════
+
+async function generateCouncil(text) {
+  const obj = getObjective();
+  showGenerating('Assembling five voices who will never quite agree…');
+
+  const prompt = `You are designing a rhizomatic learning experience about navigating genuine complexity. Dave Cormier argues that "the community is the curriculum" — that learning happens not by finding the right authority, but by navigating multiple legitimate perspectives held by real people with real stakes. From this OER text, extract a wicked problem — a messy, real question with no clean solution — and give it to five very different voices to respond to.
+
+The goal is not false balance. Each voice should be genuinely positioned by their context, experience, and what they stand to lose or gain. The student's job is to figure out how to navigate — not to pick the winner.
+
+OER TEXT:
+---
+${text}
+---
+${obj ? `\nFocus: ${obj}` : ''}
+
+Return ONLY valid JSON (no markdown):
+{
+  "wicked_problem": "A specific, provocative question arising from this text that has real implications and no consensus answer. 1-2 sentences, grounded in the text. Should feel like a decision someone actually has to make.",
+  "voices": [
+    {
+      "emoji": "🧑‍🏭",
+      "role": "The Practitioner",
+      "role_color": "#7db87a",
+      "role_bg": "rgba(125,184,122,0.12)",
+      "role_border": "rgba(125,184,122,0.28)",
+      "says": "What someone working on the ground with this problem every day would say. Grounded in what actually works. Skeptical of theory that hasn't been tested in the field. Probably has seen the textbook version fail."
+    },
+    {
+      "emoji": "🧑‍🎓",
+      "role": "The Researcher",
+      "role_color": "#c8b560",
+      "role_bg": "rgba(200,181,96,0.12)",
+      "role_border": "rgba(200,181,96,0.28)",
+      "says": "What a scholar studying this domain would say. Evidence-focused, genuinely aware of complexity, honest about what the evidence can and can't settle. Has caveats. Probably sees nuance the practitioner misses."
+    },
+    {
+      "emoji": "🧑‍🤝‍🧑",
+      "role": "The Community Member",
+      "role_color": "#b07ab8",
+      "role_bg": "rgba(176,122,184,0.12)",
+      "role_border": "rgba(176,122,184,0.28)",
+      "says": "What someone directly affected by this issue would say. Personal, grounded in lived experience. Possibly frustrated by how this problem is framed in textbooks and research that doesn't reflect their reality. Brings knowledge the text doesn't have access to."
+    },
+    {
+      "emoji": "🌍",
+      "role": "The Outsider",
+      "role_color": "#c27050",
+      "role_bg": "rgba(194,112,80,0.12)",
+      "role_border": "rgba(194,112,80,0.28)",
+      "says": "What someone from a completely different cultural, geographic, or disciplinary context would say. Sees things as obvious that insiders treat as complicated, and vice versa. Their framing makes the assumptions of the text visible."
+    },
+    {
+      "emoji": "🌱",
+      "role": "The Newcomer",
+      "role_color": "#7aaec8",
+      "role_bg": "rgba(122,174,200,0.12)",
+      "role_border": "rgba(122,174,200,0.28)",
+      "says": "What someone just encountering this material for the first time would say — the naive question that turns out to be surprisingly hard to answer, or the obvious objection that experts have stopped noticing."
+    }
+  ],
+  "navigation_prompt": "A question for the student: given that all five of these people are responding to the same situation and none of them is simply wrong — they're each positioned by their experience and what they stand to lose — what does that tell you about how this problem should be navigated? Not solved. Navigated. What would YOU bring to this table?"
+}
+
+Rules:
+- The wicked problem must be genuinely difficult — a real decision with real stakes, not a quiz question
+- Each voice must be authentically different, positioned by context not just by opinion
+- No voice should be obviously right or obviously wrong — if one voice sounds dumb, rewrite it
+- The navigation prompt should invite the student to take a genuine position, not just describe the disagreement`;
+
+  const raw = await callClaude(prompt);
+  const data = parseJSON(raw);
+  state.generatedData = data;
+  renderCouncil(data);
+}
+
+function renderCouncil(data) {
+  const voiceCards = data.voices.map(v => `
+    <div class="voice-card">
+      <div class="voice-avatar" style="--voice-bg:${esc(v.role_bg)};--voice-border:${esc(v.role_border)}">${esc(v.emoji)}</div>
+      <div class="voice-role" style="--voice-color:${esc(v.role_color)}">${esc(v.role)}</div>
+      <div class="voice-says">${esc(v.says)}</div>
+    </div>`).join('');
+
+  showStage(`<div class="council-wrap activity-content">
+    <div class="council-problem">
+      <div class="council-problem-label">The wicked problem</div>
+      <div class="council-problem-text">${esc(data.wicked_problem)}</div>
+    </div>
+    <div class="council-voices">${voiceCards}</div>
+    <div class="council-navigation">
+      <div class="council-nav-title">Your role as navigator</div>
+      <div class="council-nav-prompt">${esc(data.navigation_prompt)}</div>
+      <textarea class="council-response" id="council-response" placeholder="None of them is simply wrong. So what do you do with that?" rows="5"></textarea>
+      <button class="btn-council-respond" id="btn-council-respond">Bring your perspective ↗</button>
+      <div class="council-synthesis hidden" id="council-synthesis"></div>
+    </div>
+  </div>`);
+
+  document.getElementById('btn-council-respond').addEventListener('click', async () => {
+    const response = document.getElementById('council-response').value.trim();
+    if (!response) return;
+    const synthEl = document.getElementById('council-synthesis');
+    synthEl.classList.remove('hidden');
+    synthEl.innerHTML = '<div class="council-synthesis-title">Responding…</div>';
+    try {
+      const voiceSummary = data.voices.map(v => `${v.role}: "${v.says}"`).join('\n');
+      const reply = await callClaude(
+        `Five voices responded to this wicked problem: "${data.wicked_problem}"\n\nThe voices:\n${voiceSummary}\n\nThe student's navigation: "${response}"\n\nRespond in 3-4 sentences. Acknowledge the genuine difficulty of their position. Point to one thing they noticed that others might miss. Offer one question that would make their position harder to hold — not to undermine it, but to strengthen it.`,
+        'You are a facilitator of complex conversations who values productive discomfort over false consensus. You do not have the answer.'
+      );
+      synthEl.innerHTML = `<div class="council-synthesis-title">From the facilitator</div>${esc(reply)}`;
+    } catch(err) { synthEl.innerHTML = `Error: ${esc(err.message)}`; }
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+//  ACTIVITY 4: NOMAD'S ENTRY POINTS
+// ══════════════════════════════════════════════════════════
+
+async function generateNomad(text) {
+  const obj = getObjective();
+  showGenerating('Finding five radically different doors into the same content…');
+
+  const prompt = `You are a designer of rhizomatic learning experiences grounded in Dave Cormier's philosophy. A rhizome has no single entry point, no beginning, no end — you can enter from anywhere and the map changes depending on where you start. Your task is to create five genuinely different doorways into the ideas in this OER text.
+
+Cormier argues that the choice of entry point is itself a form of knowledge — it reveals what the learner already knows, what they value, and what they're unconsciously avoiding. Each door should be a radically different genre or mode of entry: provocative, poetic, personal, historical, practical. No two should feel like variations on the same approach.
+
+OER TEXT:
+---
+${text}
+---
+${obj ? `\nFocus: ${obj}` : ''}
+
+Return ONLY valid JSON (no markdown):
+{
+  "entries": [
+    {
+      "mode": "The Uncomfortable Question",
+      "mode_color": "#c27050",
+      "icon": "🔥",
+      "content": "A question so blunt, strange, or slightly rude that it reframes what the text is really about. Should feel like something a clever child or an outsider would ask — not sophisticated, but genuinely hard to answer.",
+      "why": "Why this question opens a different door than the text itself opens — what it makes visible that the text's own framing hides"
+    },
+    {
+      "mode": "The Unexpected Metaphor",
+      "mode_color": "#7db87a",
+      "icon": "🌿",
+      "content": "An extended metaphor or analogy that makes the whole topic feel different. Must be surprising — not the obvious metaphor, not the one the text itself would use. Something that reveals structure the literal language obscures.",
+      "why": "What this metaphor reveals that the text's own framing hides — what new things become visible when you see it this way"
+    },
+    {
+      "mode": "The Failure Story",
+      "mode_color": "#b07ab8",
+      "icon": "🌫",
+      "content": "A brief narrative about something going genuinely wrong with, in, or around this topic. Real or highly plausible. The kind of story textbooks edit out because it complicates the theory. Specific enough to be believable.",
+      "why": "What you can only understand by starting from failure — what the success story hides"
+    },
+    {
+      "mode": "The Historical Rupture",
+      "mode_color": "#c8b560",
+      "icon": "📜",
+      "content": "A moment in history — recent or distant — when this topic meant something completely different, when what now seems obvious was contested, or when someone's idea permanently changed how it was understood. Specific, not vague.",
+      "why": "Why entering through this historical moment changes what seems fixed or natural about the topic now"
+    },
+    {
+      "mode": "The Community Practice",
+      "mode_color": "#7aaec8",
+      "icon": "🧭",
+      "content": "Something a specific community of practitioners actually does — a ritual, habit, informal rule, or ongoing disagreement — that illuminates the topic from the inside. Should be the kind of thing you'd only know if you were in that community.",
+      "why": "Why starting from practice rather than theory opens things that theory-first closes — what practitioners know that the textbook can't capture"
+    }
+  ],
+  "reflection_prompt": "You chose a door. What does that choice tell you — about what you already know, what draws you in, or what you were quietly avoiding in the other options?"
+}`;
+
+  const raw = await callClaude(prompt);
+  const data = parseJSON(raw);
+  state.generatedData = data;
+  state.nomadChosen = null;
+  renderNomad(data);
+}
+
+function renderNomad(data) {
+  const entryCards = data.entries.map((e, i) => `
+    <div class="entry-card" data-idx="${i}" style="--entry-color:${esc(e.mode_color)}">
+      <div class="entry-mode">${esc(e.icon)} ${esc(e.mode)}</div>
+      <div class="entry-content">${esc(e.content)}</div>
+      <div class="entry-why">${esc(e.why)}</div>
+    </div>`).join('');
+
+  showStage(`<div class="nomad-wrap activity-content">
+    <div class="nomad-intro">There is no right way in. Choose the door that interests you most — or disturbs you most. Then tell us why.</div>
+    <div class="entry-grid" id="entry-grid">${entryCards}</div>
+    <div class="chosen-reflect hidden" id="chosen-reflect">
+      <div class="chosen-reflect-label">You chose the <span id="chosen-mode-name"></span> door</div>
+      <div class="chosen-reflect-prompt" id="chosen-reflect-prompt"></div>
+      <textarea class="reflect-textarea" id="reflect-input" placeholder="What made this your door? What were you avoiding in the others?" rows="4"></textarea>
+      <button class="btn-reflect-send" id="btn-reflect-send">Reflect ↗</button>
+      <div class="reflect-response hidden" id="reflect-response"></div>
+    </div>
+  </div>`);
+
+  document.querySelectorAll('.entry-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.entry-card').forEach(c => c.classList.remove('chosen'));
+      card.classList.add('chosen');
+      const idx = card.dataset.idx;
+      state.nomadChosen = data.entries[idx];
+      const reflectEl = document.getElementById('chosen-reflect');
+      document.getElementById('chosen-mode-name').textContent = data.entries[idx].mode;
+      document.getElementById('chosen-reflect-prompt').textContent = data.reflection_prompt;
+      reflectEl.classList.remove('hidden');
+      document.getElementById('reflect-response').classList.add('hidden');
+    });
+  });
+
+  document.getElementById('btn-reflect-send').addEventListener('click', async () => {
+    const input = document.getElementById('reflect-input').value.trim();
+    if (!input || !state.nomadChosen) return;
+    const respEl = document.getElementById('reflect-response');
+    respEl.classList.remove('hidden'); respEl.textContent = 'Thinking…';
+    try {
+      const reply = await callClaude(
+        `A student chose the "${state.nomadChosen.mode}" entry point into this topic.\n\nThe entry point was: "${state.nomadChosen.content}"\n\nTheir reflection: "${input}"\n\nRespond in 2-3 sentences. Notice something specific about their choice — what it suggests about how they learn, what they know, or what they're curious about. Then offer one thing they might find through one of the doors they DIDN'T choose.`,
+        'You are a learning guide who is fascinated by how people choose to enter ideas. You see the choice itself as data.'
+      );
+      respEl.textContent = reply;
+      respEl.style.animation = 'none'; respEl.offsetHeight; respEl.style.animation = '';
+    } catch(err) { respEl.textContent = `Error: ${esc(err.message)}`; }
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+//  ACTIVITY 5: COMMUNITY CONTRACT
+// ══════════════════════════════════════════════════════════
+
+async function generateContract(text) {
+  const obj = getObjective();
+  showGenerating('Identifying what this community of learners needs to agree on — and disagree about…');
+
+  const prompt = `You are designing a rhizomatic learning experience grounded in Dave Cormier's core claim: "The community is the curriculum." Cormier argues that in a world of information abundance, what you learn depends on which community you learn with — because communities don't just share information, they enact practices of knowing: what counts as evidence, who counts as an expert, what questions are worth asking.
+
+From this OER text, extract the central topic and generate a community learning contract scaffold — prompts that help a learner articulate what they bring to a learning community, what they need from it, and where they draw their lines. This is not a reflection exercise. It's a commitment — something they could share with actual learners.
+
+OER TEXT:
+---
+${text}
+---
+${obj ? `\nFocus: ${obj}` : ''}
+
+Return ONLY valid JSON (no markdown):
+{
+  "topic": "The central topic or question from this text, stated in plain language — not academic jargon, not a bland title. Something that captures what's actually at stake (1 sentence)",
+  "sections": [
+    {
+      "label": "What I bring",
+      "color": "#7db87a",
+      "prompt": "A specific question that helps the learner articulate their prior knowledge, lived experience, or existing perspective on this topic. Should be grounded in the text but require genuine self-knowledge to answer well. Not 'what do you know about X' but something more personal.",
+      "placeholder": "A short example that sets the tone — models the kind of honest, specific, non-generic response you want"
+    },
+    {
+      "label": "What I need from this community",
+      "color": "#c8b560",
+      "prompt": "A question that helps the learner articulate what kind of engagement, challenge, or support would actually help them grow with this specific topic. Should invite them to be specific, not just say 'I need a safe space.'",
+      "placeholder": "Tone-setter: honest, specific, not generic"
+    },
+    {
+      "label": "What I'm willing to have challenged",
+      "color": "#b07ab8",
+      "prompt": "A question that invites the learner to name one specific assumption or belief they hold about this topic that they're genuinely open to questioning. Cormier calls this the humility required for learning in abundance — knowing you might be wrong.",
+      "placeholder": "Tone-setter: intellectual courage, specific belief not vague openness"
+    },
+    {
+      "label": "What I refuse to accept",
+      "color": "#c27050",
+      "prompt": "A question that invites the learner to name one thing — a framing, an exclusion, a conclusion, a way this topic gets talked about — that they will not agree to without a fight. Where is their line? Cormier calls this the values-anchor that makes community knowledge trustworthy.",
+      "placeholder": "Tone-setter: principled resistance, not just personal preference"
+    }
+  ],
+  "signature_line": "A philosophically rich, slightly poetic closing line for the contract — something that captures what it means to learn with and through a community, grounded in the specific topic of this text"
+}`;
+
+  const raw = await callClaude(prompt);
+  const data = parseJSON(raw);
+  state.generatedData = data;
+  renderContract(data);
+}
+
+function renderContract(data) {
+  const sections = data.sections.map((s, i) => `
+    <div class="contract-section" style="--cs-color:${esc(s.color)}">
+      <div class="contract-section-label">${esc(s.label)}</div>
+      <div class="contract-section-prompt">${esc(s.prompt)}</div>
+      <textarea class="contract-input" id="contract-input-${i}" placeholder="${esc(s.placeholder)}" rows="3"></textarea>
+    </div>`).join('');
+
+  showStage(`<div class="contract-wrap activity-content">
+    <div class="contract-intro">
+      <div class="contract-intro-title">The community is the curriculum</div>
+      <div class="contract-intro-text">In rhizomatic learning, what you bring to a community of learners is as important as what the text contains. This contract is yours — write it honestly, then consider what it would mean to share it.</div>
+    </div>
+    <div class="contract-topic">
+      <div class="contract-topic-label">Topic</div>
+      <div class="contract-topic-text">${esc(data.topic)}</div>
+    </div>
+    <div class="contract-sections">${sections}</div>
+    <button class="btn-generate-contract" id="btn-generate-contract" style="margin-top:4px">
+      Generate my learning contract ↗
+    </button>
+    <div class="contract-result hidden" id="contract-result"></div>
+  </div>`);
+
+  document.getElementById('btn-generate-contract').addEventListener('click', async () => {
+    const inputs = data.sections.map((_, i) => document.getElementById(`contract-input-${i}`)?.value?.trim()||'');
+    if (inputs.every(v => !v)) return;
+    const resultEl = document.getElementById('contract-result');
+    resultEl.classList.remove('hidden');
+    resultEl.innerHTML = '<div class="council-synthesis-title">Writing your contract…</div>';
+    try {
+      const filled = data.sections.map((s,i) => `${s.label}: "${inputs[i]||'(left blank)'}"`).join('\n');
+      const reply = await callClaude(
+        `A learner has filled in a community learning contract about "${data.topic}".\n\nThey wrote:\n${filled}\n\nWrite their contract back to them in 4-5 sentences. Use their own words and ideas. Make it sound like a genuine commitment they could share with a learning community. Don't soften their refusals or clarify their ambiguities — honor them. End with this line: "${data.signature_line}"`,
+        'You are a scribe who turns rough intentions into dignified commitments. You do not improve people — you reflect them back more clearly.'
+      );
+      const clauseBlocks = data.sections.map((s,i) => inputs[i] ? `
+        <div class="contract-clause">
+          <div class="contract-clause-label" style="color:${esc(s.color)}">${esc(s.label)}</div>
+          <div class="contract-clause-text">${esc(inputs[i])}</div>
+        </div>` : '').join('');
+      resultEl.innerHTML = `
+        <div class="contract-result-title">My Learning Contract: ${esc(data.topic)}</div>
+        ${clauseBlocks}
+        <div class="contract-signed">${esc(reply)}</div>`;
+    } catch(err) { resultEl.innerHTML = `Error: ${esc(err.message)}`; }
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+//  ACTIVITY 6: INFORMED TRUST AUDIT
+// ══════════════════════════════════════════════════════════
+
+async function generateTrust(text) {
+  const obj = getObjective();
+  showGenerating('Mapping who this text asks you to trust — and on what grounds…');
+
+  const prompt = `You are a critical epistemologist informed by Dave Cormier's concept of "informed trust" from his book Learning in a Time of Abundance. Cormier argues that in a world of information abundance, the key skill is not just evaluating whether a claim is true, but understanding WHO you are being asked to trust, on WHAT BASIS, and whether that trust is warranted given your own values and context.
+
+He distinguishes between:
+- Trusting a SOURCE (an institution, publication, credential)
+- Trusting a COMMUNITY (a field, a tradition, a practice)
+- Trusting a PROCESS (peer review, replication, lived experience)
+- Trusting a PERSON (an author's track record, positionality, stakes)
+
+He also argues that "informed trust" requires HUMILITY — knowing when NOT to have a strong opinion because you lack the context to evaluate the claims being made.
+
+From this OER text, extract 3-4 specific claims that ask the reader to extend trust of different kinds. For each, map the trust being requested and help the learner interrogate it.
+
+OER TEXT:
+---
+${text}
+---
+${obj ? `\nFocus: ${obj}` : ''}
+
+Return ONLY valid JSON (no markdown):
+{
+  "framing": "1-2 sentences: what kinds of trust does this text rely on — and what would it mean to extend that trust thoughtfully rather than automatically?",
+  "claims": [
+    {
+      "claim": "A specific claim from the text — quoted or closely paraphrased — that asks the reader to trust something",
+      "trust_type": "source" | "community" | "process" | "person",
+      "trust_type_label": "Trusting a Source" | "Trusting a Community" | "Trusting a Process" | "Trusting a Person",
+      "trust_basis": "What the text is implicitly relying on to make this claim credible — what's the actual warrant?",
+      "audit_questions": [
+        "A question about WHO benefits from you believing this claim",
+        "A question about WHAT you'd need to know to evaluate this trust wisely",
+        "A question about WHETHER you have enough context to weigh in — or whether humility is the right response"
+      ],
+      "cormier_lens": "A 1-sentence connection to Cormier's idea of informed trust — what does his framework reveal about this particular claim?"
+    }
+  ],
+  "synthesis_prompt": "A question that asks the learner to reflect on their overall trust posture toward this text: not whether to trust it, but HOW they are trusting it and what that reveals about their own epistemics"
+}
+
+Rules:
+- Claims must be SPECIFIC and from THIS text — not generic
+- Trust types must be accurate — don't call something 'source' trust if it's really 'process' trust
+- Audit questions should be genuinely hard — not gotchas, but real epistemological questions
+- The synthesis prompt should invite genuine self-reflection, not just 'did you find this credible?'`;
+
+  const raw = await callClaude(prompt);
+  const data = parseJSON(raw);
+  state.generatedData = data;
+  renderTrust(data);
+}
+
+function renderTrust(data) {
+  const trustColors = {
+    source:    { color: '#7db87a', bg: 'rgba(125,184,122,0.1)',  border: 'rgba(125,184,122,0.28)',  label: 'Trusting a Source'    },
+    community: { color: '#c8b560', bg: 'rgba(200,181,96,0.1)',   border: 'rgba(200,181,96,0.28)',   label: 'Trusting a Community' },
+    process:   { color: '#b07ab8', bg: 'rgba(176,122,184,0.1)',  border: 'rgba(176,122,184,0.28)',  label: 'Trusting a Process'   },
+    person:    { color: '#7aaec8', bg: 'rgba(122,174,200,0.1)',  border: 'rgba(122,174,200,0.28)',  label: 'Trusting a Person'    },
+  };
+
+  const claimCards = (data.claims || []).map((c, i) => {
+    const tc = trustColors[c.trust_type] || trustColors.source;
+    const qs = (c.audit_questions || []).map(q => `<div class="bc-question">${esc(q)}</div>`).join('');
+    return `<div class="trust-claim">
+      <div class="trust-claim-header">
+        <div class="trust-claim-badge" style="--trust-color:${tc.color};--trust-bg:${tc.bg};--trust-border:${tc.border}">${esc(c.trust_type_label || tc.label)}</div>
+      </div>
+      <div class="trust-claim-text">${esc(c.claim)}</div>
+      <div class="trust-basis"><strong>What the text relies on:</strong> ${esc(c.trust_basis)}</div>
+      <div class="trust-audit-row">
+        <div class="trust-audit-label">Audit questions</div>
+        <div class="bc-questions">${qs}</div>
+      </div>
+      <div class="trust-audit-row">
+        <div class="trust-audit-label">Cormier's lens</div>
+        <div class="trust-audit-q">${esc(c.cormier_lens)}</div>
+      </div>
+      <textarea class="trust-response" id="trust-res-${i}" placeholder="What's your honest audit of this trust? Do you have what you need to extend it wisely?" rows="3"></textarea>
+      <div><button class="btn-trust-reflect" data-idx="${i}">Get feedback ↗</button></div>
+      <div class="trust-feedback hidden" id="trust-fb-${i}"></div>
+    </div>`;
+  }).join('');
+
+  showStage(`<div class="trust-wrap activity-content">
+    <div class="trust-intro">${esc(data.framing)}</div>
+    <div class="trust-claims-grid">${claimCards}</div>
+    <div class="trust-synthesis">
+      <div class="trust-synthesis-title">Your trust posture</div>
+      <div class="trust-synthesis-q">${esc(data.synthesis_prompt)}</div>
+      <textarea class="trust-final" id="trust-final" placeholder="Not 'do I trust this text' — but HOW am I trusting it, and what does that reveal?" rows="4"></textarea>
+      <button class="btn-trust-final" id="btn-trust-final">Reflect on your epistemics ↗</button>
+      <div class="trust-final-response hidden" id="trust-final-response"></div>
+    </div>
+  </div>`);
+
+  document.querySelectorAll('.btn-trust-reflect').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const idx = btn.dataset.idx;
+      const response = document.getElementById(`trust-res-${idx}`)?.value?.trim();
+      if (!response) return;
+      const fb = document.getElementById(`trust-fb-${idx}`);
+      fb.classList.remove('hidden');
+      fb.textContent = 'Thinking…';
+      const claim = data.claims[idx];
+      try {
+        const reply = await callClaude(
+          `A student is auditing a trust claim from an OER text.\n\nThe claim: "${claim.claim}"\nTrust type: ${claim.trust_type_label}\nWhat the text relies on: "${claim.trust_basis}"\n\nThe student's audit: "${response}"\n\nRespond in 2-3 sentences. Cormier's framework: informed trust means knowing WHO you're trusting, on WHAT BASIS, and whether that basis is sufficient for YOU given your own context and stakes. Acknowledge what the student noticed. Push them on one thing they might not have considered — perhaps about their own positionality, or about what they'd need to know that they don't yet.`,
+          'You are a critical epistemologist who believes that knowing HOW you trust is more important than deciding WHETHER to trust. You never give verdicts — you deepen the question.'
+        );
+        fb.textContent = reply;
+        fb.style.animation = 'none'; fb.offsetHeight; fb.style.animation = '';
+      } catch(err) { fb.textContent = `Error: ${err.message}`; }
+    });
+  });
+
+  document.getElementById('btn-trust-final').addEventListener('click', async () => {
+    const response = document.getElementById('trust-final')?.value?.trim();
+    if (!response) return;
+    const respEl = document.getElementById('trust-final-response');
+    respEl.classList.remove('hidden');
+    respEl.textContent = 'Thinking…';
+    try {
+      const claimSummary = (data.claims || []).map(c => `${c.trust_type_label}: "${c.claim}"`).join('\n');
+      const reply = await callClaude(
+        `A student has completed a trust audit of an OER text. The text asked them to extend trust in these ways:\n${claimSummary}\n\nTheir overall reflection on their trust posture: "${response}"\n\nRespond in 3-4 sentences. Name something specific about their epistemics — how they decide what to trust — that this reflection reveals. Connect it to Cormier's idea that in a world of abundance, informed trust (knowing WHO to trust, on WHAT basis, and for HOW LONG) is a core literacy. Offer one question that would make their trust posture more sophisticated — not more suspicious, but more nuanced.`,
+        'You are a guide to epistemological self-awareness. You help people understand not just what they believe, but how they come to believe — and whether that process serves them well in a world of abundant, contested information.'
+      );
+      respEl.textContent = reply;
+      respEl.style.animation = 'none'; respEl.offsetHeight; respEl.style.animation = '';
+    } catch(err) { respEl.textContent = `Error: ${err.message}`; }
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+//  ACTIVITY 7: ABUNDANCE CHECK
+// ══════════════════════════════════════════════════════════
+
+async function generateAbundance(text) {
+  const obj = getObjective();
+  showGenerating('Surfacing what this text presents as finished — and what\'s hidden beneath…');
+
+  const prompt = `You are applying Dave Cormier's central insight from Learning in a Time of Abundance: before the internet, uncertainty was HIDDEN from us. We only encountered "finished products" — the food on the table, the beautiful wooden bowl, the textbook chapter — with all the messiness, debate, failure, and uncertainty edited out. The internet didn't create uncertainty; it revealed the uncertainty that was always there.
+
+A textbook chapter is a finished product. It presents knowledge as settled, processes as proven, conclusions as established. Your job is to find what uncertainty it's hiding, what "finished product" confidence it's projecting, and what the mess beneath actually looks like.
+
+Cormier also argues that this creates two failure modes: FACTIONALIZATION (picking an authority and stopping thinking) and APATHY (giving up because nothing is certain). The antidote is learning to SIT WITH uncertainty — to deal with it rather than solve it.
+
+OER TEXT:
+---
+${text}
+---
+${obj ? `\nFocus: ${obj}` : ''}
+
+Return ONLY valid JSON (no markdown):
+{
+  "finished_product": "In 1-2 sentences: what 'finished product' confidence is this text projecting? What does it present as settled, proven, or established that is actually messier than it appears?",
+  "hidden_uncertainties": [
+    {
+      "type": "process",
+      "type_label": "Hidden Process",
+      "ab_color": "#7db87a",
+      "hidden_label": "What got cleaned up",
+      "hidden_text": "Something about HOW the knowledge in this text was produced that the text doesn't show — the debates, failed experiments, rejected theories, or contested methodologies behind this 'settled' content.",
+      "what_to_ask": "A question the learner could ask to surface this hidden process — something a curious insider would know to ask"
+    },
+    {
+      "type": "stakes",
+      "type_label": "Hidden Stakes",
+      "ab_color": "#c8b560",
+      "hidden_label": "Who has skin in the game",
+      "hidden_text": "Someone or some group whose interests shape what this text includes, excludes, or frames as obvious — not necessarily maliciously, but inevitably. Cormier's point: all knowledge is made by positioned people.",
+      "what_to_ask": "A question about whose interests are embedded in this text's framing"
+    },
+    {
+      "type": "dissent",
+      "type_label": "Hidden Dissent",
+      "ab_color": "#b07ab8",
+      "hidden_label": "What the field actually argues about",
+      "hidden_text": "An active, genuine disagreement within the relevant field or community that this text flattens or ignores — not a fringe position, but something real practitioners or scholars debate.",
+      "what_to_ask": "A question that would take the learner into the actual debate"
+    },
+    {
+      "type": "context",
+      "type_label": "Hidden Context-Dependence",
+      "ab_color": "#c27050",
+      "hidden_label": "Where this stops working",
+      "hidden_text": "A context, community, or situation in which the claims or frameworks in this text break down, don't apply, or actively mislead — the conditions under which the 'finished product' falls apart.",
+      "what_to_ask": "A question that helps the learner identify the limits of this text's reach"
+    }
+  ],
+  "sit_with_it": "A prompt that invites the learner to practice Cormier's 'sitting with uncertainty' — not resolving these tensions, but articulating what it feels like to hold them and what it might mean for how they use this text"
+}
+
+Rules:
+- Be specific to THIS text — generic critiques of 'all textbooks' are not acceptable
+- The hidden content must be real and verifiable, not invented
+- Avoid the two failure modes Cormier names: don't tip into cynicism (apathy) or suggest there's a better authority to follow instead (factionalization)
+- The 'sit with it' prompt should be genuinely challenging — not 'how do you feel?' but something that requires sitting in productive discomfort`;
+
+  const raw = await callClaude(prompt);
+  const data = parseJSON(raw);
+  state.generatedData = data;
+  renderAbundance(data);
+}
+
+function renderAbundance(data) {
+  const cards = (data.hidden_uncertainties || []).map((h, i) => `
+    <div class="abundance-card" style="--ab-color:${esc(h.ab_color)}">
+      <div class="abundance-type">${esc(h.type_label)}</div>
+      <div class="abundance-hidden-label">${esc(h.hidden_label)}</div>
+      <div class="abundance-hidden-text">${esc(h.hidden_text)}</div>
+      <div class="abundance-surface"><strong>Ask:</strong> ${esc(h.what_to_ask)}</div>
+      <textarea class="abundance-respond" id="ab-res-${i}" placeholder="What do you actually know about this hidden layer — from experience, other reading, or your community?" rows="3"></textarea>
+      <div><button class="btn-abundance-reflect" data-idx="${i}">Get feedback ↗</button></div>
+      <div class="abundance-fb hidden" id="ab-fb-${i}"></div>
+    </div>`).join('');
+
+  showStage(`<div class="abundance-wrap activity-content">
+    <div class="abundance-premise">
+      <div class="abundance-premise-label">The finished product</div>
+      <div class="abundance-premise-text">${esc(data.finished_product)}</div>
+    </div>
+    <div class="abundance-hidden-grid">${cards}</div>
+    <div class="abundance-closing">
+      <div class="abundance-closing-q">${esc(data.sit_with_it)}</div>
+      <textarea class="abundance-sit" id="abundance-sit" placeholder="Sitting with it — not resolving it, just naming what it feels like to hold these tensions while still using the text…" rows="4"></textarea>
+    </div>
+  </div>`);
+
+  document.querySelectorAll('.btn-abundance-reflect').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const idx = btn.dataset.idx;
+      const response = document.getElementById(`ab-res-${idx}`)?.value?.trim();
+      if (!response) return;
+      const fb = document.getElementById(`ab-fb-${idx}`);
+      fb.classList.remove('hidden');
+      fb.textContent = 'Thinking…';
+      const h = data.hidden_uncertainties[idx];
+      try {
+        const reply = await callClaude(
+          `A student is exploring a hidden layer in an OER text.\n\nThe hidden layer (${h.type_label}): "${h.hidden_text}"\n\nThe question they were asked: "${h.what_to_ask}"\n\nTheir response: "${response}"\n\nRespond in 2-3 sentences. Acknowledge what they've brought — experience, reading, community knowledge. Cormier's framework: this kind of knowledge (practitioner knowledge, community knowledge, situated knowledge) is EXACTLY what the "finished product" of a textbook can't contain. Push them one step further — either toward a harder question, or toward noticing what their knowledge reveals about the text's limits.`,
+          'You are a guide who values the knowledge that lives in communities and experience as much as the knowledge that lives in texts. You help learners see what they already know that the textbook doesn\'t.'
+        );
+        fb.textContent = reply;
+        fb.style.animation = 'none'; fb.offsetHeight; fb.style.animation = '';
+      } catch(err) { fb.textContent = `Error: ${err.message}`; }
+    });
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+//  ACTIVITY 8: BREADCRUMB TRAIL
+// ══════════════════════════════════════════════════════════
+
+async function generateBreadcrumb(text) {
+  const obj = getObjective();
+  showGenerating('Tracing the claims back to where they came from…');
+
+  const prompt = `You are applying Dave Cormier's "Practice 2: Leave Bread Crumbs" from Learning in a Time of Abundance. Cormier argues that one of the most important practices in an abundant information world is epistemic transparency — showing WHERE your claims came from, HOW you came to believe them, and WHAT KIND of claim you're making.
+
+He distinguishes between:
+- FACT CLAIMS: verifiable, with a traceable source
+- INTERPRETATION CLAIMS: someone's reading of facts, shaped by their framework
+- VALUE CLAIMS: what ought to be, which no amount of evidence can fully settle
+- EXPERIENCE CLAIMS: grounded in lived practice, not research
+
+The problem is that texts often present all four as if they were the same kind of claim — and readers accept them all with the same level of trust. Your task is to surface 3-4 specific claims from this text and help the learner trace each one back to its epistemic roots.
+
+After tracing the text's claims, the learner will build their OWN claim about the topic — with their own breadcrumbs.
+
+OER TEXT:
+---
+${text}
+---
+${obj ? `\nFocus: ${obj}` : ''}
+
+Return ONLY valid JSON (no markdown):
+{
+  "intro": "1-2 sentences: what does it mean to 'leave breadcrumbs' — and why does this text make that harder than it should be?",
+  "claims": [
+    {
+      "claim": "A specific claim from the text — exact quote or very close paraphrase",
+      "claim_type": "fact" | "interpretation" | "value" | "experience",
+      "claim_type_label": "Fact Claim" | "Interpretation Claim" | "Value Claim" | "Experience Claim",
+      "trail_questions": [
+        "Who or what is the original source of this claim — and how far is the text from that source?",
+        "What kind of evidence COULD support this claim — and does the text provide it?",
+        "What would someone who disputes this claim say about where it comes from?"
+      ],
+      "cormier_note": "A brief note on why this TYPE of claim matters — what Cormier says about fact vs. interpretation vs. value claims and the confusion between them"
+    }
+  ],
+  "build_prompt": "A prompt inviting the learner to make their OWN claim about this topic — with their own breadcrumbs. Should specify: state a claim, identify what type it is, and explain where it comes from (source, experience, reasoning, community knowledge)"
+}
+
+Rules:
+- Claims must be SPECIFIC and from THIS text — not invented
+- Claim types must be accurate — this is the core learning, don't be sloppy
+- Trail questions should be genuinely investigable, not rhetorical
+- The build prompt should feel like a real epistemic exercise, not a summary task`;
+
+  const raw = await callClaude(prompt);
+  const data = parseJSON(raw);
+  state.generatedData = data;
+  renderBreadcrumb(data);
+}
+
+function renderBreadcrumb(data) {
+  const typeColors = {
+    fact:           '#7db87a',
+    interpretation: '#c8b560',
+    value:          '#b07ab8',
+    experience:     '#c27050',
+  };
+
+  const claimCards = (data.claims || []).map((c, i) => {
+    const color = typeColors[c.claim_type] || '#7db87a';
+    const qs = (c.trail_questions || []).map(q => `<div class="bc-question">${esc(q)}</div>`).join('');
+    return `<div class="bc-claim">
+      <div class="bc-claim-header">
+        <div class="bc-claim-num">${i + 1}</div>
+        <div class="bc-claim-text">${esc(c.claim)}</div>
+        <div class="bc-type-badge" style="background:rgba(${color === '#7db87a' ? '125,184,122' : color === '#c8b560' ? '200,181,96' : color === '#b07ab8' ? '176,122,184' : '194,112,80'},0.12);color:${color};border-color:rgba(${color === '#7db87a' ? '125,184,122' : color === '#c8b560' ? '200,181,96' : color === '#b07ab8' ? '176,122,184' : '194,112,80'},0.3)">${esc(c.claim_type_label)}</div>
+      </div>
+      <div class="bc-trail">
+        <div class="bc-trail-label">Trace the trail</div>
+        <div class="bc-questions">${qs}</div>
+      </div>
+      <div class="trust-audit-row">
+        <div class="trust-audit-label">Why this type matters</div>
+        <div class="trust-audit-q">${esc(c.cormier_note)}</div>
+      </div>
+      <textarea class="bc-response" id="bc-res-${i}" placeholder="Where do you think this claim actually comes from? What trail can you find — or not find?" rows="3"></textarea>
+      <div><button class="btn-bc-check" data-idx="${i}">Check your trail ↗</button></div>
+      <div class="bc-feedback hidden" id="bc-fb-${i}"></div>
+    </div>`;
+  }).join('');
+
+  showStage(`<div class="breadcrumb-wrap activity-content">
+    <div class="breadcrumb-intro">${esc(data.intro)}</div>
+    <div class="breadcrumb-claims">${claimCards}</div>
+    <div class="bc-build">
+      <div class="bc-build-title">Now leave your own breadcrumbs</div>
+      <div class="bc-build-prompt">${esc(data.build_prompt)}</div>
+      <textarea class="bc-own-claim" id="bc-own-claim" placeholder="My claim: … / Type: … / Where it comes from: …" rows="5"></textarea>
+      <button class="btn-bc-build" id="btn-bc-build">Build my trail ↗</button>
+      <div class="bc-own-response hidden" id="bc-own-response"></div>
+    </div>
+  </div>`);
+
+  document.querySelectorAll('.btn-bc-check').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const idx = btn.dataset.idx;
+      const response = document.getElementById(`bc-res-${idx}`)?.value?.trim();
+      if (!response) return;
+      const fb = document.getElementById(`bc-fb-${idx}`);
+      fb.classList.remove('hidden');
+      fb.textContent = 'Thinking…';
+      const claim = data.claims[idx];
+      try {
+        const reply = await callClaude(
+          `A student is tracing a claim from an OER text.\n\nThe claim: "${claim.claim}"\nClaim type: ${claim.claim_type_label}\nWhy this type matters: "${claim.cormier_note}"\n\nThe student's trail-trace: "${response}"\n\nRespond in 2-3 sentences. Cormier's framework: fact claims, interpretation claims, value claims, and experience claims have different kinds of evidence behind them and different epistemic standards. Acknowledge what the student found. Point to something specific they might not have noticed about this claim type — perhaps where the trail becomes especially hard to follow, or where the text is presenting one type of claim as if it were another.`,
+          'You are an epistemologist helping learners distinguish between types of claims and trace their origins. You value epistemic transparency above all — knowing not just WHAT someone claims, but WHAT KIND of claim it is and WHERE it comes from.'
+        );
+        fb.textContent = reply;
+        fb.style.animation = 'none'; fb.offsetHeight; fb.style.animation = '';
+      } catch(err) { fb.textContent = `Error: ${err.message}`; }
+    });
+  });
+
+  document.getElementById('btn-bc-build').addEventListener('click', async () => {
+    const response = document.getElementById('bc-own-claim')?.value?.trim();
+    if (!response) return;
+    const respEl = document.getElementById('bc-own-response');
+    respEl.classList.remove('hidden');
+    respEl.textContent = 'Reading your trail…';
+    try {
+      const claimSummary = (data.claims || []).map(c => `${c.claim_type_label}: "${c.claim}"`).join('\n');
+      const reply = await callClaude(
+        `A student has traced claims in an OER text and is now making their own claim with breadcrumbs.\n\nText claims they traced:\n${claimSummary}\n\nTheir own claim (with type and source): "${response}"\n\nRespond in 3-4 sentences. Cormier's practice: leaving breadcrumbs means being specific about WHERE your claim comes from — a source, an experience, a piece of reasoning, a community. Assess how well their breadcrumbs work: Are they being specific enough? Is the claim type accurate? Is there a gap between what they claim and what their trail actually supports? Offer one specific way they could strengthen their trail.`,
+        'You are a guide to epistemic transparency. You help learners build claims that are honest about their type and their origins — not more certain than the evidence warrants, but not falsely humble either.'
+      );
+      respEl.textContent = reply;
+      respEl.style.animation = 'none'; respEl.offsetHeight; respEl.style.animation = '';
+    } catch(err) { respEl.textContent = `Error: ${err.message}`; }
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+//  SAVE SESSION
+// ══════════════════════════════════════════════════════════
+
+function _rtxt(selector) { const el = document.querySelector(selector); return el ? el.textContent.trim() : ''; }
+function _rval(selector) { const el = document.querySelector(selector); return (el && el.value) ? el.value.trim() : ''; }
+
+function collectRhizoSession() {
+  const d = state.generatedData;
+  if (!d) return null;
+  const act = state.activity;
+  const actLabel = ACTIVITY_LABELS[act] || act;
+  const bookInfo = state.bookTitle ? `**Book:** ${state.bookTitle}` : '';
+  const ts = new Date().toLocaleString();
+
+  let body = '';
+
+  if (act === 'garden') {
+    body += `## Official Summary\n\n${d.official_summary || ''}\n\n`;
+    body += `## Weeds\n\n`;
+    (d.weeds || []).forEach((w, i) => {
+      body += `### ${w.label || w.type}\n\n`;
+      body += `${w.content || ''}\n\n`;
+      body += `**Prompt:** ${w.student_prompt || ''}\n\n`;
+      const res = _rval(`#weed-res-${i}`);
+      if (res) body += `**Your response:** ${res}\n\n`;
+      const fb = _rtxt(`#weed-fb-${i}`);
+      if (fb) body += `**Feedback:** ${fb}\n\n`;
+    });
+
+  } else if (act === 'uncertainty') {
+    body += `## Framing\n\n${d.intro || ''}\n\n`;
+    body += `## Uncertainty Questions\n\n`;
+    (d.questions || []).forEach((q, i) => {
+      body += `### ${q.type_label}: ${q.question}\n\n`;
+      body += `**Why unanswerable:** ${q.why_unanswerable || ''}\n\n`;
+      body += `**Stakes:** ${q.stakes || ''}\n\n`;
+      if (q.position_a) body += `**${q.position_a.label}:** ${q.position_a.text}\n\n`;
+      if (q.position_b) body += `**${q.position_b.label}:** ${q.position_b.text}\n\n`;
+      const take = _rval(`.uq-your-take:nth-of-type(${i+1})`);
+      // Collect all .uq-your-take textareas in order
+      const allTakes = document.querySelectorAll('.uq-your-take');
+      const myTake = allTakes[i] ? allTakes[i].value.trim() : '';
+      if (myTake) body += `**Your take:** ${myTake}\n\n`;
+    });
+
+  } else if (act === 'council') {
+    body += `## The Wicked Problem\n\n${d.wicked_problem || ''}\n\n`;
+    body += `## Five Voices\n\n`;
+    (d.voices || []).forEach(v => {
+      body += `**${v.emoji || ''} ${v.role}:** ${v.says}\n\n`;
+    });
+    body += `## Navigation Prompt\n\n${d.navigation_prompt || ''}\n\n`;
+    const response = _rval('#council-response');
+    if (response) body += `## Your Navigation\n\n${response}\n\n`;
+    const synthesis = _rtxt('#council-synthesis');
+    if (synthesis) body += `## Facilitator Response\n\n${synthesis}\n\n`;
+
+  } else if (act === 'nomad') {
+    body += `## Entry Points\n\n`;
+    (d.entries || []).forEach(e => {
+      body += `### ${e.icon || ''} ${e.mode}\n\n${e.content}\n\n**Why this door:** ${e.why}\n\n`;
+    });
+    body += `## Reflection Prompt\n\n${d.reflection_prompt || ''}\n\n`;
+    if (state.nomadChosen) {
+      body += `## Your Chosen Door\n\n**${state.nomadChosen.icon || ''} ${state.nomadChosen.mode}**\n\n`;
+      const reflectInput = _rval('#reflect-input');
+      if (reflectInput) body += `**Your reflection:** ${reflectInput}\n\n`;
+      const reflectResp = _rtxt('#reflect-response');
+      if (reflectResp) body += `**Guide's response:** ${reflectResp}\n\n`;
+    }
+
+  } else if (act === 'contract') {
+    body += `## Topic\n\n${d.topic || ''}\n\n`;
+    body += `## My Contract\n\n`;
+    (d.sections || []).forEach((s, i) => {
+      body += `### ${s.label}\n\n**Prompt:** ${s.prompt}\n\n`;
+      const input = _rval(`#contract-input-${i}`);
+      if (input) body += `**Your response:** ${input}\n\n`;
+    });
+    const contractResult = _rtxt('#contract-result');
+    if (contractResult) body += `## Generated Contract\n\n${contractResult}\n\n`;
+    if (d.signature_line) body += `---\n\n*${d.signature_line}*\n\n`;
+
+  } else if (act === 'trust') {
+    body += `## Framing\n\n${d.framing || ''}\n\n`;
+    body += `## Trust Claims\n\n`;
+    (d.claims || []).forEach((c, i) => {
+      body += `### ${c.trust_type_label}: "${c.claim}"\n\n`;
+      body += `**What the text relies on:** ${c.trust_basis || ''}\n\n`;
+      body += `**Cormier's lens:** ${c.cormier_lens || ''}\n\n`;
+      const res = _rval(`#trust-res-${i}`);
+      if (res) body += `**Your audit:** ${res}\n\n`;
+      const fb = _rtxt(`#trust-fb-${i}`);
+      if (fb) body += `**Feedback:** ${fb}\n\n`;
+    });
+    body += `## Synthesis Prompt\n\n${d.synthesis_prompt || ''}\n\n`;
+    const finalRes = _rval('#trust-final');
+    if (finalRes) body += `## Your Trust Posture\n\n${finalRes}\n\n`;
+    const finalFb = _rtxt('#trust-final-response');
+    if (finalFb) body += `## Guide's Response\n\n${finalFb}\n\n`;
+
+  } else if (act === 'abundance') {
+    body += `## The Finished Product\n\n${d.finished_product || ''}\n\n`;
+    body += `## Hidden Uncertainties\n\n`;
+    (d.hidden_uncertainties || []).forEach((h, i) => {
+      body += `### ${h.type_label}: ${h.hidden_label}\n\n`;
+      body += `${h.hidden_text || ''}\n\n`;
+      body += `**Ask:** ${h.what_to_ask || ''}\n\n`;
+      const res = _rval(`#ab-res-${i}`);
+      if (res) body += `**Your response:** ${res}\n\n`;
+      const fb = _rtxt(`#ab-fb-${i}`);
+      if (fb) body += `**Feedback:** ${fb}\n\n`;
+    });
+    body += `## Sitting With It\n\n${d.sit_with_it || ''}\n\n`;
+    const sit = _rval('#abundance-sit');
+    if (sit) body += `**Your reflection:** ${sit}\n\n`;
+
+  } else if (act === 'breadcrumb') {
+    body += `## Intro\n\n${d.intro || ''}\n\n`;
+    body += `## Claim Trails\n\n`;
+    (d.claims || []).forEach((c, i) => {
+      body += `### Claim ${i + 1} (${c.claim_type_label})\n\n`;
+      body += `"${c.claim}"\n\n`;
+      body += `**Why this type matters:** ${c.cormier_note || ''}\n\n`;
+      const res = _rval(`#bc-res-${i}`);
+      if (res) body += `**Your trail:** ${res}\n\n`;
+      const fb = _rtxt(`#bc-fb-${i}`);
+      if (fb) body += `**Feedback:** ${fb}\n\n`;
+    });
+    body += `## Build Prompt\n\n${d.build_prompt || ''}\n\n`;
+    const own = _rval('#bc-own-claim');
+    if (own) body += `## Your Own Claim\n\n${own}\n\n`;
+    const ownFb = _rtxt('#bc-own-response');
+    if (ownFb) body += `## Trail Feedback\n\n${ownFb}\n\n`;
+  }
+
+  const header = [
+    `# Rhizo — ${actLabel}`,
+    bookInfo,
+    `**Saved:** ${ts}`,
+    '',
+    '---',
+    '',
+  ].filter(l => l !== undefined).join('\n');
+
+  return header + '\n' + body;
+}
+
+function saveRhizoSession() {
+  const md = collectRhizoSession();
+  if (!md) return;
+  const actLabel = ACTIVITY_LABELS[state.activity] || state.activity;
+  const slug = actLabel.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  const filename = `rhizo-${slug}-${Date.now()}.md`;
+  const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  // Button feedback
+  const btn = document.getElementById('btn-save');
+  if (btn) {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<span>✓ Saved</span>';
+    btn.classList.add('save-done');
+    setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('save-done'); }, 2000);
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════════
+
+function init() {
+  // Activity tiles
+  document.querySelectorAll('.activity-tile').forEach(tile =>
+    tile.addEventListener('click', () => selectActivity(tile.dataset.activity)));
+
+  // Connect
+  document.getElementById('btn-connect').addEventListener('click', testConnection);
+
+  // Generate
+  document.getElementById('btn-generate').addEventListener('click', generate);
+
+  // Save session
+  document.getElementById('btn-save').addEventListener('click', saveRhizoSession);
+
+  // Book search
+  document.getElementById('book-search').addEventListener('input', e => filterBooks(e.target.value));
+
+  // Retry books
+  document.getElementById('books-retry').addEventListener('click', loadBooks);
+
+  // Back button
+  document.getElementById('book-back').addEventListener('click', () => {
+    state.bookUrl = null; state.bookTitle = null;
+    state.chapterId = null;
+    document.getElementById('book-focus-view').classList.add('hidden');
+    document.getElementById('book-list-view').classList.remove('hidden');
+    document.getElementById('chapter-notice').classList.add('hidden');
+    const hasSource = state.sources.length > 0 || (document.getElementById('oer-text')?.value || '').trim();
+    document.getElementById('btn-generate').disabled = !hasSource || !state.connected;
+  });
+
+  // TOC selectors
+  document.getElementById('part-select').addEventListener('change', onPartSelected);
+  document.getElementById('chapter-select').addEventListener('change', onChapterSelected);
+  document.getElementById('btn-load-chapter').addEventListener('click', loadChapter);
+
+  // URL fetch button
+  document.getElementById('btn-fetch-url').addEventListener('click', fetchUrl);
+  document.getElementById('url-fetch-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') fetchUrl();
+  });
+
+  // File upload button + hidden input
+  document.getElementById('btn-file-upload').addEventListener('click', () => {
+    document.getElementById('file-upload-input').click();
+  });
+  document.getElementById('file-upload-input').addEventListener('change', e => {
+    const file = e.target.files?.[0];
+    if (file) { handleFileUpload(file); e.target.value = ''; }
+  });
+
+  // Paste toggle
+  document.getElementById('paste-toggle').addEventListener('click', () => {
+    const section = document.getElementById('paste-section');
+    const btn     = document.getElementById('paste-toggle');
+    const isOpen  = !section.classList.contains('hidden');
+    section.classList.toggle('hidden', isOpen);
+    btn.classList.toggle('active', !isOpen);
+    btn.textContent = isOpen ? '✎ Paste text instead' : '✕ Close paste panel';
+  });
+
+  // Paste textarea word count
+  const oerTextarea = document.getElementById('oer-text');
+  oerTextarea.addEventListener('input', () => {
+    document.getElementById('word-count').textContent = wordCount(oerTextarea.value);
+    const hasSource = state.sources.length > 0 || oerTextarea.value.trim();
+    document.getElementById('btn-generate').disabled = !hasSource || !state.connected;
+  });
+
+  // Proxy URL change
+  document.getElementById('proxy-url').addEventListener('change', () => {
+    state.connected = false; state.allBooks = [];
+    document.getElementById('status-pill').classList.remove('connected');
+    document.getElementById('status-text').textContent = 'Not connected';
+    document.getElementById('books-ready').classList.add('hidden');
+    document.getElementById('books-error').classList.add('hidden');
+    document.getElementById('books-loading').classList.remove('hidden');
+  });
+
+  // Auto-connect
+  testConnection();
+
+  // ── Mobile panel drawer ──────────────────────────────────────
+  (function initMobilePanel() {
+    const MQ = window.matchMedia('(max-width: 768px)');
+    const panel    = document.querySelector('.context-panel');
+    const btn      = document.getElementById('btn-open-panel');
+    const backdrop = document.getElementById('mobile-backdrop');
+    function open()  { panel.classList.add('mobile-open'); btn.setAttribute('aria-expanded','true'); backdrop.classList.add('visible'); }
+    function close() { panel.classList.remove('mobile-open'); btn.setAttribute('aria-expanded','false'); backdrop.classList.remove('visible'); }
+    function applyMobile(m) { btn.style.display = m ? 'flex' : 'none'; if (!m) close(); }
+    btn.addEventListener('click', () => panel.classList.contains('mobile-open') ? close() : open());
+    backdrop.addEventListener('click', close);
+    MQ.addEventListener('change', e => applyMobile(e.matches));
+    applyMobile(MQ.matches);
+  })();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+
+// ── Suite-wide theme toggle ──────────────────────────────
+(function() {
+  var btn = document.getElementById('btn-suite-theme');
+  if (!btn) return;
+  function applyOmTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    btn.textContent = theme === 'dark' ? '☀' : '🌙';
+    btn.title = theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+    try { localStorage.setItem('om-theme', theme); } catch(e) {}
+  }
+  btn.addEventListener('click', function() {
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    applyOmTheme(cur === 'dark' ? 'light' : 'dark');
+  });
+  var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+  btn.textContent = cur === 'dark' ? '☀' : '🌙';
+  btn.title = cur === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+})();
+</script>
+<script>
+/* ── ROTATING CORMIER QUOTES ── */
+(function() {
+  var QUOTES = [
+    "The internet didn't create uncertainty — it revealed it.",
+    "Before the internet, we mostly encountered finished products with all the uncertainty handled by someone else.",
+    "Information abundance means we are drowning in things that look like knowledge but require much more work to evaluate.",
+    "We have built a world that prioritizes certainty, and now we live in one that can't provide it.",
+    "The community is the curriculum. The people around you know things. They bring experiences and perspectives that no textbook contains.",
+    "Rhizomatic learning doesn't start with a map. It starts with where you are.",
+    "Humility isn't about being uncertain about everything. It's about being honest about what you don't know.",
+    "The goal isn't to find the right answer. It's to get better at knowing when you've found it.",
+    "Informed trust is not blind trust. It asks: who is this person? what community backs them? what process produced this?",
+    "In a world of abundance, knowing how to evaluate a source matters more than knowing any particular fact.",
+    "Curriculum, in the traditional sense, is a promise that the right knowledge exists and can be delivered. The internet broke that promise.",
+    "We are not failing because we lack information. We are failing because we haven't learned to live with uncertainty.",
+    "The problem isn't fake news. The problem is that real news is also complicated.",
+    "When we encounter a claim, the first question isn't 'is this true?' — it's 'what kind of claim is this?'",
+    "Facts, interpretations, and values travel together on the internet. Learning to sort them out is a survival skill.",
+    "The certainty-seeking instinct isn't stupid — it used to be adaptive. The world changed faster than our instincts.",
+    "We built institutions of knowledge for a world of scarcity. We need new ones for a world of abundance.",
+    "A community of practice is not just a support group. It is an epistemic community — it builds knowledge together.",
+    "The expert who says 'I'm not sure' is often more trustworthy than the one who claims certainty.",
+    "Engagement is the curriculum. What you do together is what you learn.",
+    "We can't go back to a world where someone else handled all the uncertainty. We have to learn to handle it ourselves.",
+    "Leaving breadcrumbs means showing your work — not just what you concluded, but how you got there.",
+    "If you can't trace a claim back to its source, you are trusting the container, not the content.",
+    "Process trust is different from source trust. Sometimes the process is more reliable than the person.",
+    "The hardest thing about abundance isn't finding information. It's sitting with the discomfort of not knowing.",
+    "Rhizomes don't have a centre. Neither does knowledge, in the end.",
+    "We need to stop teaching people what to think and start teaching them how to navigate uncertainty.",
+    "A good question in a time of abundance isn't 'what's the answer?' — it's 'who benefits from me believing this?'",
+    "The things we are most certain about are often the things we've thought about least.",
+    "Community doesn't just support learning. Community is learning — the living, breathing, arguing kind.",
+    "Abundance is not the problem. Our response to abundance is the problem.",
+    "Every time we pretend certainty we don't have, we make someone else feel stupid for their doubt.",
+    "The map is not the territory, and the curriculum is not the knowledge.",
+    "When knowledge is scarce, experts make sense. When knowledge is abundant, navigation matters more than expertise.",
+    "Learning in abundance means choosing your uncertainty wisely — not eliminating it.",
+    "We used to fear not having enough information. Now we need to learn to fear being overwhelmed by it.",
+    "What makes a community trustworthy isn't that everyone agrees. It's that disagreement is honest.",
+    "The student who says 'I don't know but here's how I'd find out' has mastered something essential.",
+    "Scarcity curriculum was built to transmit. Abundance curriculum must be built to navigate.",
+    "Knowing who to trust — and why — is the foundational literacy of the twenty-first century.",
+    "We are all navigating. The question is whether we're doing it consciously.",
+    "In a time of abundance, uncertainty isn't weakness. It's accuracy.",
+    "The rhizome has no beginning and no end. It is always in the middle, always becoming.",
+    "What you know is inseparable from who you know it with.",
+    "Finished products hide the uncertainty that went into making them. That hiding has a cost.",
+    "We used to be able to trust the container — the newspaper, the textbook, the encyclopedia. That era is over.",
+    "The most dangerous knowledge is the knowledge we're most sure about.",
+    "Good judgment in uncertainty isn't a gift. It's a practice.",
+    "If we changed how we look at uncertainty, we have a fighting chance to be both reasonable and hopeful.",
+    "Learning communities are not just nice to have. In a time of abundance, they are how we survive epistemically."
+  ];
+  var el = document.getElementById('cormier-quote');
+  if (!el) return;
+  var q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+  el.textContent = '\u201c' + q + '\u201d';
+})();
+</script>
+</body>
+</html>

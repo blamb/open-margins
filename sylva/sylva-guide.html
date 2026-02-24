@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sylva Guide — Lesson Design · TRU Open Press</title>
+<script>(function(){var t=localStorage.getItem('om-theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root,
+[data-theme="light"] {
+  --bg:         #f4f8f5;
+  --panel:      #ffffff;
+  --surface:    #eaf2ed;
+  --surface-hi: #ddeee5;
+  --raised:     #d0e6d8;
+
+  --fern:       #2d6b4e;
+  --fern-mid:   #3d7a5e;
+  --fern-dim:   rgba(45,107,78,0.10);
+  --fern-glow:  rgba(45,107,78,0.22);
+  --fern-soft:  rgba(45,107,78,0.05);
+  --fern-border: rgba(45,107,78,0.25);
+
+  --sage:       #4a9070;
+  --sage-dim:   rgba(74,144,112,0.10);
+
+  --bark:       #8a5a2a;
+  --bark-dim:   rgba(138,90,42,0.10);
+
+  --gold:       #c8872a;
+  --gold-dim:   rgba(200,135,42,0.10);
+  --gold-border: rgba(200,135,42,0.3);
+
+  --sky:        #1a5c8a;
+  --sky-dim:    rgba(26,92,138,0.10);
+  --sky-border: rgba(26,92,138,0.28);
+
+  --violet:     #6a3a90;
+  --violet-dim: rgba(106,58,144,0.10);
+  --violet-border: rgba(106,58,144,0.28);
+
+  --text:       #1a2e22;
+  --text-mid:   #3a5244;
+  --text-dim:   #5a7868;
+  --text-faint: #8aaa96;
+
+  --border:     rgba(45,107,78,0.10);
+  --border-hi:  rgba(45,107,78,0.18);
+  --shadow-sm:  0 1px 3px rgba(30,80,55,0.08);
+  --shadow-md:  0 4px 14px rgba(30,80,55,0.10);
+  --r: 12px;
+}
+
+[data-theme="dark"] {
+  --bg:         #0a110e;
+  --panel:      #111a15;
+  --surface:    #182418;
+  --surface-hi: #1e2e21;
+  --raised:     #253328;
+
+  --fern:       #5aad82;
+  --fern-mid:   #3d7a5e;
+  --fern-dim:   rgba(90,173,130,0.14);
+  --fern-glow:  rgba(90,173,130,0.28);
+  --fern-soft:  rgba(90,173,130,0.07);
+  --fern-border: rgba(90,173,130,0.25);
+
+  --sage:       #7ab89e;
+  --sage-dim:   rgba(122,184,158,0.12);
+
+  --bark:       #c8a87a;
+  --bark-dim:   rgba(200,168,122,0.12);
+
+  --gold:       #d4a84e;
+  --gold-dim:   rgba(212,168,78,0.12);
+  --gold-border: rgba(212,168,78,0.3);
+
+  --sky:        #7ab4d8;
+  --sky-dim:    rgba(122,180,216,0.12);
+  --sky-border: rgba(122,180,216,0.28);
+
+  --violet:     #b09ad8;
+  --violet-dim: rgba(176,154,216,0.12);
+  --violet-border: rgba(176,154,216,0.28);
+
+  --text:       #d0e8dc;
+  --text-mid:   #a8c8b4;
+  --text-dim:   #7a9882;
+  --text-faint: #5e8270;
+
+  --border:     rgba(255,255,255,0.06);
+  --border-hi:  rgba(255,255,255,0.11);
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md:  0 4px 14px rgba(0,0,0,0.35);
+  --r: 12px;
+}
+
+/* ── BASE ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--bg); color: var(--text);
+  line-height: 1.6; min-height: 100vh;
+}
+a { color: var(--fern); text-underline-offset: 3px; }
+a:hover { color: var(--sage); }
+
+/* ── TOPBAR ── */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 20px; height: 52px;
+  background: var(--panel); border-bottom: 1px solid var(--border-hi);
+  box-shadow: var(--shadow-sm);
+}
+.topbar-brand { display: flex; flex-direction: column; justify-content: center; gap: 1px; }
+.brand-sylva {
+  font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 700;
+  color: var(--fern); line-height: 1; letter-spacing: -0.01em;
+}
+.brand-sub {
+  font-size: 0.63rem; color: var(--fern); letter-spacing: 0.07em;
+  text-transform: uppercase; margin-top: 1px;
+}
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.topbar-guide-badge {
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 10px;
+  background: var(--fern-dim); color: var(--fern); border: 1px solid var(--fern-border);
+}
+
+/* ── SUITE NAV ── */
+.suite-nav {
+  display: flex; align-items: center; gap: 8px; padding: 7px 20px;
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.suite-nav-home {
+  font-size: 0.72rem; color: var(--text-dim); text-decoration: none;
+  white-space: nowrap; padding: 2px 0; transition: color 0.15s;
+}
+.suite-nav-home:hover { color: var(--fern); }
+.suite-nav-tools { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.suite-nav-pill {
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.03em;
+  padding: 3px 10px; border-radius: 20px; text-decoration: none; white-space: nowrap;
+  border: 1px solid var(--border-hi); color: var(--text-dim);
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.suite-nav-pill:hover { background: var(--surface-hi); color: var(--text); }
+.pill-companion { color: #a07800; border-color: rgba(180,140,0,0.25); }
+[data-theme="dark"] .pill-companion { color: #d4a84e; border-color: rgba(212,168,78,0.25); }
+.pill-builder   { color: #1a5080; border-color: rgba(26,80,128,0.25); }
+[data-theme="dark"] .pill-builder   { color: #7ab4d8; border-color: rgba(122,180,216,0.25); }
+.pill-nova      { color: #7a5000; border-color: rgba(180,120,0,0.25); }
+[data-theme="dark"] .pill-nova      { color: #d4a84e; border-color: rgba(212,168,78,0.25); }
+.pill-rhizo     { color: #3a6a30; border-color: rgba(60,110,48,0.25); }
+[data-theme="dark"] .pill-rhizo     { color: #7ab89e; border-color: rgba(122,184,158,0.25); }
+.pill-sylva     { color: var(--fern); border-color: var(--fern-border); }
+.pill-active    { background: var(--fern-dim); color: var(--fern); border-color: var(--fern-border); }
+.suite-nav-guide {
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em;
+  color: var(--fern); padding: 3px 10px; border-radius: 20px;
+  background: var(--fern-dim); border: 1px solid var(--fern-border);
+  white-space: nowrap; margin-left: 2px;
+}
+.btn-suite-theme {
+  background: transparent; border: 1px solid rgba(128,128,128,0.25);
+  border-radius: 20px; padding: 4px 10px; font-size: 0.78rem;
+  cursor: pointer; color: inherit; opacity: 0.7;
+  transition: opacity 0.2s, background 0.2s; line-height: 1; flex-shrink: 0;
+}
+.btn-suite-theme:hover { opacity: 1; background: rgba(128,128,128,0.12); }
+
+/* ── PAGE WRAP ── */
+.page-wrap { max-width: 780px; margin: 0 auto; padding: 40px 24px 80px; }
+
+/* ── HERO ── */
+.guide-hero {
+  text-align: center; padding: 48px 24px 40px;
+  border-bottom: 1px solid var(--border-hi); margin-bottom: 44px;
+}
+.guide-hero-eyebrow {
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--fern); margin-bottom: 14px;
+}
+.guide-hero-title {
+  font-family: 'Fraunces', serif; font-size: clamp(1.8rem, 5vw, 2.6rem);
+  font-weight: 700; line-height: 1.15; color: var(--text); margin-bottom: 16px;
+}
+.guide-hero-title span { color: var(--fern); }
+.guide-hero-sub {
+  font-size: 0.9rem; color: var(--text-dim); line-height: 1.7;
+  max-width: 560px; margin: 0 auto 24px;
+}
+.guide-hero-cta {
+  display: inline-block; padding: 9px 20px; border-radius: 8px;
+  background: var(--fern-dim); color: var(--fern);
+  border: 1px solid var(--fern-border); font-size: 0.8rem; font-weight: 600;
+  text-decoration: none; transition: background 0.18s, border-color 0.18s;
+}
+.guide-hero-cta:hover { background: var(--fern-glow); border-color: var(--fern); color: var(--fern); }
+
+/* ── FRAMEWORK BAND ── */
+.framework-band {
+  background: var(--surface); border: 1px solid var(--border-hi);
+  border-radius: var(--r); padding: 26px 30px; margin-bottom: 48px;
+}
+.framework-band-title {
+  font-size: 0.63rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--fern); margin-bottom: 14px;
+}
+.framework-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+}
+.framework-item { display: flex; flex-direction: column; gap: 5px; }
+.framework-item-label {
+  font-size: 0.72rem; font-weight: 700; color: var(--fern);
+  display: flex; align-items: center; gap: 6px;
+}
+.framework-item-label::before {
+  content: ''; display: inline-block; width: 6px; height: 6px;
+  border-radius: 50%; background: var(--fern); flex-shrink: 0;
+}
+.framework-item-text { font-size: 0.81rem; color: var(--text-dim); line-height: 1.6; }
+
+/* ── QUICKSTART ── */
+.quickstart {
+  background: var(--surface); border: 1px solid var(--border-hi);
+  border-radius: var(--r); padding: 24px 28px; margin-bottom: 56px;
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+}
+.quickstart-title {
+  grid-column: 1 / -1; font-size: 0.63rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--fern); margin-bottom: 4px;
+}
+.qs-step { display: flex; flex-direction: column; gap: 5px; }
+.qs-num {
+  font-family: 'Fraunces', serif; font-size: 1.7rem; font-weight: 700;
+  color: var(--fern); line-height: 1; margin-bottom: 2px;
+}
+.qs-title { font-size: 0.8rem; font-weight: 700; color: var(--text); }
+.qs-body { font-size: 0.76rem; color: var(--text-dim); line-height: 1.55; }
+
+/* ── SECTION HEADING ── */
+.section-heading {
+  display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px;
+}
+.section-heading-title {
+  font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 600; color: var(--text);
+}
+.section-heading-sub { font-size: 0.78rem; color: var(--text-dim); }
+
+/* ── ACTIVITY CARDS ── */
+.activity-cards { display: flex; flex-direction: column; gap: 16px; margin-bottom: 56px; }
+.activity-card {
+  background: var(--panel); border: 1px solid var(--border-hi);
+  border-radius: var(--r); overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border-top: 3px solid var(--ac, var(--fern));
+}
+.card-fern   { --ac: var(--fern);   --ac-dim: var(--fern-dim);   --ac-border: var(--fern-border); }
+.card-gold   { --ac: var(--gold);   --ac-dim: var(--gold-dim);   --ac-border: var(--gold-border); }
+.card-sky    { --ac: var(--sky);    --ac-dim: var(--sky-dim);    --ac-border: var(--sky-border); }
+.card-sage   { --ac: var(--sage);   --ac-dim: var(--sage-dim);   --ac-border: rgba(74,144,112,0.3); }
+.card-violet { --ac: var(--violet); --ac-dim: var(--violet-dim); --ac-border: var(--violet-border); }
+.card-bark   { --ac: var(--bark);   --ac-dim: var(--bark-dim);   --ac-border: rgba(138,90,42,0.3); }
+
+.activity-card-header {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 18px 20px 14px; border-bottom: 1px solid var(--border);
+}
+.activity-card-icon { font-size: 2rem; line-height: 1; flex-shrink: 0; }
+.activity-card-meta { flex: 1; min-width: 0; }
+.activity-card-name {
+  font-family: 'Fraunces', serif; font-size: 1.05rem; font-weight: 700;
+  color: var(--text); margin-bottom: 3px;
+}
+.activity-card-tag {
+  display: inline-block; font-size: 0.6rem; font-weight: 700;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 4px; margin-bottom: 5px;
+  background: var(--ac-dim); color: var(--ac); border: 1px solid var(--ac-border);
+}
+.activity-card-tagline { font-size: 0.78rem; color: var(--text-dim); font-style: italic; }
+.activity-card-body { padding: 16px 20px; display: flex; flex-direction: column; gap: 14px; }
+.card-section-label {
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.09em;
+  text-transform: uppercase; color: var(--ac); margin-bottom: 5px;
+}
+.card-section-text { font-size: 0.8rem; color: var(--text-mid); line-height: 1.65; }
+.card-steps { display: flex; flex-direction: column; gap: 8px; }
+.card-step { display: flex; gap: 10px; align-items: flex-start; }
+.card-step-num {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+  background: var(--ac-dim); color: var(--ac); border: 1px solid var(--ac-border);
+  font-size: 0.65rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+  margin-top: 1px;
+}
+.card-step-text { font-size: 0.79rem; color: var(--text-mid); line-height: 1.6; }
+.card-tips { display: flex; flex-direction: column; gap: 7px; }
+.card-tip { display: flex; gap: 8px; align-items: flex-start; font-size: 0.79rem; color: var(--text-dim); line-height: 1.55; }
+.card-tip-icon { color: var(--ac); flex-shrink: 0; margin-top: 1px; }
+.card-divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+.tru-callout {
+  padding: 10px 14px; border-radius: 8px;
+  background: var(--fern-soft); border-left: 3px solid var(--fern);
+  font-size: 0.76rem; color: var(--text-dim); line-height: 1.6;
+}
+.tru-callout strong { color: var(--fern); }
+
+/* ── ALIGNMENT SECTION ── */
+.alignment-section {
+  background: var(--surface); border: 1px solid var(--border-hi);
+  border-radius: var(--r); padding: 28px 30px; margin-bottom: 48px;
+}
+.alignment-title {
+  font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 600;
+  color: var(--text); margin-bottom: 10px; display: flex; align-items: center; gap: 10px;
+}
+.alignment-title-badge {
+  font-size: 0.58rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 4px;
+  background: var(--fern-dim); color: var(--fern); border: 1px solid var(--fern-border);
+}
+.alignment-body { font-size: 0.82rem; color: var(--text-dim); line-height: 1.7; margin-bottom: 14px; }
+.alignment-flow {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin: 16px 0; font-size: 0.78rem;
+}
+.alignment-node {
+  padding: 6px 14px; border-radius: 20px; font-weight: 600;
+  background: var(--fern-dim); color: var(--fern); border: 1px solid var(--fern-border);
+}
+.alignment-arrow { color: var(--text-faint); font-size: 1rem; }
+.alignment-bloom {
+  margin-top: 14px; font-size: 0.79rem; color: var(--text-dim); line-height: 1.65;
+}
+
+/* ── ACCESSIBILITY SECTION ── */
+.access-section {
+  background: var(--surface); border: 1px solid var(--border-hi);
+  border-radius: var(--r); padding: 24px 28px; margin-bottom: 48px;
+}
+.access-title {
+  font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 600;
+  color: var(--text); margin-bottom: 10px;
+}
+.access-body { font-size: 0.82rem; color: var(--text-dim); line-height: 1.7; }
+.access-list { margin-top: 12px; display: flex; flex-direction: column; gap: 7px; }
+.access-item { display: flex; gap: 9px; font-size: 0.79rem; color: var(--text-dim); line-height: 1.55; }
+.access-icon { color: var(--fern); flex-shrink: 0; }
+
+/* ── GENERAL TIPS ── */
+.general-tips {
+  background: var(--surface); border: 1px solid var(--border-hi);
+  border-radius: var(--r); padding: 24px 28px; margin-bottom: 48px;
+}
+.general-tips-heading {
+  font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 600;
+  color: var(--text); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.general-tips-list { display: flex; flex-direction: column; gap: 10px; }
+.gtip { display: flex; gap: 10px; font-size: 0.8rem; color: var(--text-dim); line-height: 1.6; }
+.gtip-icon { color: var(--fern); flex-shrink: 0; font-size: 0.9rem; margin-top: 1px; }
+
+/* ── BOTTOM CTA ── */
+.bottom-cta {
+  background: var(--surface); border: 1px solid var(--border-hi);
+  border-radius: var(--r); padding: 32px 28px; text-align: center;
+}
+.bottom-cta-title { font-family: 'Fraunces', serif; font-size: 1.3rem; color: var(--text); margin-bottom: 8px; }
+.bottom-cta-sub { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 18px; }
+.bottom-cta-btn {
+  display: inline-block; padding: 10px 24px; border-radius: 8px;
+  background: var(--fern-dim); color: var(--fern);
+  border: 1px solid var(--fern-border); font-size: 0.82rem; font-weight: 700;
+  text-decoration: none; transition: background 0.18s, border-color 0.18s;
+}
+.bottom-cta-btn:hover { background: var(--fern-glow); border-color: var(--fern); color: var(--fern); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  .framework-grid, .quickstart { grid-template-columns: 1fr; }
+  .alignment-flow { gap: 5px; }
+  .page-wrap { padding: 28px 16px 60px; }
+  .guide-hero { padding: 32px 16px 28px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Topbar -->
+<header class="topbar">
+  <div class="topbar-brand">
+    <div class="brand-sylva">Sylva</div>
+    <div class="brand-sub">Lesson Planner · TRU Open Press</div>
+  </div>
+  <div class="topbar-right">
+    <span class="topbar-guide-badge">Activity Guide</span>
+  </div>
+</header>
+
+<!-- Suite nav -->
+<nav class="suite-nav" aria-label="Open Margins suite">
+  <a href="../index.html" class="suite-nav-home">← Open Margins</a>
+  <div class="suite-nav-tools">
+    <a href="../companion/companion.html" class="suite-nav-pill pill-companion">✦ Companion</a>
+    <a href="../tru-oer-activity-builder.html" class="suite-nav-pill pill-builder">⬡ Activity Builder</a>
+    <a href="../nova/nova.html" class="suite-nav-pill pill-nova">✺ Nova</a>
+    <a href="../rhizo/rhizo.html" class="suite-nav-pill pill-rhizo">∿ Rhizo</a>
+    <span class="suite-nav-pill pill-sylva pill-active" aria-current="page">⟡ Sylva</span>
+  </div>
+  <span class="suite-nav-guide">? guide</span>
+  <button class="btn-suite-theme" id="btn-suite-theme" aria-label="Toggle theme" title="Toggle theme">🌙</button>
+</nav>
+
+<!-- PAGE -->
+<main class="page-wrap">
+
+  <!-- HERO -->
+  <div class="guide-hero">
+    <div class="guide-hero-eyebrow">⟡ Sylva · Lesson Design Guide</div>
+    <h1 class="guide-hero-title">Design the lesson that brings<br>the text to <span>life</span></h1>
+    <p class="guide-hero-sub">Sylva is a lesson design tool grounded in TRU Open Learning's learner-centred framework. It takes any OER chapter and generates a complete, timed lesson arc — with Bloom's-tagged objectives, community-building moments, care-informed instructor notes, and aligned assessment ideas.</p>
+    <a href="sylva.html" class="guide-hero-cta">← Back to Sylva</a>
+  </div>
+
+  <!-- FRAMEWORK BAND -->
+  <div class="framework-band">
+    <div class="framework-band-title">Grounded in TRU's design framework</div>
+    <div class="framework-grid">
+      <div class="framework-item">
+        <div class="framework-item-label">Caring</div>
+        <div class="framework-item-text">Grounded in Maha Bali's Pedagogy of Care. Sylva's instructor notes include wellbeing prompts — low-stakes entry points, acknowledgement of uneven prior knowledge, and reminders to check in with learners who may be struggling.</div>
+      </div>
+      <div class="framework-item">
+        <div class="framework-item-label">Connected</div>
+        <div class="framework-item-text">TRU's framework insists learners need a sense of belonging. Sylva includes a dedicated <em>community</em> segment type for belonging-building activities — especially important in online and first-year courses where isolation is a real risk.</div>
+      </div>
+      <div class="framework-item">
+        <div class="framework-item-label">Active</div>
+        <div class="framework-item-text">Course design should centre meaningful activity, not passive reception. Sylva's lesson arcs use a structured hook → direct → active → synthesis arc, with mode-specific activities (in-class, online synchronous, online asynchronous).</div>
+      </div>
+      <div class="framework-item">
+        <div class="framework-item-label">Open</div>
+        <div class="framework-item-text">Sylva is built entirely on openly-licensed OER texts from TRU Open Press. Transparent, accessible, and free. Open education isn't just a resource type — it's a value that shapes how knowledge is shared.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK-START -->
+  <div class="quickstart" role="region" aria-label="How Sylva works">
+    <div class="quickstart-title">Getting started</div>
+    <div class="qs-step">
+      <div class="qs-num">1</div>
+      <div class="qs-title">Set up your session</div>
+      <div class="qs-body">Choose your class level, delivery mode (in-class, online sync, or async), and session duration. These shape every activity suggestion.</div>
+    </div>
+    <div class="qs-step">
+      <div class="qs-num">2</div>
+      <div class="qs-title">Load OER text</div>
+      <div class="qs-body">Browse the TRU Open Press catalogue, paste a URL, upload a PDF or Word doc, or paste text directly. Sylva reads the chapter and grounds every segment in it.</div>
+    </div>
+    <div class="qs-step">
+      <div class="qs-num">3</div>
+      <div class="qs-title">Generate objectives</div>
+      <div class="qs-body">Sylva produces 3–5 Bloom's Taxonomy-tagged learning objectives tailored to your class level and prior knowledge. You can edit or add more.</div>
+    </div>
+    <div class="qs-step">
+      <div class="qs-num">4</div>
+      <div class="qs-title">Build the lesson arc</div>
+      <div class="qs-body">Sylva generates a fully timed arc of 4–6 segments: hook, direct instruction, active learning, community, and synthesis — with specific activities and care-informed instructor notes.</div>
+    </div>
+    <div class="qs-step">
+      <div class="qs-num">5</div>
+      <div class="qs-title">Suggest assessment</div>
+      <div class="qs-body">Hit "Suggest assessment" to generate 2–3 constructively aligned assessment ideas — at least one formative and one summative — tied to your specific objectives.</div>
+    </div>
+    <div class="qs-step">
+      <div class="qs-num">6</div>
+      <div class="qs-title">Export your plan</div>
+      <div class="qs-body">Download as Markdown for editing, or Print to PDF for sharing. The export includes objectives, full arc, instructor notes, and assessment ideas.</div>
+    </div>
+  </div>
+
+  <!-- SEGMENT TYPE CARDS -->
+  <div class="section-heading">
+    <div class="section-heading-title">The five segment types</div>
+    <div class="section-heading-sub">Every lesson arc is built from these building blocks</div>
+  </div>
+
+  <div class="activity-cards">
+
+    <!-- Hook -->
+    <article class="activity-card card-gold">
+      <div class="activity-card-header">
+        <div class="activity-card-icon">🪝</div>
+        <div class="activity-card-meta">
+          <div class="activity-card-name">Hook</div>
+          <div class="activity-card-tag">Opening · Engagement</div>
+          <div class="activity-card-tagline">Activate prior knowledge and create productive curiosity before new content begins</div>
+        </div>
+      </div>
+      <div class="activity-card-body">
+        <div>
+          <div class="card-section-label">What it does</div>
+          <div class="card-section-text">The hook is the first segment in every Sylva arc. It surfaces what learners already know (or think they know), creates a genuine question the lesson will answer, and lowers the psychological barrier to engaging with difficult material. A good hook doesn't just warm people up — it orients them toward the specific ideas the lesson will develop.</div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">How to engage</div>
+          <div class="card-steps">
+            <div class="card-step"><div class="card-step-num">1</div><div class="card-step-text">Read the hook activity and the OER passage it references before class</div></div>
+            <div class="card-step"><div class="card-step-num">2</div><div class="card-step-text">Run the activity as written — resist the urge to skip it when time feels tight</div></div>
+            <div class="card-step"><div class="card-step-num">3</div><div class="card-step-text">Note what learners say; return to it at the synthesis stage to show how far they've come</div></div>
+          </div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">Tips</div>
+          <div class="card-tips">
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div>Keep it under 10 minutes — the hook creates energy, it doesn't consume it</div></div>
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div>Think-pair-share and quick polls work especially well for activating prior knowledge with low stakes</div></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Direct instruction -->
+    <article class="activity-card card-sky">
+      <div class="activity-card-header">
+        <div class="activity-card-icon">📖</div>
+        <div class="activity-card-meta">
+          <div class="activity-card-name">Direct Instruction</div>
+          <div class="activity-card-tag">Content · Delivery</div>
+          <div class="activity-card-tagline">Efficient, focused delivery of new concepts grounded in the OER text</div>
+        </div>
+      </div>
+      <div class="activity-card-body">
+        <div>
+          <div class="card-section-label">What it does</div>
+          <div class="card-section-text">Direct instruction segments are for introducing genuinely new concepts that learners cannot construct from prior knowledge alone. Sylva grounds these in specific OER passages — every direct segment quotes the text it draws from. The instructor note will flag if this segment risks running long.</div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">How to engage</div>
+          <div class="card-steps">
+            <div class="card-step"><div class="card-step-num">1</div><div class="card-step-text">Identify the 1–2 key concepts this segment must land — don't try to cover everything</div></div>
+            <div class="card-step"><div class="card-step-num">2</div><div class="card-step-text">Use the OER passage as an anchor — read a key sentence aloud before explaining it</div></div>
+            <div class="card-step"><div class="card-step-num">3</div><div class="card-step-text">Check for understanding before moving on — a quick show of hands or chat response</div></div>
+          </div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">TRU Design Framework note</div>
+          <div class="tru-callout"><strong>10-minute guideline:</strong> TRU's design framework, following Mayer's Cognitive Theory of Multimedia Learning, recommends keeping direct instruction segments under 10 minutes. Sylva's instructor notes will flag when a direct segment risks exceeding this. Break longer explanations into direct + active pairs.</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Active learning -->
+    <article class="activity-card card-sage">
+      <div class="activity-card-header">
+        <div class="activity-card-icon">🤝</div>
+        <div class="activity-card-meta">
+          <div class="activity-card-name">Active Learning</div>
+          <div class="activity-card-tag">Collaborative · Practice</div>
+          <div class="activity-card-tagline">Learners do something with the knowledge — discuss, apply, create, debate</div>
+        </div>
+      </div>
+      <div class="activity-card-body">
+        <div>
+          <div class="card-section-label">What it does</div>
+          <div class="card-section-text">Active segments are the engine of learning. Sylva suggests mode-appropriate activities: in-class (think-pair-share, fishbowl, jigsaw, gallery walk), online synchronous (breakout rooms, collaborative docs, chat waterfall), and online asynchronous (discussion boards, reflection journals, peer review). Each is tied to a specific OER passage.</div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">How to engage</div>
+          <div class="card-steps">
+            <div class="card-step"><div class="card-step-num">1</div><div class="card-step-text">Give clear instructions and a specific task — vague prompts produce vague discussions</div></div>
+            <div class="card-step"><div class="card-step-num">2</div><div class="card-step-text">Keep the OER passage visible while learners work — the text is the anchor</div></div>
+            <div class="card-step"><div class="card-step-num">3</div><div class="card-step-text">Debrief briefly after — what did learners notice? what surprised them?</div></div>
+          </div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">TRU Design Framework note</div>
+          <div class="tru-callout"><strong>Activity-focused learning:</strong> TRU's framework emphasises "varied individual and collaborative learning activities" as central to course design — not peripheral add-ons. Every lesson arc Sylva generates includes at least one substantial active segment.</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Community -->
+    <article class="activity-card card-fern">
+      <div class="activity-card-header">
+        <div class="activity-card-icon">🌿</div>
+        <div class="activity-card-meta">
+          <div class="activity-card-name">Community</div>
+          <div class="activity-card-tag">Belonging · Connected</div>
+          <div class="activity-card-tagline">Build shared identity, trust, and a sense of place — especially in online courses</div>
+        </div>
+      </div>
+      <div class="activity-card-body">
+        <div>
+          <div class="card-section-label">What it does</div>
+          <div class="card-section-text">Community segments are a new segment type in Sylva, grounded in TRU's <em>Connected</em> value and the Pedagogy of Care. They create moments where learners relate to each other, not just to the content — through introductions, shared agreements, peer recognition, or collaborative norms-setting. They're especially valuable at the start of a unit, in online courses, and with first-year students.</div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">How to engage</div>
+          <div class="card-steps">
+            <div class="card-step"><div class="card-step-num">1</div><div class="card-step-text">Don't skip or rush community segments — belonging is a precondition for learning</div></div>
+            <div class="card-step"><div class="card-step-num">2</div><div class="card-step-text">In online courses, use name introductions, Padlet walls, or shared interest surveys</div></div>
+            <div class="card-step"><div class="card-step-num">3</div><div class="card-step-text">Invite, don't require — connection can't be mandated, but space for it can be made</div></div>
+          </div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">TRU Design Framework note</div>
+          <div class="tru-callout"><strong>Connected:</strong> TRU's framework states that learners need "a sense of belonging" and that the institution aims to "foster community and relationships within courses." The Pedagogy of Care (Maha Bali, 2020) argues that care for learners as whole people — not just as students — is itself a form of instructional design. The community segment type makes this concrete.</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Synthesis -->
+    <article class="activity-card card-violet">
+      <div class="activity-card-header">
+        <div class="activity-card-icon">🔄</div>
+        <div class="activity-card-meta">
+          <div class="activity-card-name">Synthesis</div>
+          <div class="activity-card-tag">Exit · Wrap-up</div>
+          <div class="activity-card-tagline">Consolidate, reflect, and close the loop — connecting back to objectives and forward to assessment</div>
+        </div>
+      </div>
+      <div class="activity-card-body">
+        <div>
+          <div class="card-section-label">What it does</div>
+          <div class="card-section-text">Every Sylva arc ends with a synthesis segment. This is where learners consolidate what they've learned, reflect on what surprised them, and connect the lesson back to the learning objectives. Sylva's synthesis segments are grounded in constructive alignment — they set up the assessment step that follows.</div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">How to engage</div>
+          <div class="card-steps">
+            <div class="card-step"><div class="card-step-num">1</div><div class="card-step-text">Return to the hook — what did learners think at the start? How has that changed?</div></div>
+            <div class="card-step"><div class="card-step-num">2</div><div class="card-step-text">Use an exit ticket, reflection prompt, or one-sentence summary to surface understanding</div></div>
+            <div class="card-step"><div class="card-step-num">3</div><div class="card-step-text">Preview the assessment — tell learners how today's learning connects to what comes next</div></div>
+          </div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">Tips</div>
+          <div class="card-tips">
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div>Keep synthesis at the end — don't move it earlier even when time is tight</div></div>
+            <div class="card-tip"><div class="card-tip-icon">✦</div><div>Exit tickets work asynchronously too: a brief discussion board post or form response</div></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </div><!-- /activity-cards -->
+
+  <!-- CONSTRUCTIVE ALIGNMENT SECTION -->
+  <div class="alignment-section">
+    <div class="alignment-title">
+      Constructive Alignment
+      <span class="alignment-title-badge">TRU Framework</span>
+    </div>
+    <div class="alignment-body">
+      Constructive alignment (Biggs &amp; Tang) is TRU's first design guideline: learning outcomes, activities, and assessment should be aligned so each reinforces the others. Sylva operationalises this across three steps.
+    </div>
+    <div class="alignment-flow">
+      <div class="alignment-node">📋 Objectives</div>
+      <div class="alignment-arrow">→</div>
+      <div class="alignment-node">🕐 Lesson Arc</div>
+      <div class="alignment-arrow">→</div>
+      <div class="alignment-node">✓ Assessment</div>
+    </div>
+    <div class="alignment-body">
+      First, Sylva generates Bloom's-tagged learning objectives grounded in the OER text and your session parameters. Then, every segment in the lesson arc is designed to move learners toward those specific objectives. Finally, the <strong>Suggest Assessment</strong> step closes the loop: it generates 2–3 assessment ideas — at least one formative, at least one summative — that directly target the stated objectives, reflecting TRU's emphasis on authentic, active assessment.
+    </div>
+    <div class="alignment-bloom">
+      <strong>Bloom's Taxonomy levels used by Sylva:</strong> Remember (1) · Understand (2) · Apply (3) · Analyze (4) · Evaluate (5) · Create (6). Each objective is tagged with its level so you can see at a glance whether the session is primarily building foundational knowledge or pushing toward higher-order thinking — and adjust the arc accordingly.
+    </div>
+  </div>
+
+  <!-- ACCESSIBILITY SECTION -->
+  <div class="access-section">
+    <div class="access-title">Accessibility &amp; inclusion</div>
+    <div class="access-body">TRU's design framework requires that materials follow inclusive design principles and respect-centred, inclusive language. Sylva embeds accessibility thinking into the lesson arc itself — not as an afterthought.</div>
+    <div class="access-list">
+      <div class="access-item"><div class="access-icon">✦</div><div><strong>Instructor notes include accessibility reminders</strong> — e.g. flagging when shared documents should be screen-reader accessible, or when a direct-instruction segment risks exceeding the 10-minute multimedia learning guideline.</div></div>
+      <div class="access-item"><div class="access-icon">✦</div><div><strong>Care prompts for uneven prior knowledge</strong> — notes may suggest offering a low-stakes entry point, or acknowledging that learners arrive with different preparation levels.</div></div>
+      <div class="access-item"><div class="access-icon">✦</div><div><strong>Mode-appropriate activities</strong> — Sylva's activity suggestions for online asynchronous delivery prioritise flexible participation (discussion boards, reflection journals, peer review) that accommodate different schedules and access conditions.</div></div>
+      <div class="access-item"><div class="access-icon">✦</div><div><strong>OER foundation</strong> — all text is from open-access TRU Open Press resources, so learners don't face paywalls or access barriers to the reading that underpins the lesson.</div></div>
+    </div>
+  </div>
+
+  <!-- GENERAL TIPS -->
+  <div class="general-tips">
+    <div class="general-tips-heading">⟡ Tips for better lessons</div>
+    <div class="general-tips-list">
+      <div class="gtip"><div class="gtip-icon">✦</div><div><strong>More text = better arc.</strong> Paste at least 500–800 words for best results. The more Sylva can read, the more grounded and specific the activities will be.</div></div>
+      <div class="gtip"><div class="gtip-icon">✦</div><div><strong>Use the prior knowledge field.</strong> "Strong foundation" produces higher Bloom's levels and more analytic activities. "None assumed" produces more scaffolded, introductory sequences.</div></div>
+      <div class="gtip"><div class="gtip-icon">✦</div><div><strong>Don't regenerate if you mostly like it.</strong> Edit objectives manually, and re-run the arc with those edited objectives — you'll get a more tailored arc than starting from scratch.</div></div>
+      <div class="gtip"><div class="gtip-icon">✦</div><div><strong>The community segment is optional but valuable.</strong> If Sylva doesn't include one and you're teaching a first-year or online course, add a brief community moment to the beginning — even 5 minutes of name introductions changes the room.</div></div>
+      <div class="gtip"><div class="gtip-icon">✦</div><div><strong>Run the assessment step before exporting.</strong> The assessment ideas give your lesson a complete instructional design arc — objectives, activities, and evidence of learning — ready to share with students or curriculum reviewers.</div></div>
+      <div class="gtip"><div class="gtip-icon">✦</div><div><strong>Export and edit.</strong> The Markdown export is designed to be copied into your LMS, shared as a course document, or adapted for your institution's lesson plan template. It's a starting point, not a finished product.</div></div>
+    </div>
+  </div>
+
+  <!-- BOTTOM CTA -->
+  <div class="bottom-cta">
+    <div class="bottom-cta-title">Ready to plan your lesson?</div>
+    <div class="bottom-cta-sub">Load a chapter, generate your arc, and get to the good part — teaching it.</div>
+    <a href="sylva.html" class="bottom-cta-btn">← Back to Sylva</a>
+  </div>
+
+</main>
+
+<script>
+(function() {
+  var btn = document.getElementById('btn-suite-theme');
+  if (!btn) return;
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    btn.textContent = theme === 'dark' ? '☀' : '🌙';
+    btn.title = theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+    btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+    try { localStorage.setItem('om-theme', theme); } catch(e) {}
+  }
+  btn.addEventListener('click', function() {
+    var cur = document.documentElement.getAttribute('data-theme') || 'light';
+    applyTheme(cur === 'dark' ? 'light' : 'dark');
+  });
+  var cur = document.documentElement.getAttribute('data-theme') || 'light';
+  btn.textContent = cur === 'dark' ? '☀' : '🌙';
+  btn.title = cur === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+  btn.setAttribute('aria-label', cur === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+})();
+</script>
+</body>
+</html>

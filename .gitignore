@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Build / cache
+.cache/
+dist/
+*.log
+
+# Archives
+*.zip
+
+# Environment / secrets
+.env
+.env.local
+
+# Claude Code local settings
+.claude/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo

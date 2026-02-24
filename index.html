@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Open Margins · Active Learning Tools for Open Educational Resources</title>
+<script>(function(){var t=localStorage.getItem('om-theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,500;1,9..144,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ══════════════════════════════════════════════════════════
+   TRU OPEN PRESS · ACTIVE LEARNING TOOLS
+   Editorial · Warm · Scholarly · Purposeful
+   ══════════════════════════════════════════════════════════ */
+
+:root {
+  --cream:     #f5f0e8;
+  --cream-hi:  #ede7d9;
+  --parchment: #e8dfc8;
+  --ink:       #1a1610;
+  --ink-mid:   #3d3528;
+  --ink-light: #6b5e48;
+  --ink-faint: #a8997e;
+
+  --amber:       #c17f24;
+  --amber-light: #dfa03a;
+  --amber-dim:   rgba(193,127,36,0.12);
+  --amber-glow:  rgba(193,127,36,0.25);
+
+  /* Tool accent colours */
+  --tool-companion: #e8a245;   /* Companion: amber — first in journey */
+  --tool-builder:   #003865;   /* Activity Builder: TRU navy */
+  --tool-nova:      #f5a623;   /* Nova: gold */
+  --tool-rhizo:     #7db87a;   /* Rhizo: moss */
+  --tool-sylva:     #2d6b4e;   /* Sylva: forest green */
+
+  --border:    rgba(26,22,16,0.10);
+  --border-hi: rgba(26,22,16,0.18);
+
+  --shadow-sm: 0 1px 3px rgba(26,22,16,0.08), 0 1px 2px rgba(26,22,16,0.06);
+  --shadow-md: 0 4px 16px rgba(26,22,16,0.10), 0 2px 4px rgba(26,22,16,0.06);
+  --shadow-lg: 0 12px 40px rgba(26,22,16,0.14), 0 4px 8px rgba(26,22,16,0.06);
+
+  --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  --r: 12px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+/* Focus ring — keyboard users only */
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; border-radius: 3px; }
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Subtle grain overlay */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  opacity: 1;
+}
+
+* { position: relative; z-index: 1; }
+
+/* ── SCROLL ANIMATIONS ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── PAGE LAYOUT ── */
+.page-wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ══════════════════════════════════════════════════════════
+   HEADER
+   ══════════════════════════════════════════════════════════ */
+.site-header {
+  padding: 48px 0 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.header-inner {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 32px;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.header-logo {
+  height: 52px;
+  width: 52px;
+  object-fit: contain;
+  opacity: 0.9;
+  filter: drop-shadow(0 2px 8px rgba(193,127,36,0.18));
+}
+
+.header-wordmark {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.wordmark-press {
+  font-family: 'Fraunces', serif;
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+
+.wordmark-press span { color: var(--amber); }
+
+.wordmark-sub {
+  font-size: 0.67rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-link {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.77rem;
+  font-weight: 500;
+  color: var(--ink-light);
+  text-decoration: none;
+  transition: all var(--transition);
+  border: 1px solid transparent;
+}
+.nav-link:hover {
+  color: var(--ink);
+  background: var(--cream-hi);
+  border-color: var(--border);
+}
+.nav-link.external::after {
+  content: ' ↗';
+  font-size: 0.7em;
+  opacity: 0.6;
+}
+
+/* ══════════════════════════════════════════════════════════
+   HERO
+   ══════════════════════════════════════════════════════════ */
+.hero {
+  padding: 72px 0 64px;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.69rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 22px;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--amber);
+  border-radius: 1px;
+}
+
+.hero-headline {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  max-width: 780px;
+  margin-bottom: 28px;
+}
+
+.hero-headline em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--amber);
+}
+
+.hero-body {
+  max-width: 600px;
+  font-size: 1.05rem;
+  line-height: 1.78;
+  color: var(--ink-light);
+  margin-bottom: 36px;
+}
+
+.hero-body strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.hero-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.79rem;
+  color: var(--ink-faint);
+}
+.hero-meta-pip {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--amber);
+  opacity: 0.6;
+}
+
+.hero-decoration {
+  position: absolute;
+  top: -20px;
+  right: -48px;
+  font-family: 'Fraunces', serif;
+  font-size: 22rem;
+  font-weight: 900;
+  font-style: italic;
+  color: var(--amber);
+  opacity: 0.04;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: -0.06em;
+}
+
+/* ══════════════════════════════════════════════════════════
+   DIVIDER
+   ══════════════════════════════════════════════════════════ */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--border-hi) 20%, var(--border-hi) 80%, transparent);
+  margin: 0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   JOURNEY — FEATURED FIRST STEP
+   ══════════════════════════════════════════════════════════ */
+.journey-section {
+  padding: 72px 0 0;
+}
+
+.journey-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.69rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 14px;
+}
+.journey-eyebrow::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--amber);
+  border-radius: 1px;
+}
+
+.journey-intro-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+
+.journey-intro-sub {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--ink-light);
+  max-width: 600px;
+  margin-bottom: 40px;
+}
+
+/* ── FEATURED CARD (Companion) ── */
+.featured-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+  color: inherit;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  transition: box-shadow var(--transition), transform var(--transition), border-color var(--transition);
+  margin-bottom: 56px;
+}
+.featured-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-3px);
+  border-color: var(--border-hi);
+}
+
+.featured-card-left {
+  padding: 44px 44px 40px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+
+.featured-step-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9a6218;
+  background: rgba(232,162,69,0.1);
+  border: 1px solid rgba(232,162,69,0.25);
+  border-radius: 20px;
+  padding: 4px 12px;
+  align-self: flex-start;
+  margin-bottom: 22px;
+}
+.featured-step-badge::before {
+  content: '→';
+  font-size: 0.8em;
+}
+
+.featured-number {
+  font-family: 'Fraunces', serif;
+  font-size: 6.5rem;
+  font-weight: 900;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  color: var(--tool-companion);
+  opacity: 0.13;
+  margin-bottom: 18px;
+  user-select: none;
+  transition: opacity var(--transition);
+}
+.featured-card:hover .featured-number { opacity: 0.22; }
+
+.featured-label {
+  font-size: 0.59rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9a6218;
+  margin-bottom: 6px;
+}
+
+.featured-name {
+  font-family: 'Fraunces', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+
+.featured-tagline {
+  font-size: 0.95rem;
+  font-style: italic;
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  color: var(--ink-light);
+  line-height: 1.55;
+  margin-bottom: 18px;
+}
+
+.featured-desc {
+  font-size: 0.87rem;
+  line-height: 1.75;
+  color: var(--ink-light);
+  flex: 1;
+  margin-bottom: 24px;
+}
+.featured-desc strong { color: var(--ink); font-weight: 600; }
+
+.featured-audience {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 24px;
+}
+
+.audience-tag {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.67rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border: 1px solid;
+}
+
+.featured-launch {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(232,162,69,0.35);
+  color: #7a4e12;
+  background: rgba(232,162,69,0.08);
+  transition: all var(--transition);
+  align-self: flex-start;
+  cursor: pointer;
+}
+.featured-card:hover .featured-launch {
+  background: rgba(232,162,69,0.15);
+  border-color: rgba(232,162,69,0.5);
+}
+.featured-launch-arrow { transition: transform var(--transition); }
+.featured-card:hover .featured-launch-arrow { transform: translateX(3px); }
+
+/* Featured right panel: modes illustration */
+.featured-card-right {
+  padding: 44px 40px;
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+}
+
+.featured-modes-title {
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 6px;
+}
+
+.featured-mode {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 16px 18px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.featured-card:hover .featured-mode {
+  border-color: var(--border-hi);
+  box-shadow: var(--shadow-sm);
+}
+
+.featured-mode-icon {
+  font-size: 1.15rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.featured-mode-body { flex: 1; }
+
+.featured-mode-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+
+.featured-mode-desc {
+  font-size: 0.76rem;
+  line-height: 1.55;
+  color: var(--ink-light);
+}
+
+.featured-card-strip {
+  height: 4px;
+  background: var(--tool-companion);
+  flex-shrink: 0;
+  grid-column: 1 / -1;
+  transition: height var(--transition);
+}
+.featured-card:hover .featured-card-strip { height: 6px; }
+
+/* ══════════════════════════════════════════════════════════
+   ABOUT TEASER
+   ══════════════════════════════════════════════════════════ */
+.about-teaser-section {
+  padding: 0 0 64px;
+}
+
+.about-teaser-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 40px;
+  align-items: center;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 28px 32px;
+  box-shadow: var(--shadow-sm);
+  border-left: 4px solid var(--amber);
+}
+
+.about-teaser-eyebrow {
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 6px;
+}
+
+.about-teaser-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.about-teaser-body {
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: var(--ink-light);
+  max-width: 520px;
+}
+
+.about-teaser-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.about-teaser-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.about-tag {
+  font-size: 0.67rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+.about-tag-learner  { background: rgba(56,189,248,0.07);  border-color: rgba(56,189,248,0.22);  color: #0369a1; }
+.about-tag-instructor { background: rgba(167,139,250,0.07); border-color: rgba(167,139,250,0.22); color: #6d28d9; }
+.about-tag-matrix   { background: rgba(125,184,122,0.08);  border-color: rgba(125,184,122,0.25); color: #3a6438; }
+
+.about-teaser-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 9px 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(193,127,36,0.35);
+  color: #7a4e12;
+  background: rgba(193,127,36,0.08);
+  text-decoration: none;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+.about-teaser-btn:hover {
+  background: rgba(193,127,36,0.15);
+  border-color: rgba(193,127,36,0.5);
+}
+.about-teaser-btn span { transition: transform var(--transition); }
+.about-teaser-btn:hover span { transform: translateX(3px); }
+
+/* ══════════════════════════════════════════════════════════
+   PATHWAYS — Learners & Instructors
+   ══════════════════════════════════════════════════════════ */
+.pathways-section {
+  padding: 72px 0 0;
+}
+
+.pathways-header {
+  margin-bottom: 40px;
+}
+
+.pathways-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.69rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 14px;
+}
+.pathways-eyebrow::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--amber);
+  border-radius: 1px;
+}
+
+.pathways-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+
+.pathways-sub {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--ink-light);
+  max-width: 560px;
+}
+
+.pathways-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 56px;
+}
+
+.pathway-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.pathway-header {
+  padding: 28px 30px 22px;
+  border-bottom: 1px solid var(--border);
+}
+
+.pathway-who {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.pathway-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.pathway-who-label {
+  font-family: 'Fraunces', serif;
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.pathway-who-sub {
+  font-size: 0.79rem;
+  color: var(--ink-faint);
+  line-height: 1.5;
+}
+
+.pathway-body {
+  padding: 22px 30px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pathway-use {
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+  padding: 13px 15px;
+  border-radius: 9px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  transition: border-color var(--transition), background var(--transition);
+}
+.pathway-use:hover {
+  background: var(--cream-hi);
+  border-color: var(--border-hi);
+}
+
+.pathway-use-tool {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 20px;
+  border: 1px solid;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.pathway-use-text {
+  flex: 1;
+}
+
+.pathway-use-headline {
+  font-size: 0.81rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 2px;
+  line-height: 1.35;
+}
+
+.pathway-use-desc {
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: var(--ink-light);
+}
+
+/* ══════════════════════════════════════════════════════════
+   CAPABILITY MATRIX
+   ══════════════════════════════════════════════════════════ */
+.matrix-section {
+  padding: 0 0 72px;
+}
+
+.matrix-header {
+  margin-bottom: 28px;
+}
+
+.matrix-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink-light);
+  margin-bottom: 4px;
+}
+
+.matrix-sub {
+  font-size: 0.79rem;
+  color: var(--ink-faint);
+}
+
+.matrix-wrap {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Header row */
+.matrix-table thead tr {
+  border-bottom: 2px solid var(--border-hi);
+}
+
+.matrix-th-blank {
+  width: 36%;
+  padding: 16px 20px;
+  background: var(--cream);
+}
+
+.matrix-th {
+  padding: 16px 14px;
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--cream);
+  border-left: 1px solid var(--border);
+}
+
+.matrix-th-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.matrix-th-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  display: block;
+}
+
+/* Body rows */
+.matrix-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition);
+}
+.matrix-table tbody tr:last-child { border-bottom: none; }
+.matrix-table tbody tr:hover { background: var(--cream); }
+
+.matrix-row-group {
+  padding: 14px 20px 10px;
+  vertical-align: top;
+}
+
+.matrix-group-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 3px;
+}
+
+.matrix-capability {
+  font-size: 0.83rem;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.35;
+}
+
+.matrix-capability-sub {
+  font-size: 0.74rem;
+  color: var(--ink-light);
+  line-height: 1.45;
+  margin-top: 2px;
+}
+
+.matrix-cell {
+  padding: 14px 14px;
+  text-align: center;
+  border-left: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.matrix-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.matrix-check.yes {
+  background: rgba(125,184,122,0.14);
+  color: #3a7a38;
+}
+.matrix-check.partial {
+  background: rgba(245,166,35,0.13);
+  color: #9b6008;
+  font-size: 0.65rem;
+  letter-spacing: 0.02em;
+}
+.matrix-check.no {
+  color: var(--ink-light);
+  font-size: 0.8rem;
+}
+
+.matrix-audience-badge {
+  display: inline-block;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 20px;
+  border: 1px solid;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.badge-learner {
+  background: rgba(56,189,248,0.08);
+  border-color: rgba(56,189,248,0.25);
+  color: #0369a1;
+}
+.badge-instructor {
+  background: rgba(167,139,250,0.08);
+  border-color: rgba(167,139,250,0.25);
+  color: #6d28d9;
+}
+.badge-both {
+  background: rgba(193,127,36,0.09);
+  border-color: rgba(193,127,36,0.28);
+  color: #92580a;
+}
+
+/* Section row dividers in matrix */
+.matrix-section-row td {
+  padding: 8px 20px 4px;
+  background: var(--cream);
+  border-bottom: 1px solid var(--border);
+}
+.matrix-section-row-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* ══════════════════════════════════════════════════════════
+   TOOLS GRID — "Where to go next"
+   ══════════════════════════════════════════════════════════ */
+.tools-section {
+  padding: 16px 0 80px;
+}
+
+.tools-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  gap: 20px;
+}
+
+.tools-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink-light);
+}
+
+.tools-count {
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* ── TOOL CARDS ── */
+.tools-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.tool-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 0;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: box-shadow var(--transition), transform var(--transition), border-color var(--transition);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+}
+
+.tool-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-3px);
+  border-color: var(--border-hi);
+}
+
+/* Coloured top strip */
+.tool-card-strip {
+  height: 4px;
+  flex-shrink: 0;
+  transition: height var(--transition);
+}
+.tool-card:hover .tool-card-strip { height: 6px; }
+
+.tool-card-body {
+  padding: 24px 24px 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.tool-number {
+  font-family: 'Fraunces', serif;
+  font-size: 3.8rem;
+  font-weight: 900;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  margin-bottom: 16px;
+  transition: opacity var(--transition);
+  user-select: none;
+}
+.tool-card:hover .tool-number { opacity: 0.7; }
+
+.tool-label {
+  font-size: 0.59rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.tool-name {
+  font-family: 'Fraunces', serif;
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.tool-tagline {
+  font-size: 0.84rem;
+  font-style: italic;
+  color: var(--ink-light);
+  margin-bottom: 14px;
+  line-height: 1.5;
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+}
+
+.tool-desc {
+  font-size: 0.82rem;
+  line-height: 1.70;
+  color: var(--ink-light);
+  flex: 1;
+  margin-bottom: 18px;
+}
+
+.tool-desc strong { color: var(--ink); font-weight: 600; }
+
+/* Tool audience tags */
+.tool-audience {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 16px;
+}
+
+/* Tool footer */
+.tool-footer {
+  padding: 12px 24px;
+  border-top: 1px solid var(--border);
+  background: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.tool-tech {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.63rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.03em;
+}
+
+.tool-launch {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 7px;
+  padding: 5px 13px;
+  border: 1px solid var(--border-hi);
+  color: var(--ink-light);
+  background: white;
+  transition: all var(--transition);
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+}
+.tool-launch:hover {
+  color: var(--ink);
+  border-color: var(--border-hi);
+  background: var(--cream-hi);
+}
+.tool-launch-arrow { transition: transform var(--transition); }
+.tool-launch:hover .tool-launch-arrow { transform: translateX(2px); }
+
+/* ── TOOL-SPECIFIC COLOURS ── */
+.card-builder .tool-card-strip  { background: var(--tool-builder); }
+.card-builder .tool-number      { color: var(--tool-builder); opacity: 0.15; }
+.card-builder .tool-label       { color: var(--tool-builder); }
+.card-builder .audience-tag     { background: rgba(0,56,101,0.07); border-color: rgba(0,56,101,0.2); color: var(--tool-builder); }
+.card-builder .tool-launch:hover { color: var(--tool-builder); border-color: rgba(0,56,101,0.4); background: rgba(0,56,101,0.06); }
+
+.card-nova .tool-card-strip  { background: var(--tool-nova); }
+.card-nova .tool-number      { color: var(--tool-nova); opacity: 0.18; }
+.card-nova .tool-label       { color: #c47d0a; }
+.card-nova .audience-tag     { background: rgba(245,166,35,0.08); border-color: rgba(245,166,35,0.25); color: #9b6008; }
+.card-nova .tool-launch:hover { color: #9b6008; border-color: rgba(245,166,35,0.4); background: rgba(245,166,35,0.07); }
+
+.card-rhizo .tool-card-strip  { background: var(--tool-rhizo); }
+.card-rhizo .tool-number      { color: var(--tool-rhizo); opacity: 0.2; }
+.card-rhizo .tool-label       { color: #4a7a48; }
+.card-rhizo .audience-tag     { background: rgba(125,184,122,0.09); border-color: rgba(125,184,122,0.28); color: #3a6438; }
+.card-rhizo .tool-launch:hover { color: #3a6438; border-color: rgba(125,184,122,0.45); background: rgba(125,184,122,0.08); }
+
+.card-sylva .tool-card-strip  { background: var(--tool-sylva); }
+.card-sylva .tool-number      { color: var(--tool-sylva); opacity: 0.18; }
+.card-sylva .tool-label       { color: #2d6b4e; }
+.card-sylva .audience-tag     { background: rgba(45,107,78,0.08); border-color: rgba(45,107,78,0.22); color: #1a4d35; }
+.card-sylva .tool-launch:hover { color: #1a4d35; border-color: rgba(45,107,78,0.40); background: rgba(45,107,78,0.07); }
+
+/* ══════════════════════════════════════════════════════════
+   OPEN PRESS MISSION BAND
+   ══════════════════════════════════════════════════════════ */
+.mission-band {
+  background: var(--ink);
+  padding: 56px 0;
+  margin: 0;
+}
+
+.mission-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.mission-left {}
+
+.mission-eyebrow {
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 14px;
+}
+
+.mission-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: white;
+  line-height: 1.18;
+  margin-bottom: 18px;
+}
+
+.mission-title em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--amber-light);
+}
+
+.mission-body {
+  font-size: 0.88rem;
+  line-height: 1.78;
+  color: rgba(255,255,255,0.58);
+}
+
+.mission-body strong {
+  color: rgba(255,255,255,0.88);
+  font-weight: 500;
+}
+
+.mission-body p + p { margin-top: 14px; }
+
+.mission-right {}
+
+.mission-pillars {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mission-pillar {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 18px 20px;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+}
+
+.pillar-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.pillar-body { flex: 1; }
+
+.pillar-title {
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.88);
+  margin-bottom: 3px;
+}
+
+.pillar-desc {
+  font-size: 0.76rem;
+  line-height: 1.55;
+  color: rgba(255,255,255,0.43);
+}
+
+/* ══════════════════════════════════════════════════════════
+   CONNECTION MAP
+   ══════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════
+   SETUP SECTION
+   ══════════════════════════════════════════════════════════ */
+.setup-section {
+  padding: 0 0 80px;
+}
+
+.setup-card {
+  background: var(--ink-mid);
+  border-radius: var(--r);
+  padding: 40px 44px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+  position: relative;
+  overflow: hidden;
+}
+
+.setup-card::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(193,127,36,0.15), transparent 70%);
+  pointer-events: none;
+}
+
+.setup-eyebrow {
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 14px;
+}
+
+.setup-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: white;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.setup-body {
+  font-size: 0.85rem;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.55);
+}
+
+.setup-body strong {
+  color: rgba(255,255,255,0.9);
+  font-weight: 500;
+}
+
+.setup-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.setup-step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.step-num {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: rgba(193,127,36,0.2);
+  border: 1px solid rgba(193,127,36,0.35);
+  color: var(--amber);
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.step-body { flex: 1; }
+
+.step-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.88);
+  margin-bottom: 3px;
+}
+
+.step-desc {
+  font-size: 0.76rem;
+  color: rgba(255,255,255,0.42);
+  line-height: 1.55;
+}
+
+.step-code {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.71rem;
+  background: rgba(193,127,36,0.12);
+  border: 1px solid rgba(193,127,36,0.22);
+  color: var(--amber-light);
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+/* ══════════════════════════════════════════════════════════
+   FOOTER
+   ══════════════════════════════════════════════════════════ */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 0;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.footer-credit {
+  font-size: 0.76rem;
+  color: var(--ink-faint);
+  line-height: 1.6;
+}
+.footer-credit a {
+  color: var(--amber);
+  text-decoration: none;
+}
+.footer-credit a:hover { text-decoration: underline; }
+
+.footer-tools {
+  display: flex;
+  gap: 5px;
+}
+
+.footer-tool-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}
+
+/* ── SUITE NAV ── */
+.suite-nav {
+  background: rgba(26,22,16,0.06);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 199;
+  backdrop-filter: blur(8px);
+}
+.suite-nav-home {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-light);
+  text-decoration: none;
+  transition: color 0.18s;
+  flex-shrink: 0;
+}
+.suite-nav-home:hover { color: var(--ink); }
+.suite-nav-tools {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.suite-nav-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.63rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+/* inactive pills — solid legible text (≥4.5:1 on cream #f5f0e8) */
+.suite-nav-pill.pill-companion { color: #6b4400; border-color: rgba(107,68,0,0.35); }
+.suite-nav-pill.pill-companion:hover { background: rgba(107,68,0,0.08); border-color: rgba(107,68,0,0.55); color: #4a2f00; }
+.suite-nav-pill.pill-builder   { color: #003865; border-color: rgba(0,56,101,0.4); }
+.suite-nav-pill.pill-builder:hover   { background: rgba(0,56,101,0.08); border-color: rgba(0,56,101,0.6); color: #002244; }
+.suite-nav-pill.pill-nova      { color: #6b4400; border-color: rgba(107,68,0,0.35); }
+.suite-nav-pill.pill-nova:hover      { background: rgba(107,68,0,0.08); border-color: rgba(107,68,0,0.55); color: #4a2f00; }
+.suite-nav-pill.pill-rhizo     { color: #1e5c1a; border-color: rgba(30,92,26,0.4); }
+.suite-nav-pill.pill-rhizo:hover     { background: rgba(30,92,26,0.08); border-color: rgba(30,92,26,0.6); color: #133d10; }
+/* active (current tool) pill — filled */
+.suite-nav-pill.pill-active { cursor: default; pointer-events: none; }
+.suite-nav-pill.pill-companion.pill-active { background: rgba(107,68,0,0.1); border-color: rgba(107,68,0,0.5); color: #4a2f00; font-weight: 700; }
+.suite-nav-pill.pill-builder.pill-active   { background: rgba(0,56,101,0.1); border-color: rgba(0,56,101,0.5); color: #002244; font-weight: 700; }
+.suite-nav-pill.pill-nova.pill-active      { background: rgba(107,68,0,0.1); border-color: rgba(107,68,0,0.5); color: #4a2f00; font-weight: 700; }
+.suite-nav-pill.pill-rhizo.pill-active     { background: rgba(30,92,26,0.1); border-color: rgba(30,92,26,0.5); color: #133d10; font-weight: 700; }
+.suite-nav-pill.pill-sylva     { color: #1a5c3a; border-color: rgba(26,92,58,0.4); }
+.suite-nav-pill.pill-sylva:hover     { background: rgba(26,92,58,0.08); border-color: rgba(26,92,58,0.6); color: #0f3d26; }
+.suite-nav-pill.pill-sylva.pill-active     { background: rgba(26,92,58,0.1); border-color: rgba(26,92,58,0.5); color: #0f3d26; font-weight: 700; }
+.suite-nav-dot { font-size: 0.75em; opacity: 0.5; }
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE — TABLET & MOBILE
+   ══════════════════════════════════════════════════════════ */
+
+@media (max-width: 1024px) {
+  .page-wrap { padding: 0 20px; }
+  .hero-headline { font-size: 2.6rem; }
+}
+
+@media (max-width: 768px) {
+  .page-wrap { padding: 0 16px; }
+  .site-header { padding: 0 16px; flex-wrap: wrap; gap: 8px; }
+  .site-nav { gap: 12px; }
+  .suite-nav { padding: 0 16px; }
+  .suite-nav-tools { gap: 4px; flex-wrap: wrap; }
+  .suite-nav-pill { font-size: 0.62rem; padding: 3px 7px; }
+
+  /* Hero */
+  .hero { padding: 48px 0 36px; }
+  .hero-headline { font-size: 2rem; line-height: 1.15; }
+  .hero-body { font-size: 0.9rem; }
+  .hero-meta { flex-wrap: wrap; gap: 8px; }
+  .hero-decoration { display: none; }
+
+  /* Featured card: single column */
+  .featured-card {
+    grid-template-columns: 1fr !important;
+  }
+  .featured-card-right { display: none; }
+  .featured-card-strip { display: none; }
+
+  /* All 2-col grids → 1 col */
+  .featured-card,
+  section > div[style*="grid"],
+  .pathway-grid,
+  .tool-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Tool cards */
+  .tool-card { padding: 18px; }
+  .tool-card-body { padding: 0; }
+
+  /* Pathway cards */
+  .pathway-card { padding: 18px 20px; }
+
+  /* About teaser */
+  .about-teaser-card { padding: 24px 20px; }
+
+  /* Section headings */
+  h2 { font-size: 1.5rem !important; }
+  h3 { font-size: 1.1rem !important; }
+}
+
+@media (max-width: 480px) {
+  .hero-headline { font-size: 1.7rem; }
+  .page-wrap { padding: 0 12px; }
+  .site-header { padding: 0 12px; height: auto; padding-top: 10px; padding-bottom: 10px; }
+}
+
+/* ── Dark theme override ── */
+[data-theme="dark"] {
+  --cream:       #0f0e0c;
+  --cream-hi:    #161410;
+  --parchment:   #1e1b15;
+  --ink:         #e8e2d4;
+  --ink-mid:     #c8bfa8;
+  --ink-light:   #b0a28a;
+  --ink-faint:   #7a6e5c;
+  --amber:       #e8a245;
+  --amber-light: #f0b86a;
+  --amber-dim:   rgba(232,162,69,0.12);
+  --amber-glow:  rgba(232,162,69,0.28);
+  --tool-companion: #e8a245;
+  --tool-builder:   #4a9ad4;
+  --tool-nova:      #f5a623;
+  --tool-rhizo:     #7db87a;
+  --tool-sylva:     #5aad82;
+  --border:      rgba(255,255,255,0.08);
+  --border-hi:   rgba(255,255,255,0.14);
+  --shadow-sm:   0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md:   0 4px 16px rgba(0,0,0,0.35);
+  --shadow-lg:   0 12px 40px rgba(0,0,0,0.45);
+}
+/* Card & panel backgrounds that use hardcoded white */
+[data-theme="dark"] .featured-card,
+[data-theme="dark"] .tool-card,
+[data-theme="dark"] .pathway-card,
+[data-theme="dark"] .howto-step,
+[data-theme="dark"] .connection-card { background: var(--parchment); }
+
+/* Tool chip inline-style colors: adapt to dark theme */
+[data-theme="dark"] .audience-tag,
+[data-theme="dark"] .pathway-use-tool,
+[data-theme="dark"] .gs-card-tool,
+[data-theme="dark"] .howto-tool-badge,
+[data-theme="dark"] .conn-tool-chip {
+  background: rgba(255,255,255,0.07) !important;
+  border-color: rgba(255,255,255,0.14) !important;
+  color: var(--ink-mid) !important;
+}
+[data-theme="dark"] .about-teaser-btn {
+  background: rgba(255,255,255,0.07) !important;
+  border-color: rgba(255,255,255,0.18) !important;
+  color: var(--ink) !important;
+}
+
+/* ── Suite theme toggle button ── */
+.btn-suite-theme {
+  background: transparent;
+  border: 1px solid rgba(128,128,128,0.25);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.65;
+  transition: opacity 0.2s, background 0.2s;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.btn-suite-theme:hover { opacity: 1; background: rgba(128,128,128,0.12); }
+
+</style>
+</head>
+<body>
+
+<!-- ══════ HEADER ══════ -->
+<header class="site-header">
+  <div class="page-wrap">
+    <div class="header-inner">
+      <div class="header-brand">
+        <img src="openpress-logo.png"
+             alt="TRU Open Press logo"
+             class="header-logo"
+             onerror="this.src='https://openpress.trubox.ca/wp-content/uploads/sites/2142/2023/10/cropped-openpress_logo_colour-1.png'">
+        <div class="header-wordmark">
+          <div class="wordmark-press">TRU <span>Open Press</span></div>
+          <div class="wordmark-sub">Open Margins · Active Learning Tools</div>
+        </div>
+      </div>
+      <nav class="header-nav" aria-label="Site navigation">
+        <a href="about.html" class="nav-link">About the tools</a>
+        <a href="why.html" class="nav-link">Why Open Margins?</a>
+        <a href="https://openpress.trubox.ca" target="_blank" rel="noopener" class="nav-link external">Open Press</a>
+        <a href="https://pressbooks.tru.ca" target="_blank" rel="noopener" class="nav-link external">Pressbooks</a>
+        <button class="btn-suite-theme" id="btn-suite-theme" aria-label="Toggle theme" title="Toggle theme">🌙</button>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<!-- SUITE NAV -->
+<nav class="suite-nav" aria-label="Open Margins suite">
+  <span class="suite-nav-home" aria-current="page" style="pointer-events:none;opacity:1;color:var(--ink-mid)">Open Margins</span>
+  <div class="suite-nav-tools">
+    <a href="companion/companion.html" class="suite-nav-pill pill-companion">✦ Companion</a>
+    <a href="tru-oer-activity-builder.html" class="suite-nav-pill pill-builder">⬡ Activity Builder</a>
+    <a href="nova/nova.html" class="suite-nav-pill pill-nova">✺ Nova</a>
+    <a href="rhizo/rhizo.html" class="suite-nav-pill pill-rhizo">∿ Rhizo</a>
+    <a href="sylva/sylva.html" class="suite-nav-pill pill-sylva">⟡ Sylva</a>
+  </div>
+</nav>
+
+<!-- ══════ HERO ══════ -->
+<section class="hero">
+  <div class="page-wrap">
+    <div class="hero-decoration" aria-hidden="true">R</div>
+
+    <div class="hero-eyebrow reveal">Open Margins · TRU Open Press</div>
+
+    <h1 class="hero-headline reveal" style="transition-delay:0.08s">
+      Reading is just<br>the <em>beginning.</em>
+    </h1>
+
+    <p class="hero-body reveal" style="transition-delay:0.14s">
+      <strong>Open Margins</strong> is a suite of active learning tools built to extend open educational resources into <strong>richer, deeper engagement</strong>. Rooted in the <a href="https://designframework.trubox.ca" target="_blank" rel="noopener" style="color:var(--amber);text-decoration:none;font-weight:600">TRU Learning Design Framework</a> — caring, connected, active, and open — these tools bring any OER to life through annotation, structured activities, critical inquiry, and lesson design. Developed and hosted by TRU Open Press, with TRU Open Press books featured throughout.
+    </p>
+
+    <div class="hero-meta reveal" style="transition-delay:0.20s">
+      <div class="hero-meta-item">
+        <span class="hero-meta-pip"></span>
+        Start with reading. Go further.
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-pip"></span>
+        Works with any openly licensed OER
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-pip"></span>
+        Runs locally · no data stored
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════ JOURNEY: COMPANION FIRST ══════ -->
+<section class="journey-section" id="companion">
+  <div class="page-wrap">
+
+    <div class="journey-eyebrow reveal">Start here</div>
+    <h2 class="journey-intro-title reveal" style="transition-delay:0.06s">Step one: read actively.</h2>
+    <p class="journey-intro-sub reveal" style="transition-delay:0.10s">
+      The Companion meets you inside the text — while you're reading, not after. Select any passage and immediately get explanations, perspectives, and connections, right in the margin. It's the foundation everything else builds on.
+    </p>
+
+    <!-- Featured: Companion -->
+    <a href="companion/companion.html" class="featured-card reveal" style="transition-delay:0.12s">
+      <div class="featured-card-strip"></div>
+      <div class="featured-card-left">
+        <div class="featured-step-badge">Step one · Read</div>
+        <div class="featured-number">01</div>
+        <div class="featured-label">Companion · Reading in the Margins</div>
+        <div class="featured-name">Companion</div>
+        <div class="featured-tagline">The only tool that works while you read — not after.</div>
+        <p class="featured-desc">
+          Load any OER chapter — from TRU Open Press or elsewhere — and read it directly in the tool. Add <strong>multiple chapters or sources</strong> at once for cross-text sessions. <strong>Highlight any passage</strong> to instantly get it Illuminated, challenged by a Council of voices, or Connected to the real world. Add your own <strong>reader notes</strong> alongside AI annotations. Export the session as a reading record. Three themes: Dark, Light, Sepia.
+        </p>
+        <div class="featured-audience">
+          <span class="audience-tag" style="background:rgba(232,162,69,0.09);border-color:rgba(232,162,69,0.28);color:#7a4e12">Active readers</span>
+          <span class="audience-tag" style="background:rgba(232,162,69,0.09);border-color:rgba(232,162,69,0.28);color:#7a4e12">First-year students</span>
+          <span class="audience-tag" style="background:rgba(232,162,69,0.09);border-color:rgba(232,162,69,0.28);color:#7a4e12">ESL learners</span>
+        </div>
+        <span class="featured-launch">Open Companion <span class="featured-launch-arrow">→</span></span>
+      </div>
+      <div class="featured-card-right">
+        <div class="featured-modes-title">Four ways to engage</div>
+        <div class="featured-mode">
+          <div class="featured-mode-icon">✦</div>
+          <div class="featured-mode-body">
+            <div class="featured-mode-name">Illuminate</div>
+            <div class="featured-mode-desc">Plain-language explanation with analogies — makes dense passages accessible without dumbing them down.</div>
+          </div>
+        </div>
+        <div class="featured-mode">
+          <div class="featured-mode-icon">⊛</div>
+          <div class="featured-mode-body">
+            <div class="featured-mode-name">Council</div>
+            <div class="featured-mode-desc">Four radically different perspectives on the same passage — historian, critic, practitioner, dissenter.</div>
+          </div>
+        </div>
+        <div class="featured-mode">
+          <div class="featured-mode-icon">⬡</div>
+          <div class="featured-mode-body">
+            <div class="featured-mode-name">Connect</div>
+            <div class="featured-mode-desc">Real-world applications and unexpected links — why this passage matters outside the textbook.</div>
+          </div>
+        </div>
+        <div class="featured-mode">
+          <div class="featured-mode-icon">✎</div>
+          <div class="featured-mode-body">
+            <div class="featured-mode-name">Reader Note</div>
+            <div class="featured-mode-desc">Your own annotations, saved alongside AI responses. Export the full session as a reading record.</div>
+          </div>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ══════ TOOLS: WHERE TO GO NEXT ══════ -->
+<section class="tools-section" id="tools">
+  <div class="page-wrap">
+
+    <div class="tools-header reveal">
+      <div class="tools-title">Then go deeper — four ways</div>
+      <div class="tools-count">02 — 05</div>
+    </div>
+
+    <div class="tools-grid">
+
+      <!-- 02: Activity Builder -->
+      <a href="tru-oer-activity-builder.html" class="tool-card card-builder reveal" style="transition-delay:0.05s">
+        <div class="tool-card-strip"></div>
+        <div class="tool-card-body">
+          <div class="tool-number">02</div>
+          <div class="tool-label">Activity Builder · Structured Learning</div>
+          <div class="tool-name">OER Activity<br>Maker</div>
+          <div class="tool-tagline">Turn any chapter into a ready-to-use learning scaffold.</div>
+          <p class="tool-desc">
+            Choose an activity type — <strong>comprehension quiz</strong>, <strong>case study</strong>, <strong>branching scenario</strong>, <strong>analogy exercise</strong>, and more — and generate a structured activity from any OER chapter, URL, PDF, or Word document. Load multiple sources at once for cross-chapter activities. Built for instructors designing course supplements and students who want structured self-study.
+          </p>
+          <div class="tool-audience">
+            <span class="audience-tag">Instructors</span>
+            <span class="audience-tag">Course designers</span>
+            <span class="audience-tag">Students</span>
+          </div>
+        </div>
+        <div class="tool-footer">
+          <span class="tool-tech">tru-oer-activity-builder.html · port 3001</span>
+          <span class="tool-launch">Open tool <span class="tool-launch-arrow">→</span></span>
+        </div>
+      </a>
+
+      <!-- 03: Nova -->
+      <a href="nova/nova.html" class="tool-card card-nova reveal" style="transition-delay:0.10s">
+        <div class="tool-card-strip"></div>
+        <div class="tool-card-body">
+          <div class="tool-number">03</div>
+          <div class="tool-label">Nova · Experimental OER Lab</div>
+          <div class="tool-name">Nova</div>
+          <div class="tool-tagline">Five ways to think with a text you haven't tried yet.</div>
+          <p class="tool-desc">
+            Five distinct deep-engagement activities: visual <strong>Concept Map</strong>, <strong>Evidence Tribunal</strong> to test claims, <strong>Analogy Forge</strong> for creative reasoning, <strong>Concept Timeline</strong> for historical thinking, and a <strong>Socratic Dialogue</strong>. Accepts multiple source materials at once for cross-text synthesis. Activities are shareable via URL — instructors generate, students engage without any setup.
+          </p>
+          <div class="tool-audience">
+            <span class="audience-tag">Students</span>
+            <span class="audience-tag">Self-directed learners</span>
+            <span class="audience-tag">Seminar facilitators</span>
+          </div>
+        </div>
+        <div class="tool-footer">
+          <span class="tool-tech">nova/nova.html · port 3001</span>
+          <span class="tool-launch">Open tool <span class="tool-launch-arrow">→</span></span>
+        </div>
+      </a>
+
+      <!-- 04: Rhizo -->
+      <a href="rhizo/rhizo.html" class="tool-card card-rhizo reveal" style="transition-delay:0.15s">
+        <div class="tool-card-strip"></div>
+        <div class="tool-card-body">
+          <div class="tool-number">04</div>
+          <div class="tool-label">Rhizo · Rhizomatic Learning</div>
+          <div class="tool-name">Rhizo</div>
+          <div class="tool-tagline">The community is the curriculum. No single right door in.</div>
+          <p class="tool-desc">
+            Exposes what a text <strong>assumes, silences, and contests</strong>. Five activities: <strong>Weed the Garden</strong>, <strong>Uncertainty Map</strong>, <strong>Wicked Council</strong>, <strong>Nomad's Entry Points</strong>, and <strong>Community Contract</strong>. Supports multiple source materials for comparative critical inquiry. Built on Dave Cormier's rhizomatic learning philosophy — for when comprehension isn't enough.
+          </p>
+          <div class="tool-audience">
+            <span class="audience-tag">Critical thinkers</span>
+            <span class="audience-tag">Graduate students</span>
+            <span class="audience-tag">Community learners</span>
+          </div>
+        </div>
+        <div class="tool-footer">
+          <span class="tool-tech">rhizo/rhizo.html · port 3001</span>
+          <span class="tool-launch">Open tool <span class="tool-launch-arrow">→</span></span>
+        </div>
+      </a>
+
+      <!-- 05: Sylva -->
+      <a href="sylva/sylva.html" class="tool-card card-sylva reveal" style="transition-delay:0.20s">
+        <div class="tool-card-strip"></div>
+        <div class="tool-card-body">
+          <div class="tool-number">05</div>
+          <div class="tool-label">Sylva · Lesson Planner</div>
+          <div class="tool-name">Sylva</div>
+          <div class="tool-tagline">Plan the session that brings the reading to life.</div>
+          <p class="tool-desc">
+            For instructors and instructional designers. Load any OER chapter, URL, PDF, or document, set your session length and <strong>delivery mode</strong> — in-class, online synchronous, or asynchronous — and generate a full timed <strong>lesson arc</strong> with Bloom's-tagged learning objectives and mode-specific activities. Exports as Markdown or printable PDF.
+          </p>
+          <div class="tool-audience">
+            <span class="audience-tag">Instructors</span>
+            <span class="audience-tag">Instructional designers</span>
+            <span class="audience-tag">Faculty</span>
+          </div>
+        </div>
+        <div class="tool-footer">
+          <span class="tool-tech">sylva/sylva.html · port 3001</span>
+          <span class="tool-launch">Open tool <span class="tool-launch-arrow">→</span></span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════ MISSION BAND ══════ -->
+<div class="section-divider"></div>
+
+<section class="mission-band">
+  <div class="page-wrap">
+    <div class="mission-inner reveal">
+      <div class="mission-left">
+        <div class="mission-eyebrow">TRU Open Press</div>
+        <h2 class="mission-title">Open knowledge.<br><em>Active minds.</em></h2>
+        <div class="mission-body">
+          <p>
+            TRU Open Press is the open educational resource publishing unit of Thompson Rivers University. We create and publish <strong>freely available, openly licensed textbooks and course materials</strong> — removing cost and access barriers for students across BC and beyond.
+          </p>
+          <p>
+            Open Margins was built to extend that mission — and then further. These tools work with <strong>any openly licensed OER</strong>, not just TRU Open Press titles. Open resources deserve more than passive consumption — they deserve to be questioned, contested, illuminated, and lived in. Active learning isn't an add-on. It's the point.
+          </p>
+          <p>
+            Each tool is shaped by the <strong>TRU Learning Design Framework</strong> — its commitment to <em>caring</em> for diverse learners, <em>open</em> educational practices, <em>connected</em> learning communities, and genuinely <em>active</em> engagement with content.
+          </p>
+        </div>
+      </div>
+      <div class="mission-right">
+        <div class="mission-pillars">
+          <div class="mission-pillar">
+            <div class="pillar-icon">📖</div>
+            <div class="pillar-body">
+              <div class="pillar-title">Open — always, and by design</div>
+              <div class="pillar-desc">All TRU Open Press books are free to read, adapt, and redistribute. Open Margins extends this: any OER — paste text, upload a PDF, fetch a URL, or browse the catalogue.</div>
+            </div>
+          </div>
+          <div class="mission-pillar">
+            <div class="pillar-icon">🤝</div>
+            <div class="pillar-body">
+              <div class="pillar-title">Caring &amp; connected learning</div>
+              <div class="pillar-desc">Built on the TRU Learning Design Framework — tools designed to support diverse learners, scaffold difficult content, and help students feel that the material belongs to them.</div>
+            </div>
+          </div>
+          <div class="mission-pillar">
+            <div class="pillar-icon">⚡</div>
+            <div class="pillar-body">
+              <div class="pillar-title">Active engagement, not passive consumption</div>
+              <div class="pillar-desc">Every tool is an invitation to do something with the text — annotate, map, argue, question, plan. Reading is just the start.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ ABOUT TEASER ══════ -->
+<section class="about-teaser-section">
+  <div class="page-wrap">
+    <div class="about-teaser-card reveal">
+      <div class="about-teaser-left">
+        <div class="about-teaser-eyebrow">Learners &amp; Instructors</div>
+        <div class="about-teaser-title">Not sure which tool is right for you?</div>
+        <p class="about-teaser-body">The About page has a full breakdown — use cases for students and instructors, and a capability matrix showing exactly what each tool does.</p>
+      </div>
+      <div class="about-teaser-right">
+        <div class="about-teaser-tags">
+          <span class="about-tag about-tag-learner">🎒 Learner pathways</span>
+          <span class="about-tag about-tag-instructor">🖊 Instructor pathways</span>
+          <span class="about-tag about-tag-matrix">✓ Capability matrix</span>
+          <span class="about-tag about-tag-matrix">💡 Feature how-tos</span>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a href="about.html" class="about-teaser-btn">View the full guide <span>→</span></a>
+          <a href="why.html" class="about-teaser-btn" style="background:rgba(45,107,78,0.08);border-color:rgba(45,107,78,0.28);color:#2d6b4e">Why Open Margins? <span>→</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ SETUP ══════ -->
+<section class="setup-section">
+  <div class="page-wrap">
+    <div class="setup-card reveal">
+      <div>
+        <div class="setup-eyebrow">Getting started</div>
+        <h2 class="setup-title">Running the tools locally</h2>
+        <p class="setup-body">
+          Each tool has its own server that proxies requests to the Claude API — keeping your API key secure and working around browser CORS restrictions. <strong>Activity Maker, Nova, Rhizo, and Sylva</strong> share a server on port 3001. <strong>Companion</strong> runs on port 3002.
+        </p>
+      </div>
+      <div class="setup-steps">
+        <div class="setup-step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">Set your API key</div>
+            <div class="step-desc">Get a key from console.anthropic.com, then in Terminal:</div>
+            <div class="step-code">export ANTHROPIC_API_KEY=sk-ant-…</div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">Start the Activity Maker / Nova / Rhizo server</div>
+            <div class="step-desc">In the project root folder:</div>
+            <div class="step-code">node server.js</div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">Start the Companion server (separate terminal)</div>
+            <div class="step-code">cd companion &amp;&amp; node server.js</div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">Open this page in your browser</div>
+            <div class="step-desc">Open index.html directly, or navigate to localhost:3001. Click any tool card to launch it.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ FOOTER ══════ -->
+<footer class="site-footer">
+  <div class="page-wrap">
+    <div class="footer-inner">
+      <div class="footer-credit">
+        Built for <a href="https://openpress.trubox.ca" target="_blank" rel="noopener">TRU Open Press</a> ·
+        Thompson Rivers University · Kamloops, BC, Canada ·
+        Content published under open licenses for educational use.
+      </div>
+      <div class="footer-tools" aria-label="Five tools">
+        <div class="footer-tool-dot" style="background:var(--tool-companion)" title="Companion"></div>
+        <div class="footer-tool-dot" style="background:var(--tool-builder)" title="Activity Maker"></div>
+        <div class="footer-tool-dot" style="background:var(--tool-nova)" title="Nova"></div>
+        <div class="footer-tool-dot" style="background:var(--tool-rhizo)" title="Rhizo"></div>
+        <div class="footer-tool-dot" style="background:var(--tool-sylva)" title="Sylva"></div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Scroll reveal ──────────────────────────────────────────
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ── Staggered card delays ──────────────────────────────────
+document.querySelectorAll('.tool-card').forEach((card, i) => {
+  if (!card.style.transitionDelay) {
+    card.style.transitionDelay = `${i * 0.06}s`;
+  }
+});
+
+// ── Suite-wide theme toggle ──────────────────────────────
+(function() {
+  var btn = document.getElementById('btn-suite-theme');
+  if (!btn) return;
+  function applyOmTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    btn.textContent = theme === 'dark' ? '☀' : '🌙';
+    btn.title = theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+    try { localStorage.setItem('om-theme', theme); } catch(e) {}
+  }
+  btn.addEventListener('click', function() {
+    var cur = document.documentElement.getAttribute('data-theme') || 'light';
+    applyOmTheme(cur === 'dark' ? 'light' : 'dark');
+  });
+  var cur = document.documentElement.getAttribute('data-theme') || 'light';
+  btn.textContent = cur === 'dark' ? '☀' : '🌙';
+  btn.title = cur === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+})();
+</script>
+
+</body>
+</html>

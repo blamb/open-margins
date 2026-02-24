@@ -1,0 +1,2109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Open Margins — Five Active Learning Tools for Open Educational Resources · TRU Open Press</title>
+<meta name="description" content="Open Margins is a course design toolkit from TRU Open Press — five AI-powered tools that give instructional designers, learning technologists, and educational developers pedagogically-grounded scaffolding for building active, online learning experiences around open educational resources.">
+
+<!--
+  SCREENSHOT PATHS
+  Screenshots are referenced from: ../open margins screenshots/[filename]
+  This works for local preview when this file is inside the open-margins-site/ folder.
+
+  For FTP deployment:
+    1. Create a folder called "screenshots" alongside this index.html
+    2. Copy all images from "open margins screenshots/" into it
+    3. Find/replace "../open margins screenshots/" with "screenshots/" in this file
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,500;1,9..144,700&family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+
+<style>
+
+/* ══════════════════════════════════════════
+   TOKENS
+   ══════════════════════════════════════════ */
+:root {
+  --ink:        #0f0e0b;
+  --ink-warm:   #1c1810;
+  --ink-mid:    #3a3228;
+  --ink-muted:  #7a6e5a;
+  --cream:      #f5f0e8;
+  --cream-hi:   #ede6d4;
+  --parchment:  #e4d9bf;
+  --amber:      #c17f24;
+  --amber-lt:   #e8a245;
+  --amber-pale: rgba(193,127,36,0.12);
+
+  --tool-companion: #e8a245;
+  --tool-builder:   #3a6aa0;
+  --tool-nova:      #f5a623;
+  --tool-rhizo:     #6aaa66;
+  --tool-sylva:     #2d6b4e;
+
+  --border:    rgba(26,22,16,0.10);
+  --border-hi: rgba(26,22,16,0.18);
+  --r: 10px;
+  --shadow: 0 4px 24px rgba(15,14,11,0.12), 0 1px 4px rgba(15,14,11,0.08);
+  --shadow-lg: 0 16px 60px rgba(15,14,11,0.22), 0 4px 12px rgba(15,14,11,0.10);
+  --transition: 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ══════════════════════════════════════════
+   RESET & BASE
+   ══════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 18px; scroll-behavior: smooth; }
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+
+body {
+  font-family: 'Spectral', Georgia, serif;
+  background: var(--cream);
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+img { display: block; max-width: 100%; }
+a { color: inherit; }
+
+.wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* ══════════════════════════════════════════
+   REVEAL ANIMATIONS
+   ══════════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.72s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.72s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.up { opacity: 1; transform: translateY(0); }
+.reveal-left {
+  opacity: 0; transform: translateX(-32px);
+  transition: opacity 0.72s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.72s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-left.up { opacity: 1; transform: translateX(0); }
+.reveal-right {
+  opacity: 0; transform: translateX(32px);
+  transition: opacity 0.72s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.72s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-right.up { opacity: 1; transform: translateX(0); }
+
+/* ══════════════════════════════════════════
+   NAV
+   ══════════════════════════════════════════ */
+.site-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+  justify-content: space-between;
+  transition: background 0.3s, box-shadow 0.3s, border-color 0.3s;
+  border-bottom: 1px solid transparent;
+}
+.site-nav.scrolled {
+  background: rgba(245,240,232,0.94);
+  backdrop-filter: blur(10px);
+  border-color: var(--border);
+  box-shadow: 0 1px 12px rgba(15,14,11,0.07);
+}
+
+.nav-logo {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  color: var(--cream);
+  transition: color 0.3s;
+}
+.site-nav.scrolled .nav-logo { color: var(--ink); }
+.nav-logo span { color: var(--amber-lt); }
+.site-nav.scrolled .nav-logo span { color: var(--amber); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  list-style: none;
+}
+.nav-links a {
+  padding: 6px 13px;
+  border-radius: 20px;
+  font-family: 'Spectral', serif;
+  font-size: 0.82rem;
+  font-weight: 400;
+  text-decoration: none;
+  color: rgba(245,240,232,0.7);
+  transition: all 0.2s;
+}
+.nav-links a:hover { color: rgba(245,240,232,1); background: rgba(255,255,255,0.08); }
+.site-nav.scrolled .nav-links a { color: var(--ink-muted); }
+.site-nav.scrolled .nav-links a:hover { color: var(--ink); background: var(--cream-hi); }
+
+.nav-cta {
+  font-family: 'Spectral', serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 8px;
+  background: var(--amber);
+  color: white;
+  text-decoration: none;
+  transition: all 0.2s;
+  letter-spacing: 0.01em;
+}
+.nav-cta:hover { background: var(--amber-lt); }
+
+/* ══════════════════════════════════════════
+   HERO
+   ══════════════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  background: #0d1f38;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 120px 0 80px;
+}
+
+/* Ambient radial glow */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -20%; right: -10%;
+  width: 60vw; height: 60vw;
+  background: radial-gradient(circle, rgba(193,127,36,0.22) 0%, transparent 65%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -20%; left: 20%;
+  width: 40vw; height: 40vw;
+  background: radial-gradient(circle, rgba(45,107,78,0.08) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.hero-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-text { }
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 24px;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: block;
+  width: 22px; height: 2px;
+  background: var(--amber);
+  border-radius: 1px;
+}
+
+.hero-headline {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.8rem, 5.5vw, 4.6rem);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.04em;
+  color: var(--cream);
+  margin-bottom: 28px;
+}
+.hero-headline em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--amber-lt);
+}
+
+.hero-sub {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: rgba(245,240,232,0.82);
+  margin-bottom: 40px;
+  max-width: 480px;
+  font-weight: 300;
+}
+
+.hero-ctas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+}
+
+.btn-solid {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 28px;
+  background: var(--amber);
+  color: white;
+  font-family: 'Spectral', serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all var(--transition);
+  letter-spacing: 0.01em;
+}
+.btn-solid:hover { background: var(--amber-lt); transform: translateY(-1px); }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 28px;
+  background: transparent;
+  color: rgba(245,240,232,0.7);
+  font-family: 'Spectral', serif;
+  font-size: 0.88rem;
+  font-weight: 400;
+  border-radius: 8px;
+  border: 1px solid rgba(245,240,232,0.18);
+  text-decoration: none;
+  transition: all var(--transition);
+}
+.btn-ghost:hover {
+  color: rgba(245,240,232,0.95);
+  border-color: rgba(245,240,232,0.35);
+  background: rgba(255,255,255,0.05);
+}
+
+.hero-tools {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.hero-tool-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.63rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 11px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.68);
+}
+
+.hero-visual {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-screenshot-frame {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.55), 0 8px 24px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.08);
+  width: 100%;
+}
+.hero-screenshot-frame img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Decorative floating badge */
+.hero-float-badge {
+  position: absolute;
+  bottom: -20px;
+  left: -28px;
+  background: var(--ink-warm);
+  border: 1px solid rgba(193,127,36,0.3);
+  border-radius: 10px;
+  padding: 14px 18px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.hero-float-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 4px;
+}
+.hero-float-text {
+  font-family: 'Fraunces', serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: rgba(245,240,232,0.9);
+}
+
+/* ══════════════════════════════════════════
+   STAT BAR
+   ══════════════════════════════════════════ */
+.stat-bar {
+  background: #0b1526;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.stat-inner {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-left: 1px solid rgba(255,255,255,0.06);
+}
+.stat-item {
+  padding: 32px 40px;
+  border-right: 1px solid rgba(255,255,255,0.06);
+}
+.stat-num {
+  font-family: 'Fraunces', serif;
+  font-size: 2.6rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--cream);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.stat-num span { color: var(--amber-lt); }
+.stat-label {
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: rgba(245,240,232,0.75);
+  font-weight: 300;
+}
+
+/* ══════════════════════════════════════════
+   INTRO SECTION
+   ══════════════════════════════════════════ */
+.intro-section {
+  padding: 100px 0;
+  background: var(--cream);
+}
+
+.intro-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.intro-left {}
+
+.intro-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.67rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.intro-eyebrow::before {
+  content: '';
+  display: block;
+  width: 18px; height: 2px;
+  background: var(--amber);
+  border-radius: 1px;
+}
+
+.intro-heading {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin-bottom: 0;
+}
+.intro-heading em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--amber);
+}
+
+.intro-right {
+  padding-top: 8px;
+}
+
+.intro-body {
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: var(--ink-mid);
+  font-weight: 300;
+  margin-bottom: 24px;
+}
+.intro-body strong { color: var(--ink); font-weight: 600; }
+
+.intro-framework-note {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 18px 20px;
+  background: var(--amber-pale);
+  border: 1px solid rgba(193,127,36,0.18);
+  border-radius: var(--r);
+  margin-top: 28px;
+}
+.intro-framework-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
+.intro-framework-text {
+  font-size: 0.84rem;
+  line-height: 1.65;
+  color: var(--ink-mid);
+}
+.intro-framework-text strong { color: var(--ink); font-weight: 600; }
+.intro-framework-text a {
+  color: var(--amber);
+  font-weight: 600;
+  text-decoration: none;
+}
+.intro-framework-text a:hover { text-decoration: underline; }
+
+/* ══════════════════════════════════════════
+   TOOLS HEADER
+   ══════════════════════════════════════════ */
+.tools-header-section {
+  padding: 0 0 64px;
+  background: var(--cream);
+}
+.tools-header-inner {
+  border-top: 1px solid var(--border);
+  padding-top: 60px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+}
+.tools-header-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink-muted);
+}
+.tools-header-count {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.63rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+/* ══════════════════════════════════════════
+   TOOL SECTIONS — COMMON
+   ══════════════════════════════════════════ */
+.tool-section {
+  padding: 0 0 120px;
+}
+
+.tool-section-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: center;
+}
+
+.tool-section-inner.flip { direction: rtl; }
+.tool-section-inner.flip > * { direction: ltr; }
+
+/* Tool section text */
+.tool-text {}
+
+.tool-number-deco {
+  font-family: 'Fraunces', serif;
+  font-size: 7rem;
+  font-weight: 900;
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  opacity: 0.07;
+  margin-bottom: 20px;
+  user-select: none;
+  color: var(--ink);
+}
+
+.tool-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.63rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tool-eyebrow-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  display: block;
+}
+
+.tool-name {
+  font-family: 'Fraunces', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.tool-tagline {
+  font-family: 'Fraunces', serif;
+  font-size: 1.15rem;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--ink-muted);
+  line-height: 1.55;
+  margin-bottom: 22px;
+}
+
+.tool-desc {
+  font-size: 1.0rem;
+  line-height: 1.85;
+  color: var(--ink-mid);
+  font-weight: 300;
+  margin-bottom: 26px;
+}
+.tool-desc strong { color: var(--ink); font-weight: 600; }
+
+.tool-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.tool-feature {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ink-mid);
+}
+.tool-feature::before {
+  content: '→';
+  color: var(--amber);
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.tool-audience-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tool-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border-hi);
+  color: var(--ink-muted);
+}
+
+/* Tool section visual */
+.tool-visual { position: relative; }
+
+.screenshot-frame {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  background: white;
+  position: relative;
+}
+.screenshot-frame img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Double screenshot for Nova */
+.screenshot-double {
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 14px;
+}
+.screenshot-double .screenshot-frame:first-child {
+  transform: translateX(-12px) rotate(-0.8deg);
+  z-index: 1;
+  position: relative;
+}
+.screenshot-double .screenshot-frame:last-child {
+  transform: translateX(12px) rotate(0.5deg);
+  z-index: 2;
+  margin-top: -60px;
+  position: relative;
+}
+
+/* Tool-specific accent strip */
+.screenshot-frame .tool-strip {
+  height: 3px;
+  width: 100%;
+  display: block;
+}
+
+/* ══════════════════════════════════════════
+   TOOL BACKGROUNDS
+   ══════════════════════════════════════════ */
+.tool-companion-bg { background: var(--cream); }
+.tool-builder-bg   { background: var(--cream-hi); }
+.tool-nova-bg      { background: var(--cream); }
+.tool-rhizo-bg     { background: var(--cream-hi); }
+.tool-sylva-bg     { background: var(--cream); }
+
+/* ══════════════════════════════════════════
+   FRAMEWORK SECTION
+   ══════════════════════════════════════════ */
+.framework-section {
+  background: #0d1f38;
+  padding: 100px 0;
+  position: relative;
+  overflow: hidden;
+}
+.framework-section::before {
+  content: '';
+  position: absolute;
+  top: -30%; left: -10%;
+  width: 50vw; height: 50vw;
+  background: radial-gradient(circle, rgba(193,127,36,0.18) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.framework-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.framework-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.67rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.framework-eyebrow::before,
+.framework-eyebrow::after {
+  content: '';
+  display: block;
+  width: 32px; height: 1px;
+  background: var(--amber);
+  opacity: 0.5;
+}
+
+.framework-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--cream);
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+.framework-title em { font-style: italic; font-weight: 300; color: var(--amber-lt); }
+
+.framework-sub {
+  font-size: 1.0rem;
+  line-height: 1.8;
+  color: rgba(245,240,232,0.75);
+  max-width: 540px;
+  margin: 0 auto;
+  font-weight: 300;
+}
+.framework-sub a {
+  color: var(--amber-lt);
+  text-decoration: none;
+}
+.framework-sub a:hover { text-decoration: underline; }
+
+.framework-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.framework-card {
+  border: 1px solid rgba(255,255,255,0.13);
+  border-radius: var(--r);
+  padding: 32px 34px;
+  background: rgba(255,255,255,0.06);
+  transition: background var(--transition), border-color var(--transition);
+}
+.framework-card:hover {
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.22);
+}
+
+.framework-card-icon {
+  font-size: 1.8rem;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.framework-card-value {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: rgba(245,240,232,0.9);
+  margin-bottom: 12px;
+  line-height: 1;
+}
+
+.framework-card-desc {
+  font-size: 0.93rem;
+  line-height: 1.78;
+  color: rgba(245,240,232,0.82);
+  font-weight: 300;
+}
+.framework-card-desc strong {
+  color: rgba(245,240,232,0.97);
+  font-weight: 600;
+}
+
+/* Accent borders per value */
+.framework-card.caring   { border-top: 3px solid var(--tool-companion); }
+.framework-card.open     { border-top: 3px solid var(--tool-builder); }
+.framework-card.connected { border-top: 3px solid var(--tool-rhizo); }
+.framework-card.active   { border-top: 3px solid var(--tool-nova); }
+
+/* ══════════════════════════════════════════
+   AUDIENCES SECTION
+   ══════════════════════════════════════════ */
+.audiences-section {
+  background: var(--cream);
+  padding: 100px 0;
+}
+
+.audiences-header {
+  margin-bottom: 52px;
+}
+
+.section-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.67rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-eyebrow::before {
+  content: '';
+  display: block;
+  width: 18px; height: 2px;
+  background: var(--amber);
+  border-radius: 1px;
+}
+
+.section-heading {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+.section-heading em { font-style: italic; font-weight: 300; color: var(--amber); }
+
+.section-sub {
+  font-size: 1.0rem;
+  line-height: 1.75;
+  color: var(--ink-muted);
+  max-width: 540px;
+  font-weight: 300;
+}
+
+.audiences-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+.audience-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.audience-card-header {
+  padding: 28px 30px 22px;
+  border-bottom: 1px solid var(--border);
+}
+
+.audience-icon {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.audience-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.audience-sub {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--ink-muted);
+  font-weight: 300;
+}
+
+.audience-body {
+  padding: 22px 30px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.audience-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 13px 14px;
+  border-radius: 8px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  color: inherit;
+  transition: background var(--transition), border-color var(--transition);
+}
+.audience-item:hover { background: var(--cream-hi); border-color: var(--border-hi); }
+
+.audience-item-tool {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 20px;
+  border: 1px solid;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.audience-item-text {}
+
+.audience-item-headline {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 3px;
+  line-height: 1.35;
+}
+
+.audience-item-desc {
+  font-size: 0.82rem;
+  line-height: 1.58;
+  color: var(--ink-muted);
+  font-weight: 300;
+}
+
+/* Featured (primary audience) card — spans full width */
+.audience-card.featured {
+  grid-column: 1 / -1;
+}
+.audience-card.featured .audience-card-header {
+  background: #0d1f38;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.audience-card.featured .audience-card-header .audience-title {
+  color: rgba(245,240,232,0.92);
+}
+.audience-card.featured .audience-card-header .audience-sub {
+  color: rgba(245,240,232,0.68);
+}
+.audience-card.featured .audience-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  padding: 0;
+}
+.audience-card.featured .audience-item {
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  background: white;
+  padding: 16px 18px;
+}
+.audience-card.featured .audience-item:nth-child(even) {
+  border-right: none;
+}
+.audience-card.featured .audience-item:nth-last-child(-n+2) {
+  border-bottom: none;
+}
+@media (max-width: 960px) {
+  .audience-card.featured .audience-body { grid-template-columns: 1fr; }
+  .audience-card.featured .audience-item { border-right: none; }
+  .audience-card.featured .audience-item:nth-last-child(-n+2) { border-bottom: 1px solid var(--border); }
+  .audience-card.featured .audience-item:last-child { border-bottom: none; }
+}
+
+/* ══════════════════════════════════════════
+   QUOTE BAND
+   ══════════════════════════════════════════ */
+.quote-band {
+  background: #0d1f38;
+  padding: 80px 0;
+  text-align: center;
+}
+
+.quote-mark {
+  font-family: 'Fraunces', serif;
+  font-size: 5rem;
+  line-height: 0.5;
+  color: var(--amber);
+  opacity: 0.4;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.quote-text {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.15rem, 2.5vw, 1.65rem);
+  font-style: italic;
+  font-weight: 300;
+  color: rgba(245,240,232,0.88);
+  line-height: 1.55;
+  letter-spacing: -0.015em;
+  margin-bottom: 20px;
+  max-width: 740px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.quote-text em { font-style: normal; color: var(--amber-lt); }
+
+.quote-source {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245,240,232,0.56);
+}
+
+/* ══════════════════════════════════════════
+   GET STARTED
+   ══════════════════════════════════════════ */
+.setup-section {
+  background: var(--cream-hi);
+  padding: 100px 0;
+}
+
+.setup-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: start;
+}
+
+.setup-left {}
+
+.setup-title {
+  font-family: 'Fraunces', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+.setup-title em { font-style: italic; font-weight: 300; color: var(--amber); }
+
+.setup-desc {
+  font-size: 1.0rem;
+  line-height: 1.85;
+  color: var(--ink-mid);
+  font-weight: 300;
+  margin-bottom: 28px;
+}
+.setup-desc strong { color: var(--ink); font-weight: 600; }
+
+.setup-requirements {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: var(--ink-mid);
+  line-height: 1.55;
+}
+.setup-req {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.setup-req-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+  flex-shrink: 0;
+}
+
+.setup-right {}
+
+.setup-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.setup-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 22px 24px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  box-shadow: var(--shadow);
+}
+
+.step-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--amber-pale);
+  border: 1px solid rgba(193,127,36,0.25);
+  color: var(--amber);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.step-body {}
+
+.step-title {
+  font-size: 0.93rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 5px;
+  line-height: 1.38;
+}
+
+.step-desc {
+  font-size: 0.86rem;
+  line-height: 1.65;
+  color: var(--ink-muted);
+  font-weight: 300;
+}
+
+.step-code {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  background: var(--cream);
+  border: 1px solid var(--border-hi);
+  border-radius: 4px;
+  padding: 3px 8px;
+  color: var(--ink-mid);
+  margin-top: 6px;
+}
+
+/* ══════════════════════════════════════════
+   FOOTER
+   ══════════════════════════════════════════ */
+.site-footer {
+  background: #07111f;
+  padding: 56px 0;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.footer-logo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: rgba(245,240,232,0.9);
+  letter-spacing: -0.02em;
+}
+.footer-logo span { color: var(--amber-lt); }
+
+.footer-tagline {
+  font-size: 0.75rem;
+  color: rgba(245,240,232,0.52);
+  line-height: 1.5;
+  font-weight: 300;
+  max-width: 300px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 24px;
+}
+.footer-links a {
+  font-size: 0.78rem;
+  color: rgba(245,240,232,0.58);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: rgba(245,240,232,0.90); }
+
+.footer-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.footer-dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════ */
+@media (max-width: 960px) {
+  .wrap { padding: 0 24px; }
+  .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+  .hero-float-badge { display: none; }
+  .intro-inner { grid-template-columns: 1fr; gap: 40px; }
+  .tool-section-inner,
+  .tool-section-inner.flip { grid-template-columns: 1fr; direction: ltr; gap: 40px; }
+  .framework-grid { grid-template-columns: 1fr; }
+  .audiences-grid { grid-template-columns: 1fr; }
+  .setup-inner { grid-template-columns: 1fr; gap: 40px; }
+  .stat-inner { grid-template-columns: 1fr 1fr; }
+  .stat-item:nth-child(3) { border-top: 1px solid rgba(255,255,255,0.06); }
+  .stat-item:nth-child(4) { border-top: 1px solid rgba(255,255,255,0.06); }
+}
+
+@media (max-width: 600px) {
+  .wrap { padding: 0 18px; }
+  .site-nav { padding: 0 18px; }
+  .nav-links { display: none; }
+  .hero { padding: 100px 0 60px; }
+  .stat-inner { grid-template-columns: 1fr; }
+  .stat-item { border-right: none; border-top: 1px solid rgba(255,255,255,0.06); }
+  .stat-item:first-child { border-top: none; }
+  .footer-inner { flex-direction: column; align-items: flex-start; gap: 28px; }
+}
+
+/* ══════════════════════════════════════════
+   LIGHTBOX
+   ══════════════════════════════════════════ */
+.screenshot-frame img,
+.hero-screenshot-frame img {
+  cursor: zoom-in;
+}
+
+.lightbox-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: rgba(7, 10, 18, 0.92);
+  backdrop-filter: blur(10px);
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  cursor: zoom-out;
+}
+.lightbox-overlay.open {
+  display: flex;
+}
+
+.lightbox-img-wrap {
+  position: relative;
+  max-width: min(1200px, 90vw);
+  max-height: 88vh;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.75), 0 8px 24px rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.08);
+  cursor: default;
+  animation: lb-in 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes lb-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.lightbox-img-wrap img {
+  display: block;
+  max-width: 100%;
+  max-height: 88vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.lightbox-close {
+  position: fixed;
+  top: 18px;
+  right: 22px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(245,240,232,0.10);
+  border: 1px solid rgba(245,240,232,0.18);
+  color: rgba(245,240,232,0.88);
+  font-size: 1.5rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  z-index: 501;
+  font-family: 'DM Mono', monospace;
+}
+.lightbox-close:hover {
+  background: rgba(245,240,232,0.20);
+  border-color: rgba(245,240,232,0.30);
+}
+
+.lightbox-caption {
+  position: fixed;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245,240,232,0.45);
+  text-align: center;
+  pointer-events: none;
+  white-space: nowrap;
+  max-width: 90vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lightbox-hint {
+  position: fixed;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  color: rgba(245,240,232,0.28);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+</style>
+</head>
+<body>
+
+<!-- ══════ NAV ══════ -->
+<nav class="site-nav" id="site-nav">
+  <a href="#" class="nav-logo">Open <span>Margins</span></a>
+  <ul class="nav-links">
+    <li><a href="#tools">The tools</a></li>
+    <li><a href="#framework">Framework</a></li>
+    <li><a href="#for-ids">For IDs &amp; LTs</a></li>
+    <li><a href="#instructors">For instructors</a></li>
+    <li><a href="#setup">Get started</a></li>
+  </ul>
+  <a href="#setup" class="nav-cta">Get started →</a>
+</nav>
+
+<!-- ══════ HERO ══════ -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-inner">
+
+      <div class="hero-text">
+        <div class="hero-eyebrow reveal">TRU Open Press · Open Learning Design Toolkit</div>
+        <h1 class="hero-headline reveal" style="transition-delay:0.08s">
+          Five tools.<br>One reading<br><em>journey.</em>
+        </h1>
+        <p class="hero-sub reveal" style="transition-delay:0.14s">
+          Open Margins gives instructional designers and learning technologists a pedagogically-grounded toolkit for building active, inquiry-based learning into any OER-driven course — online, blended, or in-person.
+        </p>
+        <div class="hero-ctas reveal" style="transition-delay:0.20s">
+          <a href="#tools" class="btn-solid">Explore the tools →</a>
+          <a href="#setup" class="btn-ghost">Getting started</a>
+        </div>
+        <div class="hero-tools reveal" style="transition-delay:0.26s">
+          <span class="hero-tool-badge">✦ Companion</span>
+          <span class="hero-tool-badge">⬡ Activity Builder</span>
+          <span class="hero-tool-badge">✺ Nova</span>
+          <span class="hero-tool-badge">∿ Rhizo</span>
+          <span class="hero-tool-badge">⟡ Sylva</span>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal-right" style="transition-delay:0.18s">
+        <div class="hero-screenshot-frame">
+          <img src="../open margins screenshots/nova concept map.png"
+               alt="Nova Concept Map activity — an interactive node diagram with glowing amber nodes showing key concepts from an OER chapter and the relationships between them">
+        </div>
+        <div class="hero-float-badge">
+          <div class="hero-float-label">Nova · Concept Map</div>
+          <div class="hero-float-text">Ideas, mapped &amp; connected</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════ STAT BAR ══════ -->
+<div class="stat-bar">
+  <div class="wrap">
+    <div class="stat-inner reveal">
+      <div class="stat-item">
+        <div class="stat-num">5<span>×</span></div>
+        <div class="stat-label">tools, each designed for<br>a different learning moment</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">0</div>
+        <div class="stat-label">student setup — shareable<br>URLs need no API key</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">source materials — any OER,<br>URL, PDF, or Word doc</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">0</div>
+        <div class="stat-label">data stored externally —<br>everything runs locally</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ INTRO ══════ -->
+<section class="intro-section">
+  <div class="wrap">
+    <div class="intro-inner">
+      <div class="intro-left reveal-left">
+        <div class="intro-eyebrow">The instructional design case</div>
+        <h2 class="intro-heading">
+          OER removed<br>the cost barrier.<br>Open Margins removes<br>the <em>engagement</em> barrier.
+        </h2>
+      </div>
+      <div class="intro-right reveal-right">
+        <p class="intro-body">
+          Open educational resources have transformed access to course materials — <strong>free, adaptable, openly licensed</strong>. But for instructional designers building online and blended courses around OER, the pedagogical challenge doesn't stop at adoption. A free textbook still needs to be read, understood, questioned, and <em>designed for</em>.
+        </p>
+        <p class="intro-body">
+          Open Margins is a course design toolkit that gives IDs and learning technologists concrete, pedagogically-structured tools to embed active learning directly into any OER-based course shell. <strong>Sylva</strong> generates Bloom's-tagged lesson arcs in under two minutes. <strong>Nova</strong> produces shareable concept maps and inquiry activities students open in any browser — no setup, no API key. The <strong>Activity Builder</strong> outputs LMS-ready quizzes, case studies, and branching scenarios.
+        </p>
+        <p class="intro-body">
+          Works with any openly licensed OER — TRU Open Press titles, external URLs, PDFs, Word documents, or pasted text. <strong>Multiple sources at once</strong>, for cross-text synthesis. Designed for online and asynchronous contexts: no institutional data leaves your server, nothing is stored externally, and shareable activity URLs work for students without any account or API access.
+        </p>
+        <div class="intro-framework-note">
+          <div class="intro-framework-icon">📐</div>
+          <div class="intro-framework-text">
+            Built in alignment with the <a href="https://designframework.trubox.ca" target="_blank" rel="noopener"><strong>TRU Learning Design Framework</strong></a> — TRU Open Learning's evidence-based approach to learner-centred digital education. The framework's four core values — <strong>caring, open, connected, and active</strong> — run through every tool.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ TOOLS HEADER ══════ -->
+<section class="tools-header-section" id="tools">
+  <div class="wrap">
+    <div class="tools-header-inner reveal">
+      <div class="tools-header-title">Five tools, multiple entry points into every text</div>
+      <div class="tools-header-count">01 — 05</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ TOOL 01: COMPANION ══════ -->
+<section class="tool-section tool-companion-bg">
+  <div class="wrap">
+    <div class="tool-section-inner">
+
+      <div class="tool-text">
+        <div class="tool-number-deco reveal">01</div>
+        <div class="tool-eyebrow reveal" style="transition-delay:0.04s">
+          <span class="tool-eyebrow-dot" style="background:var(--tool-companion)"></span>
+          <span style="color:var(--tool-companion)">Companion · Reading in the Margins</span>
+        </div>
+        <h2 class="tool-name reveal" style="transition-delay:0.08s">Companion</h2>
+        <div class="tool-tagline reveal" style="transition-delay:0.10s">The only tool that works while you read — not after.</div>
+        <p class="tool-desc reveal" style="transition-delay:0.12s">
+          Load any OER chapter and read it directly inside the tool. <strong>Highlight any passage</strong> to instantly get it Illuminated, challenged by a Council of voices, or Connected to the real world. Add your own reader notes alongside AI annotations. Load multiple chapters at once for cross-text sessions. Export the whole session as a structured reading record.
+        </p>
+        <ul class="tool-features reveal" style="transition-delay:0.14s">
+          <li class="tool-feature"><strong>Illuminate</strong> — plain-language explanation with analogies drawn from the text itself</li>
+          <li class="tool-feature"><strong>Council</strong> — four radically different perspectives on the same passage</li>
+          <li class="tool-feature"><strong>Connect</strong> — real-world applications and unexpected links</li>
+          <li class="tool-feature"><strong>Reader Note</strong> — your own annotations, saved alongside AI responses</li>
+          <li class="tool-feature">Dark, Light, and Sepia reading themes · Markdown export</li>
+        </ul>
+        <div class="tool-audience-tags reveal" style="transition-delay:0.16s">
+          <span class="tool-tag">Asynchronous reading</span>
+          <span class="tool-tag">Self-directed learners</span>
+          <span class="tool-tag">Active annotation</span>
+        </div>
+      </div>
+
+      <div class="tool-visual reveal-right" style="transition-delay:0.10s">
+        <div class="screenshot-frame">
+          <span class="tool-strip" style="background:var(--tool-companion)"></span>
+          <img src="../open margins screenshots/companion with annotation.png"
+               alt="Companion reading tool — split-screen layout with OER chapter text on the left and AI-generated margin annotations on the right, including Illuminate, Council, and Connect responses alongside a highlighted passage">
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════ TOOL 02: ACTIVITY BUILDER ══════ -->
+<section class="tool-section tool-builder-bg">
+  <div class="wrap">
+    <div class="tool-section-inner flip">
+
+      <div class="tool-visual reveal-left" style="transition-delay:0.10s">
+        <div class="screenshot-frame">
+          <span class="tool-strip" style="background:var(--tool-builder)"></span>
+          <img src="../open margins screenshots/activity builder.png"
+               alt="OER Activity Builder interface — showing activity type selector, OER content input panel, and optional Learning Objective field, with a generated branching scenario activity displayed">
+        </div>
+      </div>
+
+      <div class="tool-text">
+        <div class="tool-number-deco reveal">02</div>
+        <div class="tool-eyebrow reveal" style="transition-delay:0.04s">
+          <span class="tool-eyebrow-dot" style="background:var(--tool-builder)"></span>
+          <span style="color:var(--tool-builder)">Activity Builder · Structured Learning</span>
+        </div>
+        <h2 class="tool-name reveal" style="transition-delay:0.08s">OER Activity Builder</h2>
+        <div class="tool-tagline reveal" style="transition-delay:0.10s">Turn any chapter into a ready-to-use learning scaffold — shaped to your objectives.</div>
+        <p class="tool-desc reveal" style="transition-delay:0.12s">
+          Choose one of eight activity types and generate a structured, formatted learning activity from any OER chapter, URL, PDF, or Word document. Add a <strong>Learning Objective</strong> to focus the AI's output on your intended outcome — it shapes the generated questions, scenarios, or prompts and carries through into H5P metadata. Load multiple sources at once for cross-chapter activities. Output is LMS-ready — paste directly into Moodle, Canvas, or any other platform.
+        </p>
+        <ul class="tool-features reveal" style="transition-delay:0.14s">
+          <li class="tool-feature"><strong>Comprehension Quiz</strong> — targeted questions with answer keys</li>
+          <li class="tool-feature"><strong>True/False, Matching, Fill-in-the-Blanks</strong> — LMS-ready H5P-compatible formats</li>
+          <li class="tool-feature"><strong>Branching Scenario</strong> — decision-tree activity with consequences</li>
+          <li class="tool-feature"><strong>Short Answer &amp; Flashcards</strong> — for self-testing and spaced retrieval</li>
+          <li class="tool-feature">Optional <strong>Learning Objective field</strong> — specify your intended outcome to focus the AI's output; included in H5P metadata</li>
+          <li class="tool-feature">Markdown export · LMS-ready formatting · Send to Companion</li>
+        </ul>
+        <div class="tool-audience-tags reveal" style="transition-delay:0.16s">
+          <span class="tool-tag">Instructional designers</span>
+          <span class="tool-tag">Learning technologists</span>
+          <span class="tool-tag">LMS course design</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════ TOOL 03: NOVA ══════ -->
+<section class="tool-section tool-nova-bg">
+  <div class="wrap">
+    <div class="tool-section-inner">
+
+      <div class="tool-text">
+        <div class="tool-number-deco reveal">03</div>
+        <div class="tool-eyebrow reveal" style="transition-delay:0.04s">
+          <span class="tool-eyebrow-dot" style="background:var(--tool-nova)"></span>
+          <span style="color:#c47d0a">Nova · Experimental OER Lab</span>
+        </div>
+        <h2 class="tool-name reveal" style="transition-delay:0.08s">Nova</h2>
+        <div class="tool-tagline reveal" style="transition-delay:0.10s">Eight ways to think harder with a text — each with a live chat interface for going deeper.</div>
+        <p class="tool-desc reveal" style="transition-delay:0.12s">
+          Eight distinct deep-engagement activities that go well beyond comprehension. Each activity opens a <strong>live chat interface</strong> — students can ask follow-up questions, push back on the output, or dig further into any node or argument. Accepts multiple source materials for cross-text synthesis. Activities are <strong>shareable via URL</strong> — generate on your server, students open the link in any browser with zero setup.
+        </p>
+        <ul class="tool-features reveal" style="transition-delay:0.14s">
+          <li class="tool-feature"><strong>Concept Map</strong> — interactive node-and-edge diagram mapping ideas in the text</li>
+          <li class="tool-feature"><strong>Socratic Tutor</strong> — a real one-on-one conversation that follows the learner's thinking</li>
+          <li class="tool-feature"><strong>Evidence Tribunal</strong> — put a central claim on trial, for and against</li>
+          <li class="tool-feature"><strong>Analogy Forge</strong> — creative reasoning through unexpected conceptual comparisons</li>
+          <li class="tool-feature"><strong>Concept Timeline</strong> — historical thinking visualization across the text's ideas</li>
+          <li class="tool-feature"><strong>Assumption Excavator</strong> — surfaces the hidden premises the text relies on</li>
+          <li class="tool-feature"><strong>Transfer Challenge</strong> — applies text concepts to novel real-world contexts and scenarios</li>
+          <li class="tool-feature"><strong>Question Generator</strong> — surfaces the questions a careful reader should still be asking</li>
+        </ul>
+        <div class="tool-audience-tags reveal" style="transition-delay:0.16s">
+          <span class="tool-tag">Online learners</span>
+          <span class="tool-tag">Shareable via URL</span>
+          <span class="tool-tag">No student setup</span>
+        </div>
+      </div>
+
+      <div class="tool-visual reveal-right" style="transition-delay:0.10s">
+        <div class="screenshot-double">
+          <div class="screenshot-frame">
+            <span class="tool-strip" style="background:var(--tool-nova)"></span>
+            <img src="../open margins screenshots/nova concept map.png"
+                 alt="Nova Concept Map — interactive diagram mapping key concepts and their relationships from an OER chapter, with nodes that can be expanded and a built-in chat panel for follow-up inquiry">
+          </div>
+          <div class="screenshot-frame">
+            <span class="tool-strip" style="background:var(--tool-nova)"></span>
+            <img src="../open margins screenshots/nova tribunal.png"
+                 alt="Nova Evidence Tribunal activity — two-column layout presenting supporting and challenging evidence for a central claim from the text, with a chat interface for deeper questioning">
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════ TOOL 04: RHIZO ══════ -->
+<section class="tool-section tool-rhizo-bg">
+  <div class="wrap">
+    <div class="tool-section-inner flip">
+
+      <div class="tool-visual reveal-left" style="transition-delay:0.10s">
+        <div class="screenshot-frame">
+          <span class="tool-strip" style="background:var(--tool-rhizo)"></span>
+          <img src="../open margins screenshots/rhizo home.png"
+               alt="Rhizo home screen — eight activity tiles (Weed the Garden, Uncertainty Map, Wicked Council, Trust Audit, and others) arranged on a warm cream background, with a Dave Cormier quote about rhizomatic learning">
+        </div>
+      </div>
+
+      <div class="tool-text">
+        <div class="tool-number-deco reveal">04</div>
+        <div class="tool-eyebrow reveal" style="transition-delay:0.04s">
+          <span class="tool-eyebrow-dot" style="background:var(--tool-rhizo)"></span>
+          <span style="color:#3a7038">Rhizo · Rhizomatic Learning</span>
+        </div>
+        <h2 class="tool-name reveal" style="transition-delay:0.08s">Rhizo</h2>
+        <div class="tool-tagline reveal" style="transition-delay:0.10s">The community is the curriculum. No single right door in.</div>
+        <p class="tool-desc reveal" style="transition-delay:0.12s">
+          For when comprehension isn't the point. Rhizo surfaces what a text <strong>assumes, silences, and contests</strong> — built on Dave Cormier's rhizomatic learning philosophy. Each activity opens a <strong>chat thread</strong> where learners can challenge the output, bring in their own position, or push the inquiry further. Supports multiple sources for comparative critical inquiry across readings.
+        </p>
+        <ul class="tool-features reveal" style="transition-delay:0.14s">
+          <li class="tool-feature"><strong>Weed the Garden</strong> — what the text silenced, assumed, couldn't know</li>
+          <li class="tool-feature"><strong>Uncertainty Map</strong> — genuinely unanswerable questions the text raises but won't settle</li>
+          <li class="tool-feature"><strong>Wicked Council</strong> — five conflicting perspectives as seminar seeds; no consensus possible</li>
+          <li class="tool-feature"><strong>Nomad's Entry</strong> — five different ways into the same content for different learners</li>
+          <li class="tool-feature"><strong>Community Contract</strong> — personal learning commitments rooted in the text</li>
+          <li class="tool-feature"><strong>Trust Audit</strong> — interrogates the authority claims and sourcing behind the text's arguments</li>
+          <li class="tool-feature"><strong>Abundance Check</strong> — reveals where the text presents one answer when many are possible</li>
+          <li class="tool-feature"><strong>Breadcrumb Trail</strong> — traces the chain of knowing: who proved this, how, and why we accept it</li>
+        </ul>
+        <div class="tool-audience-tags reveal" style="transition-delay:0.16s">
+          <span class="tool-tag">Critical inquiry design</span>
+          <span class="tool-tag">Graduate courses</span>
+          <span class="tool-tag">Community-based learning</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════ TOOL 05: SYLVA ══════ -->
+<section class="tool-section tool-sylva-bg">
+  <div class="wrap">
+    <div class="tool-section-inner">
+
+      <div class="tool-text">
+        <div class="tool-number-deco reveal">05</div>
+        <div class="tool-eyebrow reveal" style="transition-delay:0.04s">
+          <span class="tool-eyebrow-dot" style="background:var(--tool-sylva)"></span>
+          <span style="color:var(--tool-sylva)">Sylva · Lesson Planner</span>
+        </div>
+        <h2 class="tool-name reveal" style="transition-delay:0.08s">Sylva</h2>
+        <div class="tool-tagline reveal" style="transition-delay:0.10s">Plan the session that brings the reading to life — aligned to your outcomes.</div>
+        <p class="tool-desc reveal" style="transition-delay:0.12s">
+          Load any OER chapter, set your session length and delivery mode, and get a complete timed lesson arc with <strong>Bloom's Taxonomy-tagged learning objectives</strong> in under two minutes. The generated objectives are <strong>fully editable</strong> before the arc is built — refine or replace them to match your course outcomes, then let Sylva design every segment around them. Load multiple chapters for multi-week arcs. Exports as Markdown or printable PDF.
+        </p>
+        <ul class="tool-features reveal" style="transition-delay:0.14s">
+          <li class="tool-feature">Timed lesson arc — opening hook, chunked content, activities, synthesis</li>
+          <li class="tool-feature">Three delivery modes: <strong>in-class, online synchronous, asynchronous</strong></li>
+          <li class="tool-feature">Generates 3–5 Bloom's Taxonomy-tagged objectives — <strong>fully editable</strong> before the arc is built, so you can align them to your course outcomes</li>
+          <li class="tool-feature">Suggests Companion, Nova, and Rhizo where they fit the arc</li>
+          <li class="tool-feature">Suggests constructively-aligned <strong>assessment ideas</strong> (formative and summative) that close the loop on the stated objectives</li>
+          <li class="tool-feature">Markdown export · print-ready PDF · adjustable session length</li>
+        </ul>
+        <div class="tool-audience-tags reveal" style="transition-delay:0.16s">
+          <span class="tool-tag">Instructional designers</span>
+          <span class="tool-tag">Online &amp; blended delivery</span>
+          <span class="tool-tag">Bloom's-aligned outcomes</span>
+        </div>
+      </div>
+
+      <div class="tool-visual reveal-right" style="transition-delay:0.10s">
+        <div class="screenshot-frame">
+          <span class="tool-strip" style="background:var(--tool-sylva)"></span>
+          <img src="../open margins screenshots/sylva lesson.png"
+               alt="Sylva lesson planner — displaying editable Bloom's Taxonomy-tagged learning objectives, a timed lesson arc with chunked activity segments, and delivery mode selector with in-class, synchronous, and asynchronous options">
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════ FRAMEWORK ══════ -->
+<section class="framework-section" id="framework">
+  <div class="wrap">
+    <div class="framework-header reveal">
+      <div class="framework-eyebrow">The framework behind the tools</div>
+      <h2 class="framework-title">
+        Rooted in the TRU<br><em>Learning Design Framework</em>
+      </h2>
+      <p class="framework-sub">
+        Open Margins was developed in alignment with <a href="https://designframework.trubox.ca" target="_blank" rel="noopener">TRU Open Learning's evidence-based design framework</a> — a learner-centred approach grounded in openness, flexibility, and trust. Four core values shape every decision.
+      </p>
+    </div>
+
+    <div class="framework-grid">
+
+      <div class="framework-card caring reveal" style="transition-delay:0.05s">
+        <span class="framework-card-icon">🤝</span>
+        <div class="framework-card-value">Caring</div>
+        <p class="framework-card-desc">
+          Open Margins meets learners where they are. <strong>Companion's Illuminate mode</strong> makes dense academic writing accessible without dumbing it down. <strong>Sylva</strong> adapts to different session lengths and delivery modes. The Activity Builder's analogy exercises build conceptual bridges for learners who need them. No learner left behind by the difficulty of the text.
+        </p>
+      </div>
+
+      <div class="framework-card open reveal" style="transition-delay:0.10s">
+        <span class="framework-card-icon">📖</span>
+        <div class="framework-card-value">Open</div>
+        <p class="framework-card-desc">
+          Built on open educational practices, top to bottom. Every tool works with <strong>any openly licensed OER</strong> — not just TRU Open Press titles. No data is stored externally. PDFs and Word documents are parsed entirely in your browser. The tools run locally, on your own API key, with full transparency. Open practices, from the ground up.
+        </p>
+      </div>
+
+      <div class="framework-card connected reveal" style="transition-delay:0.15s">
+        <span class="framework-card-icon">🌐</span>
+        <div class="framework-card-value">Connected</div>
+        <p class="framework-card-desc">
+          Learning happens in relationship — with ideas, with people, with the world beyond the text. <strong>Nova's shareable URLs</strong> connect instructors and students around the same material without friction. <strong>Rhizo's Community Contract</strong> builds belonging to a learning community. Sylva sequences tools into a coherent arc that holds a class together.
+        </p>
+      </div>
+
+      <div class="framework-card active reveal" style="transition-delay:0.20s">
+        <span class="framework-card-icon">⚡</span>
+        <div class="framework-card-value">Active</div>
+        <p class="framework-card-desc">
+          Every tool demands something of the learner — and that's the point. Annotate a passage. Map the concepts. Put a claim on trial. Question what the text silences. Generate a lesson arc. Open Margins doesn't let reading stay passive. It builds the habits of <strong>active, critical engagement</strong> that the TRU Learning Design Framework places at the centre of meaningful learning.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════ AUDIENCES ══════ -->
+<section class="audiences-section" id="for-ids">
+  <div class="wrap">
+    <div class="audiences-header reveal">
+      <div class="section-eyebrow">Who uses Open Margins</div>
+      <h2 class="section-heading">Designed for the whole <em>course design chain</em></h2>
+      <p class="section-sub">Instructional designers and learning technologists evaluate and integrate. Instructors run them inside courses. Students engage with the outputs. Each group has something distinct to gain.</p>
+    </div>
+
+    <div class="audiences-grid">
+
+      <!-- INSTRUCTIONAL DESIGNERS & LTs — FEATURED -->
+      <div class="audience-card featured reveal" style="transition-delay:0.04s">
+        <div class="audience-card-header">
+          <span class="audience-icon">📐</span>
+          <div class="audience-title">For Instructional Designers &amp; Learning Technologists</div>
+          <div class="audience-sub">You evaluate, configure, and integrate. Open Margins is built with the ID in mind: pedagogically grounded, privacy-safe, LMS-aligned, and deployable in online or blended contexts without heavy IT overhead.</div>
+        </div>
+        <div class="audience-body">
+
+          <div class="audience-item">
+            <span class="audience-item-tool" style="background:rgba(45,107,78,0.08);border-color:rgba(45,107,78,0.25);color:#2d6b4e">Sylva</span>
+            <div class="audience-item-text">
+              <div class="audience-item-headline">Bloom's-aligned lesson arcs on demand</div>
+              <div class="audience-item-desc">Set chapter, session length, and delivery mode. Sylva generates a full timed arc with Bloom's Taxonomy-tagged objectives — for in-class, online synchronous, or asynchronous delivery.</div>
+            </div>
+          </div>
+
+          <div class="audience-item">
+            <span class="audience-item-tool" style="background:rgba(245,166,35,0.09);border-color:rgba(245,166,35,0.25);color:#9b6008">Nova</span>
+            <div class="audience-item-text">
+              <div class="audience-item-headline">Shareable activities — zero student setup, built-in chat</div>
+              <div class="audience-item-desc">Choose from 8 activity types, generate, and embed the URL in your LMS shell. Students open it in any browser — no account, no API key required. Each activity includes a live chat interface for follow-up and deeper inquiry.</div>
+            </div>
+          </div>
+
+          <div class="audience-item">
+            <span class="audience-item-tool" style="background:rgba(0,56,101,0.08);border-color:rgba(0,56,101,0.2);color:#003865">Activity Builder</span>
+            <div class="audience-item-text">
+              <div class="audience-item-headline">LMS-ready scaffolding shaped to your objectives</div>
+              <div class="audience-item-desc">Eight activity types, from quizzes and branching scenarios to flashcards and short answer. Add a Learning Objective to focus the output on your intended outcome — carried into H5P metadata.</div>
+            </div>
+          </div>
+
+          <div class="audience-item">
+            <span class="audience-item-tool" style="background:rgba(15,14,11,0.07);border-color:rgba(15,14,11,0.15);color:#3a3228">Privacy</span>
+            <div class="audience-item-text">
+              <div class="audience-item-headline">Institutional privacy by design</div>
+              <div class="audience-item-desc">No data stored externally. Your Anthropic API key stays local — never transmitted anywhere except directly to Claude. Student interactions aren't logged. Safe for deployment in regulated institutional environments.</div>
+            </div>
+          </div>
+
+          <div class="audience-item">
+            <span class="audience-item-tool" style="background:rgba(193,127,36,0.1);border-color:rgba(193,127,36,0.25);color:#8a5a10">Framework</span>
+            <div class="audience-item-text">
+              <div class="audience-item-headline">Pedagogically grounded, not just AI-powered</div>
+              <div class="audience-item-desc">Built in alignment with the TRU Learning Design Framework (Caring, Open, Connected, Active). Bloom's Taxonomy surfaces throughout Sylva's outputs. Designed to complement, not replace, your instructional design practice.</div>
+            </div>
+          </div>
+
+          <div class="audience-item">
+            <span class="audience-item-tool" style="background:rgba(125,184,122,0.09);border-color:rgba(125,184,122,0.28);color:#3a6438">Rhizo</span>
+            <div class="audience-item-text">
+              <div class="audience-item-headline">Design for critical inquiry, not just comprehension</div>
+              <div class="audience-item-desc">Rhizo's activities surface what a text assumes, silences, and contests — giving you tools for designing graduate-level and community-based experiences that go beyond content delivery.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- INSTRUCTORS -->
+      <div class="audience-card reveal reveal-left" style="transition-delay:0.08s" id="instructors">
+        <div class="audience-card-header">
+          <span class="audience-icon">🖊</span>
+          <div class="audience-title">For Instructors</div>
+          <div class="audience-sub">Run the tools inside your own courses — or let your ID pre-configure them for you. Everything works at course delivery speed.</div>
+        </div>
+        <div class="audience-body">
+
+          <div class="audience-item">
+            <span class="audience-item-tool" style="background:rgba(45,107,78,0.08);border-color:rgba(45,107,78,0.25);color:#2d6b4e">Sylva</span>
+            <div class="audience-item-text">
+              <div class="audience-item-headline">Chapter to lesson plan in two minutes</div>
+              <div class="audience-item-desc">Set session length and delivery mode. Get a full timed arc with Bloom's-tagged objectives, ready to export.</div>
+            </div>
+          </div>
+
+          <div class="audience-item">
+            <span class="audience-item-tool" style="background:rgba(245,166,35,0.09);border-color:rgba(245,166,35,0.25);color:#9b6008">Nova</span>
+            <div class="audience-item-text">
+              <div class="audience-item-headline">Share activities students open instantly</div>
+              <div class="audience-item-desc">Generate a Concept Map or Evidence Tribunal, copy the URL. Students open it in any browser — no server, no API key on their end.</div>
+            </div>
+          </div>
+
+          <div class="audience-item">
+            <span class="audience-item-tool" style="background:rgba(0,56,101,0.08);border-color:rgba(0,56,101,0.2);color:#003865">Activity Builder</span>
+            <div class="audience-item-text">
+              <div class="audience-item-headline">LMS-ready quizzes and scenarios in seconds</div>
+              <div class="audience-item-desc">Generate comprehension quizzes, branching scenarios, and case studies. Paste directly into Moodle or Canvas.</div>
+            </div>
+          </div>
+
+          <div class="audience-item">
+            <span class="audience-item-tool" style="background:rgba(232,162,69,0.1);border-color:rgba(232,162,69,0.3);color:#7a4e12">Companion</span>
+            <div class="audience-item-text">
+              <div class="audience-item-headline">Assign active reading — and see evidence of it</div>
+              <div class="audience-item-desc">Students export their annotated session as Markdown. You get a reading record that's genuinely revealing.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- STUDENTS -->
+      <div class="audience-card reveal reveal-right" style="transition-delay:0.10s">
+        <div class="audience-card-header">
+          <span class="audience-icon">🎒</span>
+          <div class="audience-title">For Students</div>
+          <div class="audience-sub">Self-directed learners in online and blended courses who want to do more than skim a chapter.</div>
+        </div>
+        <div class="audience-body">
+
+          <div class="audience-item">
+            <span class="audience-item-tool" style="background:rgba(232,162,69,0.1);border-color:rgba(232,162,69,0.3);color:#7a4e12">Companion</span>
+            <div class="audience-item-text">
+              <div class="audience-item-headline">Stop re-reading the same sentence</div>
+              <div class="audience-item-desc">Highlight it and hit Illuminate. Get a plain-language explanation with analogies drawn from the chapter itself.</div>
+            </div>
+          </div>
+
+          <div class="audience-item">
+            <span class="audience-item-tool" style="background:rgba(245,166,35,0.09);border-color:rgba(245,166,35,0.25);color:#9b6008">Nova</span>
+            <div class="audience-item-text">
+              <div class="audience-item-headline">See how the ideas connect</div>
+              <div class="audience-item-desc">Nova's Concept Map turns a chapter into an interactive diagram. Your instructor shares the URL — just open it in your browser. No setup.</div>
+            </div>
+          </div>
+
+          <div class="audience-item">
+            <span class="audience-item-tool" style="background:rgba(125,184,122,0.09);border-color:rgba(125,184,122,0.28);color:#3a6438">Rhizo</span>
+            <div class="audience-item-text">
+              <div class="audience-item-headline">Question the text, not just absorb it</div>
+              <div class="audience-item-desc">Rhizo shows what the chapter assumes and who it silences. Gives your critical instincts a framework and vocabulary.</div>
+            </div>
+          </div>
+
+          <div class="audience-item">
+            <span class="audience-item-tool" style="background:rgba(232,162,69,0.1);border-color:rgba(232,162,69,0.3);color:#7a4e12">Companion</span>
+            <div class="audience-item-text">
+              <div class="audience-item-headline">Build a reading record worth handing in</div>
+              <div class="audience-item-desc">Every annotation — AI response or personal note — is saved in your session. Export as Markdown: study doc, reflection, and proof of engagement.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════ QUOTE ══════ -->
+<div class="quote-band">
+  <div class="wrap">
+    <div class="reveal" style="text-align:center">
+      <span class="quote-mark">"</span>
+      <p class="quote-text">Designing active learning into an online course means building the conditions for engagement, not just assigning readings. Open Margins gives instructional designers tools that make that engagement <em>structural</em> — embedded in the text, not bolted on.</p>
+      <div class="quote-source">Design philosophy · Open Margins · TRU Open Press</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ GET STARTED ══════ -->
+<section class="setup-section" id="setup">
+  <div class="wrap">
+    <div class="setup-inner">
+
+      <div class="setup-left reveal-left">
+        <div class="section-eyebrow">Getting started · deployment</div>
+        <h2 class="setup-title">Run on your <em>own computer</em> or a <em>shared departmental server</em></h2>
+        <p class="setup-desc">
+          Open Margins is a small web application that runs on your own computer — or on a server your department or institution controls. <strong>No data is stored externally.</strong> The only outbound connection is the text you send to Claude for analysis, which travels directly and privately to Anthropic. No third-party accounts, no vendor subscriptions, no student data collected.
+        </p>
+        <p class="setup-desc">
+          To run the tools, you need two things. First, <strong>Node.js</strong> — a free program that acts as a lightweight local web server on your computer, letting the tools talk to Claude securely without exposing your API key. Second, an <strong>Anthropic API key</strong> — your personal access credential for Claude, billed on a pay-per-use basis at roughly <strong>$5–10 for a full semester of active use</strong>. Both take about ten minutes to set up.
+        </p>
+        <p class="setup-desc">
+          For <strong>departmental or institutional deployment</strong>, Open Margins can run on any server — your IT team hosts it once, and instructors or students access everything through a shared URL. Students never need to install anything.
+        </p>
+        <div class="setup-requirements">
+          <div class="setup-req"><span class="setup-req-dot"></span><strong>Node.js v18+</strong> — a free JavaScript runtime; acts as a local web server on your computer (<a href="https://nodejs.org" target="_blank" rel="noopener" style="color:var(--amber);text-decoration:none">nodejs.org</a>)</div>
+          <div class="setup-req"><span class="setup-req-dot"></span><strong>An Anthropic API key</strong> — your pay-per-use access to Claude, ~$5–10/semester (<a href="https://console.anthropic.com" target="_blank" rel="noopener" style="color:var(--amber);text-decoration:none">console.anthropic.com</a>)</div>
+          <div class="setup-req"><span class="setup-req-dot"></span><strong>The Open Margins project files</strong> — downloaded from GitHub or provided by TRU Open Press</div>
+          <div class="setup-req"><span class="setup-req-dot"></span><strong>A modern browser</strong> — Chrome, Firefox, Edge, or Safari</div>
+          <div class="setup-req"><span class="setup-req-dot"></span><strong>Optional:</strong> a departmental or institutional server for shared multi-user access</div>
+        </div>
+      </div>
+
+      <div class="setup-right reveal-right" style="transition-delay:0.08s">
+        <div class="setup-steps">
+
+          <div class="setup-step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <div class="step-title">Get your Anthropic API key</div>
+              <div class="step-desc">Create a free account at <strong>console.anthropic.com</strong> and generate an API key. This is your personal, private access credential for Claude — treat it like a password. You're only billed for what you use (typically a few cents per session, totalling $5–10 over a semester of regular use).</div>
+            </div>
+          </div>
+
+          <div class="setup-step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <div class="step-title">Install Node.js on your computer</div>
+              <div class="step-desc">Download and install Node.js v18 or later from <strong>nodejs.org</strong> — this takes about two minutes. Node.js is a free program that acts as a tiny web server on your machine, securely routing requests between the tools and Claude without exposing your API key to students or the browser.</div>
+            </div>
+          </div>
+
+          <div class="setup-step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <div class="step-title">Tell your computer your API key, then install the tool libraries</div>
+              <div class="step-desc">Open Terminal (Mac) or Command Prompt (Windows). Paste in your key so the tools can find it, then run <code class="step-code">npm install</code> in the project folder. This downloads the small support libraries the tools depend on — takes about 30 seconds and only needs to be done once.</div>
+              <div class="step-code">export ANTHROPIC_API_KEY=sk-ant-…</div>
+            </div>
+          </div>
+
+          <div class="setup-step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <div class="step-title">Start the background servers (two terminal windows)</div>
+              <div class="step-desc">Run <code class="step-code">node server.js</code> in the project folder to start Activity Builder, Nova, Rhizo, and Sylva. Open a second terminal window, navigate into the <em>companion/</em> subfolder, and run the same command to start Companion. Both servers stay running silently in the background while you use the tools — just leave the windows open.</div>
+            </div>
+          </div>
+
+          <div class="setup-step">
+            <div class="step-num">5</div>
+            <div class="step-body">
+              <div class="step-title">Open the tool launcher in your browser — you're ready</div>
+              <div class="step-desc">Open <strong>index.html</strong> in your browser (or go to <strong>localhost:3001</strong>) to see the tool launcher. Click any tool to start. Activities you build generate shareable URLs — paste them into your LMS for students to open directly, no installation or API key needed on their end. Close the terminal windows when you're done for the day.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════ FOOTER ══════ -->
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-inner">
+
+      <div class="footer-brand">
+        <div class="footer-logo">Open <span>Margins</span></div>
+        <div class="footer-tagline">A course design toolkit for instructional designers and learning technologists working with open educational resources. Built by TRU Open Press · Thompson Rivers University · Kamloops, BC, Canada.</div>
+      </div>
+
+      <div class="footer-links">
+        <a href="https://openpress.trubox.ca" target="_blank" rel="noopener">TRU Open Press ↗</a>
+        <a href="https://pressbooks.tru.ca" target="_blank" rel="noopener">Pressbooks ↗</a>
+        <a href="https://designframework.trubox.ca" target="_blank" rel="noopener">Design Framework ↗</a>
+      </div>
+
+      <div class="footer-dots" aria-label="Five tools">
+        <div class="footer-dot" style="background:var(--tool-companion)" title="Companion"></div>
+        <div class="footer-dot" style="background:var(--tool-builder)" title="Activity Builder"></div>
+        <div class="footer-dot" style="background:var(--tool-nova)" title="Nova"></div>
+        <div class="footer-dot" style="background:var(--tool-rhizo)" title="Rhizo"></div>
+        <div class="footer-dot" style="background:var(--tool-sylva)" title="Sylva"></div>
+      </div>
+
+    </div>
+  </div>
+</footer>
+
+<!-- ══════ LIGHTBOX ══════ -->
+<div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Screenshot viewer">
+  <button class="lightbox-close" id="lightbox-close" aria-label="Close image viewer">×</button>
+  <div class="lightbox-img-wrap" id="lightbox-img-wrap">
+    <img id="lightbox-img" src="" alt="">
+  </div>
+  <div class="lightbox-caption" id="lightbox-caption"></div>
+  <div class="lightbox-hint">ESC or click outside to close</div>
+</div>
+
+<script>
+// ── NAV SCROLL BEHAVIOUR ─────────────────────────────────
+const nav = document.getElementById('site-nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+}, { passive: true });
+
+// ── SCROLL REVEAL ────────────────────────────────────────
+const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      // Respect any existing transition-delay set inline
+      entry.target.classList.add('up');
+      observer.unobserve(entry.target);
+    }
+  });
+}, {
+  threshold: 0.07,
+  rootMargin: '0px 0px -48px 0px'
+});
+
+revealEls.forEach(el => observer.observe(el));
+
+// ── HERO IMMEDIATE REVEAL ────────────────────────────────
+// Trigger hero elements on load (they're already in view)
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    document.querySelectorAll('.hero .reveal, .hero .reveal-right').forEach(el => {
+      el.classList.add('up');
+    });
+  }, 80);
+});
+
+// ── LIGHTBOX ─────────────────────────────────────────────
+const lightbox     = document.getElementById('lightbox');
+const lightboxImg  = document.getElementById('lightbox-img');
+const lightboxCap  = document.getElementById('lightbox-caption');
+const lightboxWrap = document.getElementById('lightbox-img-wrap');
+const lightboxClose = document.getElementById('lightbox-close');
+
+function openLightbox(src, alt) {
+  lightboxImg.src = src;
+  lightboxImg.alt = alt || '';
+  lightboxCap.textContent = alt || '';
+  lightbox.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  lightboxClose.focus();
+}
+
+function closeLightbox() {
+  lightbox.classList.remove('open');
+  document.body.style.overflow = '';
+  // Defer clearing src so the close animation doesn't flash
+  setTimeout(() => { lightboxImg.src = ''; }, 300);
+}
+
+// Attach click to all screenshot images (main + hero)
+document.querySelectorAll('.screenshot-frame img, .hero-screenshot-frame img').forEach(img => {
+  img.addEventListener('click', () => openLightbox(img.src, img.alt));
+});
+
+// Close via button
+lightboxClose.addEventListener('click', closeLightbox);
+
+// Close via backdrop (not the image itself)
+lightbox.addEventListener('click', (e) => {
+  if (e.target === lightbox) closeLightbox();
+});
+
+// Close via ESC
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rhizo Guide — Activity Types · TRU Open Press</title>
+<script>(function(){var t=localStorage.getItem('om-theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --soil:  #0f0d09;
+  --humus: #181410;
+  --loam:  #211c14;
+  --bark:  #2e2618;
+  --stone: #3d3525;
+
+  --moss:    #7db87a;  --moss-dim:   rgba(125,184,122,0.13); --moss-border: rgba(125,184,122,0.3);
+  --lichen:  #c8b560;  --lichen-dim: rgba(200,181,96,0.13);  --lichen-border: rgba(200,181,96,0.3);
+  --spore:   #b07ab8;  --spore-dim:  rgba(176,122,184,0.13); --spore-border: rgba(176,122,184,0.3);
+  --rust:    #c27050;  --rust-dim:   rgba(194,112,80,0.13);  --rust-border: rgba(194,112,80,0.3);
+  --sky:     #7aaec8;  --sky-dim:    rgba(122,174,200,0.13); --sky-border: rgba(122,174,200,0.3);
+  --amber:   #d4a84b;
+
+  --text:      #e8e2d4;
+  --text-dim:  #9e9480;
+  --text-faint: #7a7060;
+  --border:    rgba(255,255,255,0.07);
+  --border-hi: rgba(255,255,255,0.13);
+  --r: 10px;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="light"] {
+  --soil:  #f5f0e8;
+  --humus: #ede8df;
+  --loam:  #e5dfd4;
+  --bark:  #ddd6c8;
+  --stone: #cec5b4;
+
+  --moss:   #2e7a2b;  --moss-dim:   rgba(46,122,43,0.10);   --moss-border: rgba(46,122,43,0.28);
+  --lichen: #7a6200;  --lichen-dim: rgba(122,98,0,0.10);    --lichen-border: rgba(122,98,0,0.28);
+  --spore:  #7a3a88;  --spore-dim:  rgba(122,58,136,0.10);  --spore-border: rgba(122,58,136,0.28);
+  --rust:   #8a3e22;  --rust-dim:   rgba(138,62,34,0.10);   --rust-border: rgba(138,62,34,0.28);
+  --sky:    #1a5c7a;  --sky-dim:    rgba(26,92,122,0.10);   --sky-border: rgba(26,92,122,0.28);
+  --amber:  #7a5c00;
+
+  --text:      #1c1710;
+  --text-dim:  #5a5040;
+  --text-faint: #786858;
+  --border:    rgba(0,0,0,0.08);
+  --border-hi: rgba(0,0,0,0.14);
+}
+
+/* ── RESET & BASE ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--soil); color: var(--text);
+  line-height: 1.6; min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+a { color: inherit; }
+::selection { background: var(--moss-dim); }
+
+/* ── TOPBAR ── */
+.topbar {
+  background: rgba(15,13,9,0.94);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px; height: 58px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 200; flex-shrink: 0;
+}
+[data-theme="light"] .topbar { background: rgba(245,240,232,0.96); }
+.topbar-brand { display: flex; align-items: center; gap: 14px; }
+.brand-text { display: flex; flex-direction: column; }
+.brand-rhizo {
+  font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 700;
+  color: var(--moss); line-height: 1; letter-spacing: -0.02em;
+}
+.brand-sub { font-size: 0.63rem; color: var(--text-dim); letter-spacing: 0.07em; text-transform: uppercase; margin-top: 2px; }
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+.topbar-badge {
+  padding: 4px 12px; border-radius: 20px;
+  font-size: 0.63rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  background: linear-gradient(135deg, rgba(125,184,122,0.15), rgba(200,181,96,0.15));
+  border: 1px solid rgba(125,184,122,0.25); color: var(--moss);
+}
+.btn-suite-theme {
+  background: none; border: 1px solid var(--border-hi); border-radius: 8px;
+  padding: 5px 9px; font-size: 0.9rem; cursor: pointer; color: var(--text-dim);
+  transition: all var(--transition);
+}
+.btn-suite-theme:hover { border-color: var(--moss-border); color: var(--text); }
+
+/* ── SUITE NAV ── */
+.suite-nav {
+  background: rgba(15,13,9,0.7);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px; height: 34px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  position: sticky; top: 58px; z-index: 199;
+  backdrop-filter: blur(8px); flex-shrink: 0;
+}
+[data-theme="light"] .suite-nav { background: rgba(237,232,223,0.92); }
+.suite-nav-home {
+  font-size: 0.63rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--text-dim); text-decoration: none; transition: color 0.18s; flex-shrink: 0;
+}
+.suite-nav-home:hover { color: var(--text); }
+.suite-nav-tools { display: flex; align-items: center; gap: 4px; }
+.suite-nav-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 20px;
+  font-size: 0.63rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+  text-decoration: none; border: 1px solid transparent; transition: all 0.18s; white-space: nowrap;
+}
+.suite-nav-pill.pill-companion { color: #f5c06a; border-color: rgba(245,192,106,0.45); }
+.suite-nav-pill.pill-companion:hover { background: rgba(245,192,106,0.12); border-color: rgba(245,192,106,0.65); color: #fdd28a; }
+.suite-nav-pill.pill-builder   { color: #c8d8ec; border-color: rgba(200,216,236,0.35); }
+.suite-nav-pill.pill-builder:hover   { background: rgba(200,216,236,0.10); border-color: rgba(200,216,236,0.55); color: #e8eef8; }
+.suite-nav-pill.pill-nova      { color: #f5c06a; border-color: rgba(245,192,106,0.45); }
+.suite-nav-pill.pill-nova:hover      { background: rgba(245,192,106,0.12); border-color: rgba(245,192,106,0.65); color: #fdd28a; }
+.suite-nav-pill.pill-rhizo     { color: #7db87a; border-color: rgba(125,184,122,0.45); }
+.suite-nav-pill.pill-rhizo:hover     { background: rgba(125,184,122,0.12); border-color: rgba(125,184,122,0.65); color: #a8d8a4; }
+.suite-nav-pill.pill-rhizo.pill-active { background: rgba(125,184,122,0.15); border-color: rgba(125,184,122,0.55); color: #a8d8a4; font-weight: 700; cursor: default; pointer-events: none; }
+.suite-nav-pill.pill-sylva     { color: #a8e6c8; border-color: rgba(168,230,200,0.35); }
+.suite-nav-pill.pill-sylva:hover     { background: rgba(168,230,200,0.10); border-color: rgba(168,230,200,0.55); color: #c0f0d8; }
+
+[data-theme="light"] .suite-nav-home { color: var(--text-dim); }
+[data-theme="light"] .suite-nav-pill.pill-companion { color: #7a5800; border-color: rgba(122,88,0,0.35); }
+[data-theme="light"] .suite-nav-pill.pill-companion:hover { background: rgba(122,88,0,0.08); }
+[data-theme="light"] .suite-nav-pill.pill-builder   { color: #003865; border-color: rgba(0,56,101,0.35); }
+[data-theme="light"] .suite-nav-pill.pill-builder:hover { background: rgba(0,56,101,0.07); }
+[data-theme="light"] .suite-nav-pill.pill-nova      { color: #7a5800; border-color: rgba(122,88,0,0.35); }
+[data-theme="light"] .suite-nav-pill.pill-nova:hover { background: rgba(122,88,0,0.08); }
+[data-theme="light"] .suite-nav-pill.pill-rhizo     { color: var(--moss); border-color: var(--moss-border); }
+[data-theme="light"] .suite-nav-pill.pill-rhizo.pill-active { background: var(--moss-dim); }
+[data-theme="light"] .suite-nav-pill.pill-sylva     { color: #1a5c3a; border-color: rgba(26,92,58,0.35); }
+[data-theme="light"] .suite-nav-pill.pill-sylva:hover { background: rgba(26,92,58,0.07); }
+
+/* ── PAGE LAYOUT ── */
+.page-wrap {
+  max-width: 880px; margin: 0 auto;
+  padding: 56px 32px 88px; flex: 1;
+}
+
+/* ── HERO ── */
+.guide-hero { text-align: center; margin-bottom: 60px; }
+.guide-hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 0.63rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--moss); border: 1px solid var(--moss-border); background: var(--moss-dim);
+  border-radius: 20px; padding: 4px 14px; margin-bottom: 22px;
+}
+.guide-hero-title {
+  font-family: 'Fraunces', serif; font-size: clamp(1.9rem, 5vw, 2.9rem);
+  font-weight: 700; color: var(--text); line-height: 1.15;
+  letter-spacing: -0.02em; margin-bottom: 18px;
+}
+.guide-hero-title span { color: var(--moss); }
+.guide-hero-sub {
+  font-size: 0.97rem; color: var(--text-dim); line-height: 1.78;
+  max-width: 620px; margin: 0 auto 28px;
+}
+.guide-hero-cormier {
+  font-family: 'Fraunces', serif; font-style: italic; font-size: 0.92rem;
+  color: var(--text-faint); line-height: 1.6;
+  border-left: 3px solid var(--moss-border); text-align: left;
+  max-width: 520px; margin: 0 auto 28px; padding-left: 18px;
+}
+.guide-hero-cormier cite { display: block; font-style: normal; font-size: 0.72rem; font-family: 'DM Sans', sans-serif; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-faint); margin-top: 8px; }
+.guide-hero-cta {
+  display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 8px;
+  background: var(--moss-dim); border: 1px solid var(--moss-border);
+  color: var(--moss); font-weight: 600; font-size: 0.88rem; text-decoration: none;
+  transition: all var(--transition);
+}
+.guide-hero-cta:hover { background: rgba(125,184,122,0.22); border-color: rgba(125,184,122,0.5); }
+
+/* ── PHILOSOPHY BAND ── */
+.philosophy-band {
+  background: var(--loam); border: 1px solid var(--border-hi);
+  border-radius: var(--r); padding: 26px 30px; margin-bottom: 48px;
+}
+.philosophy-band-title {
+  font-family: 'Fraunces', serif; font-size: 0.85rem; font-weight: 600;
+  color: var(--lichen); letter-spacing: 0.04em; margin-bottom: 14px;
+  text-transform: uppercase; font-size: 0.63rem; letter-spacing: 0.1em;
+}
+.philosophy-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+}
+.philosophy-item { display: flex; flex-direction: column; gap: 5px; }
+.philosophy-item-label {
+  font-size: 0.72rem; font-weight: 700; color: var(--lichen);
+  display: flex; align-items: center; gap: 6px;
+}
+.philosophy-item-label::before {
+  content: ''; display: inline-block; width: 6px; height: 6px;
+  border-radius: 50%; background: var(--lichen); flex-shrink: 0;
+}
+.philosophy-item-text { font-size: 0.81rem; color: var(--text-dim); line-height: 1.6; }
+
+/* ── QUICK START ── */
+.quickstart {
+  background: var(--loam); border: 1px solid var(--border-hi);
+  border-radius: var(--r); padding: 24px 28px; margin-bottom: 56px;
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+}
+.quickstart-title {
+  grid-column: 1 / -1; font-size: 0.63rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--moss); margin-bottom: 4px;
+}
+.qs-step { display: flex; flex-direction: column; gap: 5px; }
+.qs-num {
+  font-family: 'Fraunces', serif; font-size: 1.7rem; font-weight: 700;
+  color: var(--moss); opacity: 0.4; line-height: 1;
+}
+.qs-title { font-size: 0.86rem; font-weight: 600; color: var(--text); }
+.qs-body  { font-size: 0.77rem; color: var(--text-dim); line-height: 1.55; }
+
+/* ── SECTION HEADING ── */
+.section-heading {
+  font-family: 'Fraunces', serif; font-size: 1.25rem; font-weight: 600;
+  color: var(--text); margin-bottom: 6px;
+}
+.section-sub {
+  font-size: 0.84rem; color: var(--text-dim); line-height: 1.65;
+  margin-bottom: 28px; max-width: 680px;
+}
+
+/* ── ACTIVITY CARDS ── */
+.activity-grid { display: flex; flex-direction: column; gap: 20px; margin-bottom: 56px; }
+
+.activity-card {
+  background: var(--loam); border: 1px solid var(--border);
+  border-radius: var(--r); overflow: hidden;
+  transition: border-color var(--transition);
+}
+.activity-card:hover { border-color: var(--border-hi); }
+
+/* Colour modifier classes */
+.card-moss    { --ac: var(--moss);   --ac-dim: var(--moss-dim);   --ac-border: var(--moss-border);   --ac-rgb: 125,184,122; }
+.card-lichen  { --ac: var(--lichen); --ac-dim: var(--lichen-dim); --ac-border: var(--lichen-border); --ac-rgb: 200,181,96;  }
+.card-spore   { --ac: var(--spore);  --ac-dim: var(--spore-dim);  --ac-border: var(--spore-border);  --ac-rgb: 176,122,184; }
+.card-rust    { --ac: var(--rust);   --ac-dim: var(--rust-dim);   --ac-border: var(--rust-border);   --ac-rgb: 194,112,80;  }
+.card-sky     { --ac: var(--sky);    --ac-dim: var(--sky-dim);    --ac-border: var(--sky-border);    --ac-rgb: 122,174,200; }
+
+.activity-card-header {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 20px 22px; border-bottom: 1px solid var(--border);
+  border-left: 3px solid var(--ac);
+}
+.activity-card-icon { font-size: 1.6rem; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+.activity-card-meta { display: flex; flex-direction: column; gap: 4px; }
+.activity-card-name {
+  font-family: 'Fraunces', serif; font-size: 1.05rem; font-weight: 600; color: var(--text);
+}
+.activity-card-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 2px 9px; border-radius: 20px;
+  background: var(--ac-dim); color: var(--ac); border: 1px solid var(--ac-border);
+  width: fit-content;
+}
+.activity-card-tagline {
+  font-size: 0.8rem; color: var(--text-dim); font-style: italic; line-height: 1.5; margin-top: 2px;
+}
+
+.activity-card-body {
+  padding: 20px 22px; display: flex; flex-direction: column; gap: 18px;
+}
+.card-section-label {
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.09em;
+  text-transform: uppercase; color: var(--text-faint); margin-bottom: 7px;
+}
+.card-section-text { font-size: 0.84rem; color: var(--text-dim); line-height: 1.7; }
+.card-divider { border: none; border-top: 1px solid var(--border); }
+
+.card-steps { display: flex; flex-direction: column; gap: 10px; }
+.card-step { display: flex; align-items: flex-start; gap: 11px; }
+.card-step-num {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem; font-weight: 700;
+  background: rgba(var(--ac-rgb), 0.15); color: var(--ac);
+  border: 1px solid rgba(var(--ac-rgb), 0.3); margin-top: 1px;
+}
+.card-step-text { font-size: 0.83rem; color: var(--text-dim); line-height: 1.6; }
+.card-step-text strong { color: var(--text); font-weight: 600; }
+
+.card-tips { display: flex; flex-direction: column; gap: 9px; }
+.card-tip { display: flex; align-items: flex-start; gap: 9px; }
+.card-tip-icon { font-size: 0.75rem; color: var(--ac); flex-shrink: 0; margin-top: 3px; }
+.card-tip-text { font-size: 0.81rem; color: var(--text-dim); line-height: 1.6; }
+.card-tip-text strong { color: var(--text); font-weight: 600; }
+
+/* ── GENERAL TIPS ── */
+.general-tips {
+  background: var(--loam); border: 1px solid var(--border-hi);
+  border-radius: var(--r); padding: 26px 30px; margin-bottom: 56px;
+}
+.general-tips-title {
+  font-family: 'Fraunces', serif; font-size: 1.05rem; font-weight: 600;
+  color: var(--text); margin-bottom: 16px;
+}
+.tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.gtip { display: flex; align-items: flex-start; gap: 10px; }
+.gtip-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+.gtip-text { font-size: 0.83rem; color: var(--text-dim); line-height: 1.6; }
+.gtip-text strong { color: var(--text); }
+
+/* ── BOTTOM CTA ── */
+.bottom-cta {
+  text-align: center; padding: 40px 24px;
+  background: var(--loam); border: 1px solid var(--border);
+  border-radius: var(--r);
+}
+.bottom-cta-title {
+  font-family: 'Fraunces', serif; font-size: 1.15rem; font-weight: 600;
+  color: var(--text); margin-bottom: 10px;
+}
+.bottom-cta-sub { font-size: 0.84rem; color: var(--text-dim); margin-bottom: 22px; line-height: 1.65; }
+.bottom-cta-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 26px; border-radius: 8px;
+  background: var(--moss-dim); border: 1px solid var(--moss-border);
+  color: var(--moss); font-weight: 700; font-size: 0.9rem;
+  text-decoration: none; transition: all var(--transition);
+}
+.bottom-cta-btn:hover { background: rgba(125,184,122,0.22); border-color: rgba(125,184,122,0.5); }
+
+/* ── CORMIER CALLOUT ── */
+.cormier-callout {
+  background: linear-gradient(135deg, rgba(125,184,122,0.06), rgba(200,181,96,0.05));
+  border: 1px solid var(--border-hi); border-left: 3px solid var(--lichen);
+  border-radius: var(--r); padding: 20px 24px; margin-bottom: 20px;
+}
+.cormier-callout-label {
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--lichen); margin-bottom: 8px;
+}
+.cormier-callout-text { font-size: 0.83rem; color: var(--text-dim); line-height: 1.7; font-style: italic; }
+.cormier-callout-text strong { color: var(--text); font-style: normal; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .page-wrap { padding: 36px 18px 64px; }
+  .activity-card-header { flex-direction: column; gap: 10px; }
+  .quickstart { gap: 16px; }
+  .suite-nav-pill { padding: 3px 7px; font-size: 0.6rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar" role="banner">
+  <div class="topbar-brand">
+    <div class="brand-text">
+      <div class="brand-rhizo">Rhizo</div>
+      <div class="brand-sub">Learning in Abundance</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-badge">Guide</div>
+    <button class="btn-suite-theme" id="btn-suite-theme" aria-label="Toggle theme" title="Toggle theme">☀</button>
+  </div>
+</header>
+
+<!-- SUITE NAV -->
+<nav class="suite-nav" aria-label="Open Margins suite">
+  <a href="../index.html" class="suite-nav-home">← Open Margins</a>
+  <div class="suite-nav-tools">
+    <a href="../companion/companion.html" class="suite-nav-pill pill-companion">✦ Companion</a>
+    <a href="../tru-oer-activity-builder.html" class="suite-nav-pill pill-builder">⬡ Activity Builder</a>
+    <a href="../nova/nova.html" class="suite-nav-pill pill-nova">✺ Nova</a>
+    <span class="suite-nav-pill pill-rhizo pill-active" aria-current="page">∿ Rhizo</span>
+    <a href="../sylva/sylva.html" class="suite-nav-pill pill-sylva">⟡ Sylva</a>
+  </div>
+</nav>
+
+<!-- PAGE -->
+<main class="page-wrap">
+
+  <!-- HERO -->
+  <div class="guide-hero">
+    <div class="guide-hero-eyebrow">∿ Rhizo · Activity Guide</div>
+    <h1 class="guide-hero-title">Learning to live<br>with <span>uncertainty</span></h1>
+    <p class="guide-hero-sub">Rhizo isn't a quiz tool or a summariser. It's an invitation to do what Dave Cormier calls learning in abundance — entering texts from unexpected angles, surfacing what they hide, and building your own positioned knowledge rather than just receiving someone else's.</p>
+    <blockquote class="guide-hero-cormier" id="cormier-quote"></blockquote>
+    <p style="font-size:0.65rem;color:var(--text-faint);letter-spacing:0.05em;text-align:left;padding-left:21px;margin-top:-8px;max-width:520px;margin-left:auto;margin-right:auto">— Dave Cormier, <em>Learning in a Time of Abundance</em> (2024)</p>
+    <a href="rhizo.html" class="guide-hero-cta">← Back to Rhizo</a>
+  </div>
+
+  <!-- PHILOSOPHY BAND -->
+  <div class="philosophy-band">
+    <div class="philosophy-band-title">The ideas behind Rhizo</div>
+    <div class="philosophy-grid">
+      <div class="philosophy-item">
+        <div class="philosophy-item-label">The community is the curriculum</div>
+        <div class="philosophy-item-text">What you learn depends on who you learn with. Rhizo treats your experience, your community's knowledge, and your own positioning as curriculum — not just the text.</div>
+      </div>
+      <div class="philosophy-item">
+        <div class="philosophy-item-label">Finished products hide the mess</div>
+        <div class="philosophy-item-text">Textbooks are finished products. Before the internet, uncertainty was hidden. Rhizo's activities pull back the curtain on what was edited out.</div>
+      </div>
+      <div class="philosophy-item">
+        <div class="philosophy-item-label">No single entry point</div>
+        <div class="philosophy-item-text">A rhizome has no beginning and no centre — you can enter from anywhere. The door you choose to enter through reveals as much as what's behind it.</div>
+      </div>
+      <div class="philosophy-item">
+        <div class="philosophy-item-label">Deal with uncertainty, don't solve it</div>
+        <div class="philosophy-item-text">Cormier argues that the goal isn't to resolve uncertainty — it's to learn to navigate it well. Some questions don't have right answers; they have better and worse responses.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK START -->
+  <div class="quickstart">
+    <div class="quickstart-title">Getting started</div>
+    <div class="qs-step">
+      <div class="qs-num">1</div>
+      <div class="qs-title">Load a text</div>
+      <div class="qs-body">Select a TRU Open Press book and chapter, paste your own text, or load a web page. The richer the text, the richer the activity.</div>
+    </div>
+    <div class="qs-step">
+      <div class="qs-num">2</div>
+      <div class="qs-title">Set a focus (optional)</div>
+      <div class="qs-body">Add a specific question or angle in the objective field if you want the activity to zero in on something particular.</div>
+    </div>
+    <div class="qs-step">
+      <div class="qs-num">3</div>
+      <div class="qs-title">Pick an activity</div>
+      <div class="qs-body">Choose the activity that matches your mood or your learning goal — or pick the one that makes you most uncomfortable.</div>
+    </div>
+    <div class="qs-step">
+      <div class="qs-num">4</div>
+      <div class="qs-title">Write — don't just read</div>
+      <div class="qs-body">Every activity has response boxes. The learning happens in the writing, not the generating. Request feedback to go deeper, then save your session.</div>
+    </div>
+  </div>
+
+  <!-- ACTIVITIES -->
+  <div class="section-heading">The eight activities</div>
+  <p class="section-sub">Each activity enters the same text through a different epistemological door. They're not steps in a sequence — use the one that fits where you are.</p>
+
+  <div class="activity-grid">
+
+    <!-- 1: WEED THE GARDEN -->
+    <article class="activity-card card-moss" aria-labelledby="card-garden">
+      <div class="activity-card-header">
+        <div class="activity-card-icon">🌿</div>
+        <div class="activity-card-meta">
+          <div class="activity-card-name" id="card-garden">Weed the Garden</div>
+          <div class="activity-card-tag">what's missing · critical</div>
+          <div class="activity-card-tagline">"What the text couldn't, wouldn't, or didn't say."</div>
+        </div>
+      </div>
+      <div class="activity-card-body">
+        <div>
+          <div class="card-section-label">What it does</div>
+          <div class="card-section-text">Generates an official-sounding summary of the text — then immediately undercuts it by surfacing four kinds of hidden content: what got silenced, what's actively contested, what the text assumes you already believe, and what practitioners know that no textbook can capture. Each "weed" comes with a student prompt and a space for your response.</div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">How to engage</div>
+          <div class="card-steps">
+            <div class="card-step">
+              <div class="card-step-num">1</div>
+              <div class="card-step-text"><strong>Read the official summary critically.</strong> Notice how confident it sounds. Then ask yourself: does it match your experience of reading the text?</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">2</div>
+              <div class="card-step-text"><strong>Choose the weed that surprises you most</strong> — or the one you instinctively want to defend the text against. That's your richest entry point.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">3</div>
+              <div class="card-step-text"><strong>Write from your own community's knowledge.</strong> The "community" weed in particular is asking for what you know that the text doesn't — don't defer back to the text.</div>
+            </div>
+          </div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">Tips for better results</div>
+          <div class="card-tips">
+            <div class="card-tip">
+              <div class="card-tip-icon">∿</div>
+              <div class="card-tip-text"><strong>Disagree with a weed.</strong> If a weed feels wrong or overstated, say so in your response — that disagreement is itself a form of critical engagement.</div>
+            </div>
+            <div class="card-tip">
+              <div class="card-tip-icon">∿</div>
+              <div class="card-tip-text"><strong>Use the feedback button sparingly.</strong> Write your full response first; the AI feedback is most useful when it has something real to push back against.</div>
+            </div>
+            <div class="card-tip">
+              <div class="card-tip-icon">∿</div>
+              <div class="card-tip-text"><strong>A richer text gets richer weeds.</strong> Short excerpts produce more generic results — load a full chapter if you can.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 2: UNCERTAINTY MAP -->
+    <article class="activity-card card-lichen" aria-labelledby="card-uncertainty">
+      <div class="activity-card-header">
+        <div class="activity-card-icon">🌫</div>
+        <div class="activity-card-meta">
+          <div class="activity-card-name" id="card-uncertainty">Uncertainty Map</div>
+          <div class="activity-card-tag">what we can't know · wicked problems</div>
+          <div class="activity-card-tagline">"Some questions don't have answers — only better responses."</div>
+        </div>
+      </div>
+      <div class="activity-card-body">
+        <div>
+          <div class="card-section-label">What it does</div>
+          <div class="card-section-text">Surfaces three kinds of deep uncertainty in the text: a Wicked Problem (no correct answer — only better or worse responses), Contested Evidence (reasonable people reading the same data differently), and a Values Conflict (where evidence can't adjudicate because the dispute is about what matters, not what's true). Each card presents two genuinely different positions and asks you to locate yourself.</div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">How to engage</div>
+          <div class="card-steps">
+            <div class="card-step">
+              <div class="card-step-num">1</div>
+              <div class="card-step-text"><strong>Resist the urge to find the right answer.</strong> Cormier's key insight: these questions are structurally unanswerable — the goal is to understand WHY, not to resolve them.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">2</div>
+              <div class="card-step-text"><strong>Write your position honestly,</strong> including the parts you're uncertain about. "I lean toward X, but I can't rule out Y because…" is more valuable than false certainty.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">3</div>
+              <div class="card-step-text"><strong>Notice which type of uncertainty is hardest for you.</strong> Some people find values conflicts easier than wicked problems; some find contested evidence most destabilising. That tells you something about how you know.</div>
+            </div>
+          </div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">Tips for better results</div>
+          <div class="card-tips">
+            <div class="card-tip">
+              <div class="card-tip-icon">∿</div>
+              <div class="card-tip-text"><strong>Watch out for Cormier's two failure modes:</strong> factionalization (picking a side and stopping thinking) and apathy (giving up because nothing is certain). Both are ways of escaping the productive discomfort.</div>
+            </div>
+            <div class="card-tip">
+              <div class="card-tip-icon">∿</div>
+              <div class="card-tip-text"><strong>Add a fourth uncertainty yourself.</strong> After working through the three generated questions, try naming one the activity missed that feels important to you.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 3: WICKED COUNCIL -->
+    <article class="activity-card card-spore" aria-labelledby="card-council">
+      <div class="activity-card-header">
+        <div class="activity-card-icon">🗣</div>
+        <div class="activity-card-meta">
+          <div class="activity-card-name" id="card-council">Wicked Council</div>
+          <div class="activity-card-tag">no consensus · navigation</div>
+          <div class="activity-card-tagline">"None of them is simply wrong. What do you do with that?"</div>
+        </div>
+      </div>
+      <div class="activity-card-body">
+        <div>
+          <div class="card-section-label">What it does</div>
+          <div class="card-section-text">Extracts a wicked problem from the text and gives it to five voices — a Practitioner, a Researcher, a Community Member, an Outsider, and a Newcomer. Each responds from their own context and stakes. None is the expert with the right answer. You're then invited to navigate — not to pick the winner, but to figure out how to act when everyone at the table has something real to say.</div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">How to engage</div>
+          <div class="card-steps">
+            <div class="card-step">
+              <div class="card-step-num">1</div>
+              <div class="card-step-text"><strong>Read all five voices before writing.</strong> It's tempting to respond after the first or second — resist. The Outsider's and Newcomer's views often reframe the whole problem.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">2</div>
+              <div class="card-step-text"><strong>Identify which voice you find most credible — and why.</strong> Then deliberately make the strongest possible case for the voice you're most inclined to dismiss.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">3</div>
+              <div class="card-step-text"><strong>Your navigation response is not a summary.</strong> It's your position — where you'd stand at this table, what you'd say, and what you'd need to know to act.</div>
+            </div>
+          </div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">Tips for better results</div>
+          <div class="card-tips">
+            <div class="card-tip">
+              <div class="card-tip-icon">∿</div>
+              <div class="card-tip-text"><strong>The Community is the Curriculum:</strong> bring your own community's experience to the council. Which voice speaks closest to what people you know would say? What would they add?</div>
+            </div>
+            <div class="card-tip">
+              <div class="card-tip-icon">∿</div>
+              <div class="card-tip-text"><strong>Use this in groups.</strong> Assign a voice to each participant and have them argue from it — then switch. The activity is designed for community dialogue, not just solo reflection.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 4: NOMAD'S ENTRY -->
+    <article class="activity-card card-rust" aria-labelledby="card-nomad">
+      <div class="activity-card-header">
+        <div class="activity-card-icon">🧭</div>
+        <div class="activity-card-meta">
+          <div class="activity-card-name" id="card-nomad">Nomad's Entry</div>
+          <div class="activity-card-tag">your way in · rhizomatic</div>
+          <div class="activity-card-tagline">"The door you choose tells you as much as what's behind it."</div>
+        </div>
+      </div>
+      <div class="activity-card-body">
+        <div>
+          <div class="card-section-label">What it does</div>
+          <div class="card-section-text">Creates five radically different entry points into the text — an Uncomfortable Question, an Unexpected Metaphor, a Failure Story, a Historical Rupture, and a Community Practice. Each is a different genre and mode of knowing. You choose one door, reflect on why you chose it, and explore what the other doors might have opened.</div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">How to engage</div>
+          <div class="card-steps">
+            <div class="card-step">
+              <div class="card-step-num">1</div>
+              <div class="card-step-text"><strong>Don't choose the door that feels safest.</strong> The doors you avoid reveal as much as the one you pick — and the activity's reflection question will ask you about that directly.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">2</div>
+              <div class="card-step-text"><strong>Sit with your chosen door before reflecting.</strong> Let it reframe the text for you. Then write about what you now see differently — not just about why you chose it.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">3</div>
+              <div class="card-step-text"><strong>Revisit a door you avoided.</strong> After working through your chosen entry, come back to the one that felt most alien. Sometimes the resistance is the learning.</div>
+            </div>
+          </div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">Tips for better results</div>
+          <div class="card-tips">
+            <div class="card-tip">
+              <div class="card-tip-icon">∿</div>
+              <div class="card-tip-text"><strong>Run it twice with different texts.</strong> The door you habitually choose across topics tells you something about your dominant mode of knowing.</div>
+            </div>
+            <div class="card-tip">
+              <div class="card-tip-icon">∿</div>
+              <div class="card-tip-text"><strong>In a classroom:</strong> have different students choose different doors and compare what they found. The divergence between entries is itself the lesson.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 5: COMMUNITY CONTRACT -->
+    <article class="activity-card card-sky" aria-labelledby="card-contract">
+      <div class="activity-card-header">
+        <div class="activity-card-icon">📜</div>
+        <div class="activity-card-meta">
+          <div class="activity-card-name" id="card-contract">Community Contract</div>
+          <div class="activity-card-tag">your commitment · community</div>
+          <div class="activity-card-tagline">"What you bring to a community of learners is as important as what the text contains."</div>
+        </div>
+      </div>
+      <div class="activity-card-body">
+        <div>
+          <div class="card-section-label">What it does</div>
+          <div class="card-section-text">Generates a four-part learning contract scaffold — what you bring, what you need, what you're willing to have challenged, and what you refuse to accept. After filling in each section, Rhizo writes your contract back to you in your own voice as a formal commitment you could actually share with a learning community.</div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">How to engage</div>
+          <div class="card-steps">
+            <div class="card-step">
+              <div class="card-step-num">1</div>
+              <div class="card-step-text"><strong>Be specific.</strong> "I bring experience in healthcare" is less useful than "I bring three years working in rural emergency medicine where these protocols don't apply."</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">2</div>
+              <div class="card-step-text"><strong>Take the "what I refuse to accept" section seriously.</strong> This is where your values-anchor lives. Cormier calls this the thing that makes community knowledge trustworthy — knowing where your line is.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">3</div>
+              <div class="card-step-text"><strong>Read the generated contract aloud.</strong> Does it sound like you? If it's softened your refusals or generalised your specifics, revise and regenerate.</div>
+            </div>
+          </div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">Tips for better results</div>
+          <div class="card-tips">
+            <div class="card-tip">
+              <div class="card-tip-icon">∿</div>
+              <div class="card-tip-text"><strong>Share it.</strong> The contract is designed to be shown to other learners. Comparing contracts before engaging a topic together can transform how a group learns.</div>
+            </div>
+            <div class="card-tip">
+              <div class="card-tip-icon">∿</div>
+              <div class="card-tip-text"><strong>Return to it after the learning.</strong> Did what you refused to accept hold up? Did what you thought you'd need turn out to be different?</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 6: TRUST AUDIT -->
+    <article class="activity-card card-moss" aria-labelledby="card-trust">
+      <div class="activity-card-header">
+        <div class="activity-card-icon">🔎</div>
+        <div class="activity-card-meta">
+          <div class="activity-card-name" id="card-trust">Trust Audit</div>
+          <div class="activity-card-tag">informed trust · epistemics</div>
+          <div class="activity-card-tagline">"Knowing HOW you trust is more important than deciding WHETHER to trust."</div>
+        </div>
+      </div>
+      <div class="activity-card-body">
+        <div class="cormier-callout">
+          <div class="cormier-callout-label">From Cormier's book</div>
+          <div class="cormier-callout-text">In <em>Learning in a Time of Abundance</em>, Cormier argues that the key 21st-century skill is not fact-checking — it's <strong>informed trust</strong>: knowing who you're trusting, on what basis, and whether that basis is sufficient for you given your own context and stakes.</div>
+        </div>
+        <div>
+          <div class="card-section-label">What it does</div>
+          <div class="card-section-text">Extracts 3–4 specific claims from the text and types each one: are you being asked to trust a source, a community, a process, or a person? For each, it maps the basis of that trust, poses three audit questions, and connects the claim to Cormier's informed trust framework. Ends with a synthesis prompt about your overall "trust posture" toward the text.</div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">How to engage</div>
+          <div class="card-steps">
+            <div class="card-step">
+              <div class="card-step-num">1</div>
+              <div class="card-step-text"><strong>Audit the basis, not just the claim.</strong> The question isn't "is this true?" but "what is the text relying on to make this credible — and is that reliable enough for me?"</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">2</div>
+              <div class="card-step-text"><strong>Practice Cormier's humility move:</strong> for each claim, ask honestly whether you have enough context to evaluate it — or whether the right response is "I don't know enough to have a strong opinion here."</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">3</div>
+              <div class="card-step-text"><strong>Write the synthesis response last.</strong> After auditing individual claims, the overall trust posture question — "not whether I trust this, but HOW" — becomes much more specific and honest.</div>
+            </div>
+          </div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">Tips for better results</div>
+          <div class="card-tips">
+            <div class="card-tip">
+              <div class="card-tip-icon">∿</div>
+              <div class="card-tip-text"><strong>Notice the trust type distribution.</strong> A text that asks you to trust processes (peer review, replication) is doing something different than one that asks you to trust sources (credentials, institutions) or persons (authors' track records).</div>
+            </div>
+            <div class="card-tip">
+              <div class="card-tip-icon">∿</div>
+              <div class="card-tip-text"><strong>Don't conflate scepticism with informed trust.</strong> The goal isn't to distrust the text — it's to understand the basis on which you're extending trust, so you can do so consciously rather than automatically.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 7: ABUNDANCE CHECK -->
+    <article class="activity-card card-lichen" aria-labelledby="card-abundance">
+      <div class="activity-card-header">
+        <div class="activity-card-icon">🌊</div>
+        <div class="activity-card-meta">
+          <div class="activity-card-name" id="card-abundance">Abundance Check</div>
+          <div class="activity-card-tag">hidden uncertainty · finished products</div>
+          <div class="activity-card-tagline">"The internet didn't create uncertainty — it revealed it."</div>
+        </div>
+      </div>
+      <div class="activity-card-body">
+        <div class="cormier-callout">
+          <div class="cormier-callout-label">From Cormier's book</div>
+          <div class="cormier-callout-text">Cormier argues that before the internet, <strong>uncertainty was hidden from us</strong>. We only encountered "finished products" — the food on the table, the polished textbook chapter — with all the mess edited out. This activity finds what the text is hiding.</div>
+        </div>
+        <div>
+          <div class="card-section-label">What it does</div>
+          <div class="card-section-text">Names the "finished product" confidence the text projects, then surfaces four hidden layers: what got cleaned up in the process of knowledge-making (hidden process), who has skin in the game (hidden stakes), what the field actually argues about (hidden dissent), and where this text's claims break down (hidden context-dependence). Ends with a "sit with it" prompt — not to resolve the tensions, but to hold them.</div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">How to engage</div>
+          <div class="card-steps">
+            <div class="card-step">
+              <div class="card-step-num">1</div>
+              <div class="card-step-text"><strong>Start with the hidden process layer.</strong> This is where your practitioner or community knowledge is most valuable — you likely know things about how this kind of knowledge gets made that the text won't tell you.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">2</div>
+              <div class="card-step-text"><strong>Take the "hidden stakes" layer seriously.</strong> This isn't about conspiracy — it's about the fact that all knowledge is made by positioned people with real interests. Naming this isn't cynicism; it's epistemological honesty.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">3</div>
+              <div class="card-step-text"><strong>Write the "sit with it" response as a practice.</strong> Cormier calls this learning to deal with uncertainty rather than solve it. The goal is not to conclude — it's to articulate what productive discomfort feels like.</div>
+            </div>
+          </div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">Tips for better results</div>
+          <div class="card-tips">
+            <div class="card-tip">
+              <div class="card-tip-icon">∿</div>
+              <div class="card-tip-text"><strong>Bring your community knowledge to the response boxes.</strong> What do practitioners in this area know about the "hidden process" that researchers who wrote the text might not? This is community as curriculum in action.</div>
+            </div>
+            <div class="card-tip">
+              <div class="card-tip-icon">∿</div>
+              <div class="card-tip-text"><strong>Avoid Cormier's two failure modes:</strong> don't slide into cynicism ("all texts are propaganda") or apathy ("nothing is reliable so why bother"). The goal is informed navigation, not nihilism.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 8: BREADCRUMB TRAIL -->
+    <article class="activity-card card-rust" aria-labelledby="card-breadcrumb">
+      <div class="activity-card-header">
+        <div class="activity-card-icon">🍞</div>
+        <div class="activity-card-meta">
+          <div class="activity-card-name" id="card-breadcrumb">Breadcrumb Trail</div>
+          <div class="activity-card-tag">trace the knowing · epistemic transparency</div>
+          <div class="activity-card-tagline">"Show where your claim comes from. Then check where theirs does."</div>
+        </div>
+      </div>
+      <div class="activity-card-body">
+        <div class="cormier-callout">
+          <div class="cormier-callout-label">From Cormier's book</div>
+          <div class="cormier-callout-text">Cormier's "Practice 2" in <em>Learning in a Time of Abundance</em>: <strong>leave breadcrumbs</strong>. Don't just say "I did my research." Show where the claim came from, what type of claim it is, and how far you are from the original source. This activity builds that practice.</div>
+        </div>
+        <div>
+          <div class="card-section-label">What it does</div>
+          <div class="card-section-text">Types 3–4 specific claims from the text as Fact Claims, Interpretation Claims, Value Claims, or Experience Claims — and asks you to trace each back to its epistemic roots. Then invites you to make your own claim about the topic, with your own breadcrumbs: stating the claim, its type, and where it comes from.</div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">How to engage</div>
+          <div class="card-steps">
+            <div class="card-step">
+              <div class="card-step-num">1</div>
+              <div class="card-step-text"><strong>Focus on claim type accuracy.</strong> The most common error is treating interpretation claims as fact claims. If the text says "research shows X," ask: what research, interpreted how, by whom?</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">2</div>
+              <div class="card-step-text"><strong>Trace as far back as you can</strong> — then name where the trail goes cold. That moment of "I can't verify further from here" is crucial epistemological self-knowledge.</div>
+            </div>
+            <div class="card-step">
+              <div class="card-step-num">3</div>
+              <div class="card-step-text"><strong>Build your own claim with real breadcrumbs.</strong> The hardest part: being precise about type and source. "I believe X (interpretation claim) based on three years of nursing practice (experience claim)" is far more honest than "I think X is true."</div>
+            </div>
+          </div>
+        </div>
+        <hr class="card-divider">
+        <div>
+          <div class="card-section-label">Tips for better results</div>
+          <div class="card-tips">
+            <div class="card-tip">
+              <div class="card-tip-icon">∿</div>
+              <div class="card-tip-text"><strong>Watch for value claims dressed as fact claims.</strong> This is the most common sleight of hand in texts — claims about what ought to be presented as claims about what is. The claim type categorisation is where the critical work lives.</div>
+            </div>
+            <div class="card-tip">
+              <div class="card-tip-icon">∿</div>
+              <div class="card-tip-text"><strong>Use this before writing.</strong> Running Breadcrumb Trail on a text you're about to cite helps you understand exactly what you're borrowing — and whether you're representing it accurately.</div>
+            </div>
+            <div class="card-tip">
+              <div class="card-tip-icon">∿</div>
+              <div class="card-tip-text"><strong>Pair with the Trust Audit.</strong> Trust Audit asks WHO you're trusting; Breadcrumb Trail asks WHAT TYPE of claim you're accepting. Together they build a complete epistemological picture of a text.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </div><!-- /activity-grid -->
+
+  <!-- GENERAL TIPS -->
+  <div class="general-tips">
+    <div class="general-tips-title">Getting the most out of Rhizo</div>
+    <div class="tips-grid">
+      <div class="gtip">
+        <div class="gtip-icon">🌿</div>
+        <div class="gtip-text"><strong>Write before generating.</strong> Read the text first and form your own impressions. Rhizo's outputs land differently when they have something to confirm, surprise, or contradict.</div>
+      </div>
+      <div class="gtip">
+        <div class="gtip-icon">🌱</div>
+        <div class="gtip-text"><strong>Use your community knowledge.</strong> Every activity has response boxes. The activities are designed to invite what practitioners and community members know that texts don't — don't leave that field empty.</div>
+      </div>
+      <div class="gtip">
+        <div class="gtip-icon">🌫</div>
+        <div class="gtip-text"><strong>Discomfort is the signal.</strong> If an activity output makes you want to argue with it, that's not a failure — that's the learning starting. Write the argument.</div>
+      </div>
+      <div class="gtip">
+        <div class="gtip-icon">🧭</div>
+        <div class="gtip-text"><strong>Try the same text with two different activities.</strong> Each activity reveals a different facet of the same content. The Uncertainty Map and the Trust Audit of the same chapter will take you to very different places.</div>
+      </div>
+      <div class="gtip">
+        <div class="gtip-icon">📜</div>
+        <div class="gtip-text"><strong>Save your session.</strong> The download button captures everything — prompts, your responses, and AI feedback — as a Markdown file you can save, share, or submit.</div>
+      </div>
+      <div class="gtip">
+        <div class="gtip-icon">🍞</div>
+        <div class="gtip-text"><strong>Longer texts, richer activities.</strong> The activities are calibrated for substantive content — a full chapter rather than a paragraph. If outputs feel generic, the source text may be too short.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM CTA -->
+  <div class="bottom-cta">
+    <div class="bottom-cta-title">Ready to enter the rhizome?</div>
+    <div class="bottom-cta-sub">Load a chapter, pick the activity that unsettles you most, and see what the text was hiding.</div>
+    <a href="rhizo.html" class="bottom-cta-btn">∿ Open Rhizo</a>
+  </div>
+
+</main>
+
+<script>
+(function() {
+  var btn = document.getElementById('btn-suite-theme');
+  if (!btn) return;
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    btn.textContent = theme === 'dark' ? '☀' : '🌙';
+    btn.title = theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+    btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+    try { localStorage.setItem('om-theme', theme); } catch(e) {}
+  }
+  btn.addEventListener('click', function() {
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    applyTheme(cur === 'dark' ? 'light' : 'dark');
+  });
+  var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+  btn.textContent = cur === 'dark' ? '☀' : '🌙';
+  btn.title = cur === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+  btn.setAttribute('aria-label', cur === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+})();
+</script>
+<script>
+/* ── ROTATING CORMIER QUOTES ── */
+(function() {
+  var QUOTES = [
+    "The internet didn't create uncertainty — it revealed it.",
+    "Before the internet, we mostly encountered finished products with all the uncertainty handled by someone else.",
+    "Information abundance means we are drowning in things that look like knowledge but require much more work to evaluate.",
+    "We have built a world that prioritizes certainty, and now we live in one that can't provide it.",
+    "The community is the curriculum. The people around you know things. They bring experiences and perspectives that no textbook contains.",
+    "Rhizomatic learning doesn't start with a map. It starts with where you are.",
+    "Humility isn't about being uncertain about everything. It's about being honest about what you don't know.",
+    "The goal isn't to find the right answer. It's to get better at knowing when you've found it.",
+    "Informed trust is not blind trust. It asks: who is this person? what community backs them? what process produced this?",
+    "In a world of abundance, knowing how to evaluate a source matters more than knowing any particular fact.",
+    "Curriculum, in the traditional sense, is a promise that the right knowledge exists and can be delivered. The internet broke that promise.",
+    "We are not failing because we lack information. We are failing because we haven't learned to live with uncertainty.",
+    "The problem isn't fake news. The problem is that real news is also complicated.",
+    "When we encounter a claim, the first question isn't 'is this true?' — it's 'what kind of claim is this?'",
+    "Facts, interpretations, and values travel together on the internet. Learning to sort them out is a survival skill.",
+    "The certainty-seeking instinct isn't stupid — it used to be adaptive. The world changed faster than our instincts.",
+    "We built institutions of knowledge for a world of scarcity. We need new ones for a world of abundance.",
+    "A community of practice is not just a support group. It is an epistemic community — it builds knowledge together.",
+    "The expert who says 'I'm not sure' is often more trustworthy than the one who claims certainty.",
+    "Engagement is the curriculum. What you do together is what you learn.",
+    "We can't go back to a world where someone else handled all the uncertainty. We have to learn to handle it ourselves.",
+    "Leaving breadcrumbs means showing your work — not just what you concluded, but how you got there.",
+    "If you can't trace a claim back to its source, you are trusting the container, not the content.",
+    "Process trust is different from source trust. Sometimes the process is more reliable than the person.",
+    "The hardest thing about abundance isn't finding information. It's sitting with the discomfort of not knowing.",
+    "Rhizomes don't have a centre. Neither does knowledge, in the end.",
+    "We need to stop teaching people what to think and start teaching them how to navigate uncertainty.",
+    "A good question in a time of abundance isn't 'what's the answer?' — it's 'who benefits from me believing this?'",
+    "The things we are most certain about are often the things we've thought about least.",
+    "Community doesn't just support learning. Community is learning — the living, breathing, arguing kind.",
+    "Abundance is not the problem. Our response to abundance is the problem.",
+    "Every time we pretend certainty we don't have, we make someone else feel stupid for their doubt.",
+    "The map is not the territory, and the curriculum is not the knowledge.",
+    "When knowledge is scarce, experts make sense. When knowledge is abundant, navigation matters more than expertise.",
+    "Learning in abundance means choosing your uncertainty wisely — not eliminating it.",
+    "We used to fear not having enough information. Now we need to learn to fear being overwhelmed by it.",
+    "What makes a community trustworthy isn't that everyone agrees. It's that disagreement is honest.",
+    "The student who says 'I don't know but here's how I'd find out' has mastered something essential.",
+    "Scarcity curriculum was built to transmit. Abundance curriculum must be built to navigate.",
+    "Knowing who to trust — and why — is the foundational literacy of the twenty-first century.",
+    "We are all navigating. The question is whether we're doing it consciously.",
+    "In a time of abundance, uncertainty isn't weakness. It's accuracy.",
+    "The rhizome has no beginning and no end. It is always in the middle, always becoming.",
+    "What you know is inseparable from who you know it with.",
+    "Finished products hide the uncertainty that went into making them. That hiding has a cost.",
+    "We used to be able to trust the container — the newspaper, the textbook, the encyclopedia. That era is over.",
+    "The most dangerous knowledge is the knowledge we're most sure about.",
+    "Good judgment in uncertainty isn't a gift. It's a practice.",
+    "If we changed how we look at uncertainty, we have a fighting chance to be both reasonable and hopeful.",
+    "Learning communities are not just nice to have. In a time of abundance, they are how we survive epistemically."
+  ];
+  var el = document.getElementById('cormier-quote');
+  if (!el) return;
+  var q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+  el.textContent = '\u201c' + q + '\u201d';
+})();
+</script>
+</body>
+</html>

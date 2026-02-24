@@ -1,0 +1,2332 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sylva — Lesson Planner · TRU Open Press</title>
+<script>(function(){var t=localStorage.getItem('sylva-theme')||localStorage.getItem('om-theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400;1,9..144,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- PDF text extraction -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
+<script type="module">
+  import * as pdfjs from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs';
+  pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+  window.pdfjsLib = pdfjs;
+</script>
+<!-- Word (.docx) text extraction -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js"></script>
+<style>
+/* ══════════════════════════════════════════════════════════
+   SYLVA — Lesson Planner · Open Margins Suite
+   TRU Open Press
+   Default: Light mode. Toggle to Dark available.
+   ══════════════════════════════════════════════════════════ */
+
+/* ── LIGHT THEME (default) ── */
+:root,
+[data-theme="light"] {
+  --bg:         #f4f8f5;
+  --panel:      #ffffff;
+  --panel-alt:  #f0f5f2;
+  --surface:    #eaf2ed;
+  --surface-hi: #ddeee5;
+  --raised:     #d0e6d8;
+
+  --fern:       #2d6b4e;        /* primary action — WCAG AA on white */
+  --fern-mid:   #3d7a5e;
+  --fern-dim:   rgba(45,107,78,0.10);
+  --fern-glow:  rgba(45,107,78,0.22);
+  --fern-soft:  rgba(45,107,78,0.05);
+
+  --sage:       #4a9070;        /* secondary — readable on light */
+  --sage-dim:   rgba(74,144,112,0.10);
+  --sage-glow:  rgba(74,144,112,0.22);
+
+  --dew:        #1a5c3e;        /* headings, brand */
+  --bark:       #8a5a2a;        /* warm accent */
+  --bark-dim:   rgba(138,90,42,0.10);
+
+  --text:       #1a2e22;
+  --text-mid:   #3a5244;
+  --text-dim:   #5a7868;
+  --text-faint: #8aaa96;
+
+  --border:     rgba(45,107,78,0.10);
+  --border-hi:  rgba(45,107,78,0.18);
+  --border-fern: rgba(45,107,78,0.25);
+
+  --topbar-bg:  rgba(255,255,255,0.96);
+  --shadow-sm:  0 1px 3px rgba(30,80,55,0.08), 0 1px 2px rgba(30,80,55,0.04);
+  --shadow-md:  0 4px 12px rgba(30,80,55,0.10), 0 2px 6px rgba(30,80,55,0.06);
+
+  /* Bloom taxonomy — legible on light */
+  --bloom-1-bg: rgba(100,116,120,0.12); --bloom-1-c: #3a5458;
+  --bloom-2-bg: rgba(50,110,180,0.12);  --bloom-2-c: #1a4a8a;
+  --bloom-3-bg: rgba(180,120,20,0.12);  --bloom-3-c: #7a5010;
+  --bloom-4-bg: rgba(120,80,180,0.12);  --bloom-4-c: #5a3090;
+  --bloom-5-bg: rgba(180,60,60,0.12);   --bloom-5-c: #8a2020;
+  --bloom-6-bg: rgba(40,120,70,0.14);   --bloom-6-c: #1a5a32;
+
+  /* Segment types */
+  --type-hook-bg:      rgba(180,120,20,0.10);  --type-hook-c:      #7a4a00;
+  --type-direct-bg:    rgba(50,100,180,0.10);  --type-direct-c:    #1a3a80;
+  --type-active-bg:    rgba(40,110,70,0.12);   --type-active-c:    #1a5a30;
+  --type-synth-bg:     rgba(120,60,180,0.10);  --type-synth-c:     #5a2090;
+  --type-community-bg: rgba(45,107,78,0.12);   --type-community-c: #1a5a30;
+
+  --scrollbar-thumb: rgba(45,107,78,0.15);
+}
+
+/* ── DARK THEME ── */
+[data-theme="dark"] {
+  --bg:         #0a110e;
+  --panel:      #111a15;
+  --panel-alt:  #0d1610;
+  --surface:    #182418;
+  --surface-hi: #1e2e21;
+  --raised:     #253328;
+
+  --fern:       #5aad82;
+  --fern-mid:   #3d7a5e;
+  --fern-dim:   rgba(90,173,130,0.14);
+  --fern-glow:  rgba(90,173,130,0.28);
+  --fern-soft:  rgba(90,173,130,0.07);
+
+  --sage:       #7ab89e;
+  --sage-dim:   rgba(122,184,158,0.12);
+  --sage-glow:  rgba(122,184,158,0.28);
+
+  --dew:        #a8e6c8;
+  --bark:       #c8a87a;
+  --bark-dim:   rgba(200,168,122,0.12);
+
+  --text:       #d0e8dc;
+  --text-mid:   #a8c8b4;
+  --text-dim:   #7a9882;
+  --text-faint: #5e8270;
+
+  --border:     rgba(255,255,255,0.06);
+  --border-hi:  rgba(255,255,255,0.11);
+  --border-fern: rgba(90,173,130,0.25);
+
+  --topbar-bg:  rgba(10,17,14,0.97);
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md:  0 4px 12px rgba(0,0,0,0.35);
+
+  --bloom-1-bg: rgba(107,122,128,0.2); --bloom-1-c: #9aaab0;
+  --bloom-2-bg: rgba(74,138,184,0.2);  --bloom-2-c: #7ab4d8;
+  --bloom-3-bg: rgba(200,146,42,0.2);  --bloom-3-c: #d4a84e;
+  --bloom-4-bg: rgba(138,106,184,0.2); --bloom-4-c: #b09ad8;
+  --bloom-5-bg: rgba(184,90,90,0.2);   --bloom-5-c: #d87a7a;
+  --bloom-6-bg: rgba(61,138,94,0.2);   --bloom-6-c: #6abf8a;
+
+  --type-hook-bg:      rgba(200,146,42,0.18);  --type-hook-c:      #d4a84e;
+  --type-direct-bg:    rgba(74,138,184,0.18);  --type-direct-c:    #7ab4d8;
+  --type-active-bg:    rgba(61,122,94,0.20);   --type-active-c:    #7ab89e;
+  --type-synth-bg:     rgba(138,106,184,0.18); --type-synth-c:     #b09ad8;
+  --type-community-bg: rgba(90,173,130,0.20);  --type-community-c: #5aad82;
+
+  --scrollbar-thumb: rgba(255,255,255,0.10);
+}
+
+/* ── RESET & BASE ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; scroll-behavior: smooth; }
+:focus-visible { outline: 2px solid var(--fern); outline-offset: 2px; border-radius: 3px; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: background 0.25s, color 0.25s;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  height: 58px;
+  background: var(--topbar-bg);
+  border-bottom: 1px solid var(--border-fern);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  flex-shrink: 0;
+  position: sticky; top: 0; z-index: 200;
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-sm);
+}
+.topbar-brand { display: flex; align-items: center; gap: 12px; }
+.topbar-logo { height: 32px; width: auto; opacity: 0.9; flex-shrink: 0; }
+.topbar-logo-fallback {
+  width: 32px; height: 32px;
+  background: var(--fern); border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700; color: #fff;
+}
+.brand-text { display: flex; flex-direction: column; gap: 1px; }
+.brand-sylva {
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem; font-weight: 600;
+  color: var(--dew);
+  line-height: 1; letter-spacing: -0.01em;
+}
+[data-theme="light"] .brand-sylva { color: var(--fern); }
+.brand-sub { font-size: 0.62rem; color: var(--text-dim); letter-spacing: 0.04em; }
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+
+/* Status pill */
+.status-pill {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border-hi);
+  border-radius: 20px;
+  font-size: 0.65rem; font-weight: 600;
+  color: var(--text-dim); letter-spacing: 0.03em;
+  transition: all 0.2s;
+}
+.status-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--text-faint);
+  transition: background 0.2s; flex-shrink: 0;
+}
+.status-pill.connected { border-color: var(--border-fern); color: var(--sage); }
+.status-pill.connected .status-dot { background: var(--fern); box-shadow: 0 0 6px var(--fern-glow); }
+
+/* Theme toggle */
+.btn-theme-toggle {
+  padding: 5px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border-hi);
+  border-radius: 20px;
+  font-size: 0.65rem; font-weight: 600;
+  color: var(--text-dim); cursor: pointer;
+  transition: all 0.2s; white-space: nowrap;
+}
+.btn-theme-toggle:hover { border-color: var(--border-fern); color: var(--fern); }
+
+.topbar-badge {
+  font-size: 0.6rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--fern);
+  background: var(--fern-dim);
+  border: 1px solid var(--border-fern);
+  border-radius: 4px; padding: 2px 7px;
+}
+
+/* ── SUITE NAV ── */
+.suite-nav {
+  background: var(--panel);
+  border-bottom: 1px solid var(--border-fern);
+  padding: 0 24px; height: 34px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  position: sticky; top: 58px; z-index: 99; flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+}
+.suite-nav-home {
+  font-size: 0.63rem; font-weight: 600;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--text-dim); text-decoration: none;
+  transition: color 0.18s; flex-shrink: 0;
+}
+.suite-nav-home:hover { color: var(--fern); }
+.suite-nav-tools { display: flex; align-items: center; gap: 4px; }
+.suite-nav-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 20px;
+  font-size: 0.63rem; font-weight: 600;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  text-decoration: none; border: 1px solid transparent;
+  transition: all 0.18s; white-space: nowrap;
+}
+/* Light theme pills — dark text on light background */
+[data-theme="light"] .suite-nav-pill.pill-companion { color: #6b4400; border-color: rgba(107,68,0,0.3); }
+[data-theme="light"] .suite-nav-pill.pill-companion:hover { background: rgba(107,68,0,0.07); }
+[data-theme="light"] .suite-nav-pill.pill-builder   { color: #003865; border-color: rgba(0,56,101,0.35); }
+[data-theme="light"] .suite-nav-pill.pill-builder:hover   { background: rgba(0,56,101,0.07); }
+[data-theme="light"] .suite-nav-pill.pill-nova      { color: #6b4400; border-color: rgba(107,68,0,0.3); }
+[data-theme="light"] .suite-nav-pill.pill-nova:hover      { background: rgba(107,68,0,0.07); }
+[data-theme="light"] .suite-nav-pill.pill-rhizo     { color: #1e5c1a; border-color: rgba(30,92,26,0.35); }
+[data-theme="light"] .suite-nav-pill.pill-rhizo:hover     { background: rgba(30,92,26,0.07); }
+[data-theme="light"] .suite-nav-pill.pill-sylva     { color: var(--fern); border-color: var(--border-fern); }
+[data-theme="light"] .suite-nav-pill.pill-sylva.pill-active { background: var(--fern-dim); font-weight: 700; }
+/* Dark theme pills — bright text on dark background */
+[data-theme="dark"] .suite-nav-pill.pill-companion { color: #f5c06a; border-color: rgba(245,192,106,0.35); }
+[data-theme="dark"] .suite-nav-pill.pill-companion:hover { background: rgba(245,192,106,0.1); }
+[data-theme="dark"] .suite-nav-pill.pill-builder   { color: #c8d8ec; border-color: rgba(200,216,236,0.3); }
+[data-theme="dark"] .suite-nav-pill.pill-builder:hover   { background: rgba(200,216,236,0.08); }
+[data-theme="dark"] .suite-nav-pill.pill-nova      { color: #f5c06a; border-color: rgba(245,192,106,0.35); }
+[data-theme="dark"] .suite-nav-pill.pill-nova:hover      { background: rgba(245,192,106,0.1); }
+[data-theme="dark"] .suite-nav-pill.pill-rhizo     { color: #8fd48c; border-color: rgba(143,212,140,0.35); }
+[data-theme="dark"] .suite-nav-pill.pill-rhizo:hover     { background: rgba(143,212,140,0.08); }
+[data-theme="dark"] .suite-nav-pill.pill-sylva     { color: #a8e6c8; border-color: rgba(168,230,200,0.35); }
+[data-theme="dark"] .suite-nav-pill.pill-sylva.pill-active { background: rgba(168,230,200,0.12); border-color: rgba(168,230,200,0.45); font-weight: 700; }
+.suite-nav-pill.pill-active { cursor: default; pointer-events: none; }
+
+/* ── APP SHELL ── */
+.app-shell {
+  display: flex;
+  height: calc(100vh - 58px - 34px);
+  overflow: hidden;
+}
+
+/* ── LEFT PANEL ── */
+.setup-panel {
+  width: 330px; flex-shrink: 0;
+  background: var(--panel);
+  border-right: 1px solid var(--border-fern);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.setup-panel-header {
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--panel);
+}
+.setup-panel-title {
+  font-family: 'Fraunces', serif;
+  font-size: 0.95rem; font-weight: 600;
+  color: var(--fern); margin-bottom: 1px;
+}
+.setup-panel-sub { font-size: 0.68rem; color: var(--text-dim); }
+
+.setup-scrollable {
+  flex: 1; overflow-y: auto;
+  padding: 14px 16px 24px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.setup-scrollable::-webkit-scrollbar { width: 4px; }
+.setup-scrollable::-webkit-scrollbar-track { background: transparent; }
+.setup-scrollable::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 2px; }
+
+/* ── FORM ELEMENTS ── */
+.form-section { display: flex; flex-direction: column; gap: 9px; }
+.form-section-label {
+  font-size: 0.6rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-faint);
+  display: flex; align-items: center; gap: 6px;
+}
+.form-section-label::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+.field-group { display: flex; flex-direction: column; gap: 4px; }
+.field-label { font-size: 0.68rem; font-weight: 600; color: var(--text-dim); }
+.field-input, .field-select, .field-textarea {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border-hi);
+  border-radius: 7px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  transition: border-color 0.18s, box-shadow 0.18s;
+  appearance: none;
+}
+.field-input, .field-select { padding: 7px 10px; }
+.field-textarea { padding: 9px 10px; resize: vertical; min-height: 90px; line-height: 1.55; }
+.field-input::placeholder, .field-textarea::placeholder { color: var(--text-faint); }
+.field-input:focus, .field-select:focus, .field-textarea:focus {
+  border-color: var(--fern); box-shadow: 0 0 0 3px var(--fern-dim); outline: none;
+}
+.field-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235a7868'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
+  padding-right: 28px; cursor: pointer;
+}
+[data-theme="dark"] .field-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237a9882'/%3E%3C/svg%3E");
+}
+.field-select option { background: var(--panel); color: var(--text); }
+
+/* ── BOOK PICKER ── */
+.book-picker {
+  display: flex; flex-direction: column; gap: 7px;
+}
+.book-search-row { display: flex; gap: 5px; }
+.book-search-input {
+  flex: 1; padding: 7px 10px;
+  background: var(--surface); border: 1px solid var(--border-hi);
+  border-radius: 7px; color: var(--text); font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem; transition: border-color 0.18s, box-shadow 0.18s;
+}
+.book-search-input::placeholder { color: var(--text-faint); }
+.book-search-input:focus { border-color: var(--fern); box-shadow: 0 0 0 3px var(--fern-dim); outline: none; }
+.book-count {
+  font-size: 0.62rem; color: var(--text-faint); font-weight: 600;
+  align-self: center; white-space: nowrap;
+}
+
+.book-list-wrap {
+  max-height: 200px; overflow-y: auto;
+  border: 1px solid var(--border-hi); border-radius: 7px;
+  background: var(--surface);
+}
+.book-list-wrap::-webkit-scrollbar { width: 4px; }
+.book-list-wrap::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 2px; }
+
+.book-item {
+  width: 100%; text-align: left; display: block;
+  padding: 7px 10px; background: transparent; border: none;
+  border-bottom: 1px solid var(--border);
+  color: var(--text); cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.14s;
+}
+.book-item:last-child { border-bottom: none; }
+.book-item:hover { background: var(--fern-dim); }
+.book-item.selected { background: var(--fern-dim); border-left: 3px solid var(--fern); }
+.book-item-title { font-size: 0.78rem; font-weight: 500; line-height: 1.3; color: var(--text); }
+.book-item-meta { display: flex; gap: 6px; align-items: center; margin-top: 2px; flex-wrap: wrap; }
+.book-subject-badge {
+  font-size: 0.58rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+  background: var(--fern-dim); color: var(--fern);
+  border-radius: 3px; padding: 1px 5px;
+}
+.book-item-author { font-size: 0.65rem; color: var(--text-faint); }
+
+.books-loading-msg, .books-error-msg {
+  font-size: 0.75rem; color: var(--text-dim);
+  padding: 12px 10px; text-align: center; font-style: italic;
+}
+.books-error-msg { color: #b85a5a; }
+.btn-retry-books {
+  font-size: 0.7rem; font-weight: 600; color: var(--fern);
+  background: transparent; border: none; cursor: pointer; text-decoration: underline;
+  margin-top: 4px; display: block; margin: 0 auto;
+}
+
+/* TOC selectors */
+.toc-selectors { display: flex; flex-direction: column; gap: 6px; }
+.chapter-notice {
+  font-size: 0.72rem; padding: 6px 9px; border-radius: 6px; line-height: 1.4;
+}
+.chapter-notice.success { background: var(--fern-dim); color: var(--fern); border: 1px solid var(--border-fern); }
+.chapter-notice.error   { background: rgba(184,90,90,0.1); color: #b85a5a; border: 1px solid rgba(184,90,90,0.25); }
+
+/* Paste toggle */
+.paste-toggle-btn {
+  font-size: 0.7rem; font-weight: 600; color: var(--text-dim);
+  background: transparent; border: 1px solid var(--border-hi);
+  border-radius: 6px; padding: 5px 10px; cursor: pointer;
+  transition: all 0.18s; width: 100%; text-align: left;
+}
+.paste-toggle-btn:hover { border-color: var(--border-fern); color: var(--fern); }
+.paste-toggle-btn.active { color: var(--fern); border-color: var(--border-fern); background: var(--fern-dim); }
+.paste-word-count {
+  font-size: 0.68rem; color: var(--text-faint); text-align: right;
+  margin-top: 4px; transition: color 0.18s;
+}
+.paste-word-count.warn { color: var(--amber); }
+.paste-word-count.ok   { color: var(--fern); }
+
+/* Delivery mode cards */
+.delivery-cards { display: flex; flex-direction: column; gap: 5px; }
+.delivery-card { position: relative; cursor: pointer; }
+.delivery-card input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+.delivery-card-inner {
+  display: flex; align-items: flex-start; gap: 9px;
+  padding: 9px 11px;
+  background: var(--surface); border: 1px solid var(--border-hi);
+  border-radius: 7px; transition: all 0.18s; cursor: pointer;
+}
+.delivery-card-inner:hover { border-color: var(--border-fern); background: var(--surface-hi); }
+.delivery-card input:checked + .delivery-card-inner {
+  background: var(--fern-dim); border-color: var(--fern);
+}
+.delivery-card-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+.delivery-card-title { font-size: 0.78rem; font-weight: 600; color: var(--text); margin-bottom: 1px; }
+.delivery-card-desc { font-size: 0.63rem; color: var(--text-dim); line-height: 1.4; }
+.delivery-card input:checked + .delivery-card-inner .delivery-card-title { color: var(--fern); }
+
+/* Companion seed banner */
+.companion-seed-banner {
+  display: flex; align-items: flex-start; gap: 9px;
+  padding: 9px 12px; background: var(--fern-dim);
+  border: 1px solid var(--border-fern); border-radius: 7px;
+  font-size: 0.72rem; color: var(--text-dim);
+}
+.companion-seed-icon { font-size: 1rem; flex-shrink: 0; }
+.companion-seed-body { flex: 1; min-width: 0; }
+.companion-seed-title { font-weight: 700; color: var(--fern); font-size: 0.75rem; margin-bottom: 1px; }
+.companion-seed-dismiss {
+  background: transparent; border: none; color: var(--text-faint);
+  font-size: 0.72rem; cursor: pointer; padding: 0 2px; flex-shrink: 0;
+  transition: color 0.18s;
+}
+.companion-seed-dismiss:hover { color: var(--text); }
+
+/* Proxy row */
+.proxy-row { display: flex; gap: 6px; }
+.proxy-row .field-input { flex: 1; font-size: 0.75rem; }
+.btn-test {
+  padding: 7px 11px;
+  background: var(--surface); border: 1px solid var(--border-hi);
+  border-radius: 7px; color: var(--text-dim);
+  font-size: 0.72rem; font-weight: 600; cursor: pointer;
+  transition: all 0.18s; white-space: nowrap; flex-shrink: 0;
+}
+.btn-test:hover { border-color: var(--border-fern); color: var(--fern); }
+.proxy-status { font-size: 0.65rem; color: var(--text-faint); min-height: 16px; }
+.proxy-status.ok  { color: var(--fern); }
+.proxy-status.err { color: #b85a5a; }
+
+/* Generate button */
+.btn-generate-objectives {
+  width: 100%; padding: 11px 16px;
+  background: var(--fern); border: none; border-radius: 7px;
+  color: #fff; font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem; font-weight: 600; cursor: pointer;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  box-shadow: var(--shadow-sm);
+}
+.btn-generate-objectives:hover:not(:disabled) {
+  background: var(--fern-mid); transform: translateY(-1px); box-shadow: var(--shadow-md);
+}
+.btn-generate-objectives:disabled { opacity: 0.38; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* ── SOURCE TRAY ── */
+.source-tray {
+  display: flex; flex-direction: column; gap: 5px;
+  margin-bottom: 8px;
+}
+.source-chip {
+  display: flex; align-items: flex-start; gap: 7px;
+  padding: 6px 9px;
+  background: var(--fern-dim); border: 1px solid var(--border-fern);
+  border-radius: 7px;
+}
+.source-chip-icon { font-size: 0.8rem; flex-shrink: 0; margin-top: 1px; }
+.source-chip-body { flex: 1; min-width: 0; }
+.source-chip-label {
+  font-size: 0.72rem; font-weight: 600; color: var(--fern);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.source-chip-meta { font-size: 0.62rem; color: var(--text-faint); }
+.source-chip-remove {
+  background: transparent; border: none; color: var(--text-faint);
+  font-size: 0.7rem; cursor: pointer; padding: 0 2px; flex-shrink: 0;
+  line-height: 1; transition: color 0.15s; margin-top: 1px;
+}
+.source-chip-remove:hover { color: #b85a5a; }
+
+/* Multi-chapter: "Add chapter" button */
+.btn-add-chapter {
+  width: 100%; padding: 7px 11px;
+  background: var(--fern-dim); border: 1px solid var(--border-fern);
+  border-radius: 7px; color: var(--fern);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem; font-weight: 600; cursor: pointer;
+  transition: all 0.18s; text-align: center; justify-content: center;
+  display: none; /* shown after book+part+chapter selected */
+}
+.btn-add-chapter:hover { background: var(--fern-mid); color: #fff; }
+
+/* URL fetch row */
+.url-fetch-row {
+  display: flex; gap: 6px; margin-top: 5px;
+}
+.url-fetch-row .field-input { flex: 1; font-size: 0.75rem; }
+.btn-fetch-url {
+  padding: 7px 11px;
+  background: var(--surface); border: 1px solid var(--border-hi);
+  border-radius: 7px; color: var(--text-dim);
+  font-size: 0.72rem; font-weight: 600; cursor: pointer;
+  transition: all 0.18s; white-space: nowrap; flex-shrink: 0;
+}
+.btn-fetch-url:hover { border-color: var(--border-fern); color: var(--fern); }
+.url-fetch-status {
+  font-size: 0.65rem; color: var(--text-faint); min-height: 14px;
+  margin-top: 2px;
+}
+.url-fetch-status.ok  { color: var(--fern); }
+.url-fetch-status.err { color: #b85a5a; }
+
+/* File upload */
+.file-upload-btn {
+  display: flex; align-items: center; gap: 7px;
+  width: 100%; padding: 7px 11px;
+  background: var(--surface); border: 1px solid var(--border-hi);
+  border-radius: 7px; color: var(--text-dim);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem; font-weight: 600; cursor: pointer;
+  transition: all 0.18s; text-align: left;
+}
+.file-upload-btn:hover { border-color: var(--border-fern); color: var(--fern); }
+.file-upload-status {
+  font-size: 0.65rem; color: var(--text-faint); min-height: 14px;
+  margin-top: 2px;
+}
+.file-upload-status.ok  { color: var(--fern); }
+.file-upload-status.err { color: #b85a5a; }
+#file-upload-input { display: none; }
+
+/* Section separator within OER Content */
+.oer-source-sep {
+  font-size: 0.6rem; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--text-faint);
+  margin: 10px 0 5px; border-top: 1px solid var(--border);
+  padding-top: 8px;
+}
+
+/* ── WORKSPACE ── */
+.workspace {
+  flex: 1; display: flex; flex-direction: column;
+  overflow: hidden; background: var(--bg);
+}
+
+/* Idle */
+.workspace-idle {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 14px; padding: 40px; text-align: center;
+}
+.idle-glyph {
+  font-size: 3.5rem; color: var(--fern);
+  opacity: 0.3; line-height: 1;
+  animation: idle-breathe 5s ease-in-out infinite;
+}
+@keyframes idle-breathe {
+  0%, 100% { opacity: 0.25; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(1.05); }
+}
+.idle-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem; font-weight: 500; color: var(--text-mid);
+  line-height: 1.35; max-width: 380px;
+}
+.idle-sub {
+  font-size: 0.82rem; color: var(--text-faint);
+  max-width: 340px; line-height: 1.65;
+}
+.idle-steps {
+  display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-top: 6px;
+}
+.idle-step {
+  padding: 4px 12px;
+  background: var(--panel); border: 1px solid var(--border-hi);
+  border-radius: 20px; font-size: 0.65rem; font-weight: 600;
+  color: var(--text-dim); letter-spacing: 0.03em;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Content */
+.workspace-content {
+  flex: 1; overflow-y: auto;
+  padding: 22px 26px; display: none;
+  flex-direction: column; gap: 22px;
+}
+.workspace-content.visible { display: flex; }
+.workspace-content::-webkit-scrollbar { width: 5px; }
+.workspace-content::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+
+/* Section headers */
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-bottom: 12px;
+}
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem; font-weight: 600; color: var(--fern);
+  display: flex; align-items: center; gap: 8px;
+}
+.section-badge {
+  font-size: 0.6rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--fern); background: var(--fern-dim);
+  border: 1px solid var(--border-fern);
+  border-radius: 4px; padding: 2px 6px;
+}
+
+/* ── OBJECTIVES ── */
+.objectives-list { display: flex; flex-direction: column; gap: 7px; margin-bottom: 11px; }
+.objective-card {
+  display: flex; align-items: flex-start; gap: 9px;
+  padding: 10px 13px;
+  background: var(--panel); border: 1px solid var(--border-hi);
+  border-radius: 9px; transition: all 0.18s;
+  box-shadow: var(--shadow-sm);
+}
+.objective-card:hover { border-color: var(--border-fern); }
+.bloom-badge {
+  padding: 2px 8px; border-radius: 4px;
+  font-size: 0.58rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  white-space: nowrap; flex-shrink: 0; margin-top: 2px;
+}
+.bloom-1 { background: var(--bloom-1-bg); color: var(--bloom-1-c); }
+.bloom-2 { background: var(--bloom-2-bg); color: var(--bloom-2-c); }
+.bloom-3 { background: var(--bloom-3-bg); color: var(--bloom-3-c); }
+.bloom-4 { background: var(--bloom-4-bg); color: var(--bloom-4-c); }
+.bloom-5 { background: var(--bloom-5-bg); color: var(--bloom-5-c); }
+.bloom-6 { background: var(--bloom-6-bg); color: var(--bloom-6-c); }
+
+.objective-text {
+  flex: 1; font-size: 0.82rem; line-height: 1.55; color: var(--text);
+}
+.objective-text[contenteditable="true"] {
+  outline: none; border-bottom: 1px dashed var(--border-fern);
+  min-height: 20px; cursor: text;
+}
+.objective-text[contenteditable="true"]:focus { border-color: var(--fern); }
+.btn-obj-del {
+  background: transparent; border: none;
+  color: var(--text-faint); font-size: 0.8rem;
+  cursor: pointer; padding: 2px 4px; flex-shrink: 0;
+  border-radius: 3px; transition: all 0.18s;
+}
+.btn-obj-del:hover { color: #b85a5a; background: rgba(184,90,90,0.1); }
+
+.objectives-actions { display: flex; gap: 7px; flex-wrap: wrap; }
+.btn-secondary {
+  padding: 7px 13px;
+  background: var(--panel); border: 1px solid var(--border-hi);
+  border-radius: 7px; color: var(--text-dim);
+  font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 600;
+  cursor: pointer; transition: all 0.18s;
+  display: flex; align-items: center; gap: 5px;
+  box-shadow: var(--shadow-sm);
+}
+.btn-secondary:hover { border-color: var(--border-fern); color: var(--fern); background: var(--fern-dim); }
+.btn-generate-arc {
+  padding: 8px 16px; margin-left: auto;
+  background: var(--fern); border: none;
+  border-radius: 7px; color: #fff;
+  font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; gap: 7px;
+  box-shadow: var(--shadow-sm);
+}
+.btn-generate-arc:hover:not(:disabled) {
+  background: var(--fern-mid); transform: translateY(-1px); box-shadow: var(--shadow-md);
+}
+.btn-generate-arc:disabled { opacity: 0.38; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* ── LESSON ARC TIMELINE ── */
+.arc-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.arc-meta-chip {
+  padding: 4px 10px; background: var(--panel);
+  border: 1px solid var(--border-hi); border-radius: 20px;
+  font-size: 0.65rem; color: var(--text-dim);
+  display: flex; align-items: center; gap: 5px;
+  box-shadow: var(--shadow-sm);
+}
+.arc-meta-chip strong { color: var(--fern); }
+
+.arc-timeline { display: flex; flex-direction: column; position: relative; }
+.arc-timeline::before {
+  content: ''; position: absolute;
+  left: 22px; top: 0; bottom: 0; width: 2px;
+  background: linear-gradient(to bottom, var(--fern) 0%, var(--border) 100%);
+}
+
+.segment-card { display: flex; position: relative; z-index: 1; }
+.segment-time-col {
+  width: 46px; flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center; padding-top: 13px;
+}
+.segment-dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  border: 2px solid var(--bg); background: var(--fern); flex-shrink: 0;
+  z-index: 1; transition: transform 0.18s; box-shadow: var(--shadow-sm);
+}
+.segment-card:hover .segment-dot { transform: scale(1.4); }
+.segment-duration {
+  font-size: 0.58rem; color: var(--text-faint);
+  font-family: 'DM Mono', monospace; margin-top: 4px; white-space: nowrap;
+}
+
+.segment-body {
+  flex: 1; padding: 10px 13px 14px; margin-left: 8px; margin-bottom: 8px;
+  background: var(--panel); border: 1px solid var(--border-hi);
+  border-radius: 9px; transition: all 0.18s; box-shadow: var(--shadow-sm);
+}
+.segment-card:hover .segment-body { border-color: var(--border-fern); box-shadow: var(--shadow-md); }
+
+.segment-top {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 8px; margin-bottom: 7px;
+}
+.segment-title {
+  font-family: 'Fraunces', serif; font-size: 0.9rem; font-weight: 600;
+  color: var(--text); line-height: 1.3;
+}
+.segment-type-badge {
+  padding: 2px 8px; border-radius: 4px;
+  font-size: 0.58rem; font-weight: 700;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  white-space: nowrap; flex-shrink: 0;
+}
+.type-hook      { background: var(--type-hook-bg);      color: var(--type-hook-c);      }
+.type-direct    { background: var(--type-direct-bg);    color: var(--type-direct-c);    }
+.type-active    { background: var(--type-active-bg);    color: var(--type-active-c);    }
+.type-synthesis { background: var(--type-synth-bg);     color: var(--type-synth-c);     }
+.type-community { background: var(--type-community-bg); color: var(--type-community-c); }
+.type-other     { background: var(--fern-dim);          color: var(--fern);             }
+
+/* ── ASSESSMENT SECTION ── */
+.assessment-wrap {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-hi);
+}
+.assessment-header {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+}
+.assessment-title {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.07em;
+  text-transform: uppercase; color: var(--fern);
+}
+.assessment-badge {
+  font-size: 0.58rem; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; padding: 2px 7px; border-radius: 4px;
+  background: var(--fern-dim); color: var(--fern); border: 1px solid var(--border-fern);
+}
+.btn-suggest-assessment {
+  margin-left: auto; padding: 5px 14px;
+  background: var(--fern-dim); color: var(--fern);
+  border: 1px solid var(--border-fern); border-radius: 6px;
+  font-size: 0.73rem; font-weight: 600; cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+}
+.btn-suggest-assessment:hover { background: var(--fern-glow); border-color: var(--fern); }
+.btn-suggest-assessment:disabled { opacity: 0.4; cursor: default; }
+.assessment-loading { font-size: 0.78rem; color: var(--text-dim); padding: 8px 0; }
+.assessment-cards { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+.assessment-card {
+  background: var(--surface); border: 1px solid var(--border-hi);
+  border-radius: 9px; padding: 13px 15px;
+}
+.assessment-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.assessment-card-type {
+  font-size: 0.58rem; font-weight: 700; letter-spacing: 0.07em;
+  text-transform: uppercase; padding: 2px 7px; border-radius: 4px;
+}
+.assessment-card-type.formative {
+  background: rgba(40,110,70,0.12); color: var(--type-active-c);
+}
+.assessment-card-type.summative {
+  background: rgba(120,60,180,0.10); color: var(--type-synth-c);
+}
+.assessment-card-title { font-size: 0.82rem; font-weight: 700; color: var(--text); }
+.assessment-card-desc { font-size: 0.78rem; color: var(--text-mid); line-height: 1.6; margin-bottom: 7px; }
+.assessment-card-meta { font-size: 0.72rem; color: var(--text-dim); line-height: 1.55; }
+.assessment-card-meta strong { color: var(--fern); }
+.assessment-tru-note {
+  margin-top: 7px; padding: 7px 10px;
+  background: var(--fern-soft); border-left: 2px solid var(--fern);
+  border-radius: 0 5px 5px 0; font-size: 0.72rem; color: var(--text-dim); line-height: 1.5;
+}
+
+/* Guide pill in suite nav */
+.suite-nav-guide {
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.05em;
+  color: var(--fern); text-decoration: none; padding: 3px 10px;
+  border-radius: 20px; border: 1px solid rgba(45,107,78,0.4);
+  background: rgba(45,107,78,0.08);
+  transition: background 0.18s, border-color 0.18s, color 0.18s; flex-shrink: 0;
+}
+[data-theme="dark"] .suite-nav-guide { border-color: rgba(90,173,130,0.35); background: rgba(90,173,130,0.07); }
+.suite-nav-guide:hover { background: rgba(45,107,78,0.18); border-color: rgba(45,107,78,0.65); }
+[data-theme="dark"] .suite-nav-guide:hover { background: rgba(90,173,130,0.18); border-color: rgba(90,173,130,0.6); }
+
+.segment-description { font-size: 0.8rem; color: var(--text-mid); line-height: 1.6; margin-bottom: 9px; }
+
+.segment-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.segment-detail {
+  padding: 7px 9px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 7px;
+}
+.segment-detail-label {
+  font-size: 0.58rem; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text-faint); margin-bottom: 3px;
+}
+.segment-detail-value { font-size: 0.75rem; color: var(--text-dim); line-height: 1.5; }
+.segment-detail.full-width { grid-column: 1 / -1; }
+.segment-activity-tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 2px 8px; background: var(--fern-dim);
+  border: 1px solid var(--border-fern); border-radius: 20px;
+  font-size: 0.65rem; font-weight: 600; color: var(--fern); margin-bottom: 2px;
+}
+
+/* Export bar */
+.export-bar {
+  padding: 12px 18px; border-top: 1px solid var(--border-fern);
+  background: var(--panel); flex-shrink: 0;
+  display: none; align-items: center; gap: 8px;
+  box-shadow: 0 -2px 8px rgba(30,80,55,0.06);
+}
+.export-bar.visible { display: flex; }
+.export-label { font-size: 0.7rem; font-weight: 600; color: var(--text-dim); flex-shrink: 0; }
+.btn-export {
+  padding: 8px 15px; border-radius: 7px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 600;
+  cursor: pointer; transition: all 0.18s;
+  display: flex; align-items: center; gap: 6px;
+  box-shadow: var(--shadow-sm);
+}
+.btn-export-md {
+  background: var(--fern); border: none; color: #fff;
+}
+.btn-export-md:hover { background: var(--fern-mid); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.btn-export-print {
+  background: var(--surface); border: 1px solid var(--border-hi); color: var(--text-dim);
+}
+.btn-export-print:hover { border-color: var(--border-fern); color: var(--fern); }
+.export-delivery-tag {
+  margin-left: auto; padding: 4px 10px;
+  background: var(--surface); border: 1px solid var(--border-hi);
+  border-radius: 20px; font-size: 0.63rem; font-weight: 600; color: var(--text-dim);
+}
+
+/* ── LOADING / ERROR ── */
+.skeleton-block { display: flex; flex-direction: column; gap: 9px; }
+.skeleton-item {
+  height: 58px;
+  background: linear-gradient(90deg, var(--surface) 0%, var(--surface-hi) 50%, var(--surface) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 9px; border: 1px solid var(--border);
+}
+.skeleton-item.tall { height: 110px; }
+.skeleton-item.short { height: 38px; }
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.loading-label { font-size: 0.72rem; color: var(--text-faint); text-align: center; margin-top: 6px; font-style: italic; }
+
+.error-banner {
+  padding: 11px 14px;
+  background: rgba(184,90,90,0.07); border: 1px solid rgba(184,90,90,0.22);
+  border-radius: 8px; font-size: 0.78rem; color: #b85a5a;
+  line-height: 1.5; display: flex; gap: 9px; align-items: flex-start;
+}
+.error-icon { flex-shrink: 0; }
+
+/* ── UTILITIES ── */
+.hidden { display: none !important; }
+.divider { height: 1px; background: var(--border); margin: 2px 0; }
+
+/* ── PRINT ── */
+@media print {
+  /* Kill every height/overflow constraint in the flex chain */
+  html, body {
+    height: auto !important; min-height: 0 !important;
+    overflow: visible !important;
+    background: white !important; color: #111 !important;
+  }
+  .topbar, .suite-nav, .setup-panel, .export-bar { display: none !important; }
+  .app-shell {
+    height: auto !important; min-height: 0 !important;
+    overflow: visible !important;
+    flex-direction: column !important;
+  }
+  .workspace {
+    height: auto !important; min-height: 0 !important;
+    overflow: visible !important; flex: none !important;
+    width: 100% !important;
+  }
+  .workspace-content {
+    height: auto !important; min-height: 0 !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    display: flex !important; flex-direction: column !important;
+    flex: none !important;
+  }
+  /* Sensible page-break behaviour */
+  .objectives-block, .arc-block { break-inside: avoid-page; }
+  .segment-card { break-inside: avoid; margin-bottom: 12px; }
+  .segment-body, .objective-card {
+    border-color: #ccc !important; background: #f9f9f9 !important;
+    break-inside: avoid; box-shadow: none !important;
+  }
+  .arc-timeline { break-before: avoid; }
+  .divider { display: none !important; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE — TABLET & MOBILE
+   ══════════════════════════════════════════════════════════ */
+
+@media (max-width: 1024px) {
+  .setup-panel { width: 270px; }
+  .suite-nav-pill { padding: 3px 8px; font-size: 0.65rem; }
+}
+
+@media (max-width: 768px) {
+  .suite-nav-tools { display: none; }
+
+  .app-shell {
+    flex-direction: column;
+    position: relative;
+  }
+
+  .setup-panel {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    width: 100% !important;
+    max-height: 75vh;
+    z-index: 200;
+    border-right: none;
+    border-top: 1px solid var(--border-fern);
+    border-radius: 16px 16px 0 0;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    overflow-y: auto;
+  }
+  .setup-panel.mobile-open { transform: translateY(0); }
+
+  .lesson-canvas { flex: 1; width: 100%; }
+  .lesson-output { padding: 16px; }
+
+  /* Export bar */
+  .export-bar { padding: 10px 12px; gap: 6px; flex-wrap: wrap; }
+  .btn-export { padding: 7px 12px; font-size: 0.75rem; }
+
+  /* Mobile open-panel FAB */
+  .btn-open-panel {
+    display: flex !important;
+    position: fixed;
+    bottom: 80px; left: 16px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--fern);
+    border: none;
+    color: #fff;
+    font-size: 1.2rem;
+    align-items: center; justify-content: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    z-index: 210;
+    cursor: pointer;
+  }
+
+  .mobile-backdrop {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 199;
+  }
+  .mobile-backdrop.visible { display: block; }
+
+  .topbar { padding: 0 12px; }
+
+  /* Lesson segments stack cleanly */
+  .segment { padding: 14px; }
+  .arc-timeline { gap: 6px; flex-wrap: wrap; }
+}
+
+/* ── Suite theme toggle button ── */
+.btn-suite-theme {
+  background: transparent;
+  border: 1px solid rgba(128,128,128,0.25);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.65;
+  transition: opacity 0.2s, background 0.2s;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.btn-suite-theme:hover { opacity: 1; background: rgba(128,128,128,0.12); }
+
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar" role="banner">
+  <div class="topbar-brand">
+    <img src="https://openpress.trubox.ca/wp-content/uploads/sites/2142/2023/10/cropped-openpress_logo_colour-1.png"
+         alt="TRU Open Press" class="topbar-logo"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="topbar-logo-fallback" aria-hidden="true" style="display:none">OP</div>
+    <div class="brand-text">
+      <div class="brand-sylva">Sylva</div>
+      <div class="brand-sub">Lesson Planner · TRU Open Press</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="status-pill" id="status-pill">
+      <span class="status-dot"></span>
+      <span id="status-text">Not connected</span>
+    </div>
+    <button class="btn-theme-toggle" id="btn-theme-toggle" aria-label="Toggle dark mode">🌙 Dark</button>
+    <div class="topbar-badge">Open Margins</div>
+  </div>
+</header>
+
+<!-- SUITE NAV -->
+<nav class="suite-nav" aria-label="Open Margins suite">
+  <a href="../index.html" class="suite-nav-home">← Open Margins</a>
+  <div class="suite-nav-tools">
+    <a href="../companion/companion.html" class="suite-nav-pill pill-companion">✦ Companion</a>
+    <a href="../tru-oer-activity-builder.html" class="suite-nav-pill pill-builder">⬡ Activity Builder</a>
+    <a href="../nova/nova.html" class="suite-nav-pill pill-nova">✺ Nova</a>
+    <a href="../rhizo/rhizo.html" class="suite-nav-pill pill-rhizo">∿ Rhizo</a>
+    <span class="suite-nav-pill pill-sylva pill-active" aria-current="page">⟡ Sylva</span>
+  </div>
+  <a href="sylva-guide.html" class="suite-nav-guide">? guide</a>
+  <button class="btn-suite-theme" id="btn-suite-theme" aria-label="Toggle theme" title="Toggle theme">🌙</button>
+</nav>
+
+<!-- APP SHELL -->
+<div class="app-shell">
+
+  <!-- LEFT: SETUP PANEL -->
+  <aside class="setup-panel" aria-label="Lesson setup">
+    <div class="setup-panel-header">
+      <div class="setup-panel-title">⟡ Lesson Setup</div>
+      <div class="setup-panel-sub">Fill in the details, then generate your plan.</div>
+    </div>
+
+    <div class="setup-scrollable">
+
+      <!-- Companion seed banner -->
+      <div class="companion-seed-banner hidden" id="companion-seed-banner">
+        <span class="companion-seed-icon">✦</span>
+        <div class="companion-seed-body">
+          <div class="companion-seed-title" id="companion-seed-title">Loaded from Companion</div>
+          <div id="companion-seed-meta">Chapter text pre-filled.</div>
+        </div>
+        <button class="companion-seed-dismiss" id="companion-seed-dismiss" aria-label="Dismiss">✕</button>
+      </div>
+
+      <!-- Lesson Info -->
+      <div class="form-section">
+        <div class="form-section-label">Lesson Info</div>
+        <div class="field-group">
+          <label class="field-label" for="field-chapter">Chapter / Topic Title</label>
+          <input class="field-input" id="field-chapter" type="text"
+                 placeholder="e.g., The Carbon Cycle" autocomplete="off">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="field-book">Book / Course</label>
+          <input class="field-input" id="field-book" type="text"
+                 placeholder="e.g., Environmental Science OER" autocomplete="off">
+        </div>
+      </div>
+
+      <!-- Session Parameters -->
+      <div class="form-section">
+        <div class="form-section-label">Session Parameters</div>
+        <div class="field-group">
+          <label class="field-label" for="field-duration">Session Duration</label>
+          <select class="field-select" id="field-duration">
+            <option value="50">50 minutes</option>
+            <option value="75" selected>75 minutes</option>
+            <option value="90">90 minutes</option>
+            <option value="180">3 hours (half-day)</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="field-level">Class Level</label>
+          <select class="field-select" id="field-level">
+            <option value="first-year">First year</option>
+            <option value="second-year" selected>Second year</option>
+            <option value="third-fourth-year">Third / Fourth year</option>
+            <option value="graduate">Graduate</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="field-prior">Prior Knowledge</label>
+          <select class="field-select" id="field-prior">
+            <option value="none">None assumed</option>
+            <option value="some" selected>Some familiarity</option>
+            <option value="strong">Strong foundation</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Delivery Mode -->
+      <div class="form-section">
+        <div class="form-section-label">Delivery Mode</div>
+        <div class="delivery-cards" role="radiogroup" aria-label="Delivery mode">
+          <label class="delivery-card">
+            <input type="radio" name="delivery" value="in-class" checked>
+            <div class="delivery-card-inner">
+              <div class="delivery-card-icon">🏛️</div>
+              <div class="delivery-card-text">
+                <div class="delivery-card-title">In-class</div>
+                <div class="delivery-card-desc">Face-to-face — think-pair-share, gallery walks, whiteboards</div>
+              </div>
+            </div>
+          </label>
+          <label class="delivery-card">
+            <input type="radio" name="delivery" value="online-sync">
+            <div class="delivery-card-inner">
+              <div class="delivery-card-icon">📡</div>
+              <div class="delivery-card-text">
+                <div class="delivery-card-title">Online synchronous</div>
+                <div class="delivery-card-desc">Live via BigBlueButton — breakout rooms, polls, chat waterfall</div>
+              </div>
+            </div>
+          </label>
+          <label class="delivery-card">
+            <input type="radio" name="delivery" value="online-async">
+            <div class="delivery-card-inner">
+              <div class="delivery-card-icon">🕰️</div>
+              <div class="delivery-card-text">
+                <div class="delivery-card-title">Online asynchronous</div>
+                <div class="delivery-card-desc">Self-paced — discussion boards, reflections, peer review</div>
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- OER Content — multi-source -->
+      <div class="form-section">
+        <div class="form-section-label">Source Material</div>
+
+        <!-- Loaded sources tray -->
+        <div class="source-tray hidden" id="source-tray"></div>
+
+        <!-- Book picker -->
+        <div class="book-picker" id="book-picker-section">
+          <div class="field-label">Load from Open Press catalogue</div>
+
+          <!-- Loading / error states -->
+          <div id="books-loading" class="hidden">
+            <div class="books-loading-msg">Loading book catalogue…</div>
+          </div>
+          <div id="books-error" class="hidden">
+            <div class="books-error-msg">Could not load catalogue.</div>
+            <button class="btn-retry-books" id="btn-retry-books">Retry</button>
+          </div>
+
+          <!-- Book search + list -->
+          <div id="books-ready" class="hidden">
+            <div class="book-search-row">
+              <input class="book-search-input" id="book-search" type="search"
+                     placeholder="Search books…" autocomplete="off"
+                     aria-label="Search Open Press books">
+              <span class="book-count" id="book-count"></span>
+            </div>
+            <div class="book-list-wrap">
+              <div id="book-list"></div>
+            </div>
+          </div>
+
+          <!-- TOC selectors (shown after book selected) -->
+          <div class="toc-selectors hidden" id="toc-selectors">
+            <div id="toc-loading" class="hidden">
+              <div class="books-loading-msg">Loading table of contents…</div>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="part-select">Part</label>
+              <select class="field-select" id="part-select">
+                <option value="">— select a part —</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="chapter-select">Chapter</label>
+              <select class="field-select" id="chapter-select" disabled>
+                <option value="">— select a chapter —</option>
+              </select>
+            </div>
+            <button class="btn-add-chapter" id="btn-add-chapter">
+              + Add chapter to sources
+            </button>
+            <div class="chapter-notice hidden" id="chapter-notice"></div>
+          </div>
+        </div>
+
+        <!-- URL fetch -->
+        <div class="oer-source-sep">Or add a URL</div>
+        <div class="url-fetch-row">
+          <input class="field-input" id="field-url" type="url"
+                 placeholder="https://…" autocomplete="off" aria-label="URL to fetch">
+          <button class="btn-fetch-url" id="btn-fetch-url">Fetch</button>
+        </div>
+        <div class="url-fetch-status hidden" id="url-fetch-status"></div>
+
+        <!-- File upload -->
+        <div class="oer-source-sep">Or upload a file</div>
+        <button class="file-upload-btn" id="btn-file-upload" aria-label="Upload PDF or Word file">
+          <span>📄</span> Upload PDF or Word (.docx)
+        </button>
+        <input type="file" id="file-upload-input" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+        <div class="file-upload-status hidden" id="file-upload-status"></div>
+
+        <!-- Paste toggle -->
+        <div class="oer-source-sep">Or paste text</div>
+        <button class="paste-toggle-btn" id="paste-toggle">✎ Paste text directly</button>
+        <div id="paste-section" class="hidden" style="margin-top:5px">
+          <textarea class="field-textarea" id="field-oer-text"
+                    placeholder="Paste a chapter or excerpt here. Sylva will ground the lesson plan in this text.
+
+Tip: 300–1000 words works well."
+                    rows="7"></textarea>
+          <div class="paste-word-count hidden" id="paste-word-count"></div>
+        </div>
+      </div>
+
+      <!-- Proxy -->
+      <div class="form-section">
+        <div class="form-section-label">Claude Proxy</div>
+        <div class="field-group">
+          <div class="proxy-row">
+            <input class="field-input" id="field-proxy" type="url"
+                   placeholder="http://localhost:3001/api/generate"
+                   value="http://localhost:3001/api/generate"
+                   aria-label="Proxy server URL">
+            <button class="btn-test" id="btn-test-connection">Test</button>
+          </div>
+          <div class="proxy-status" id="proxy-status">Enter your proxy URL and click Test.</div>
+        </div>
+      </div>
+
+      <!-- Generate -->
+      <button class="btn-generate-objectives" id="btn-generate-objectives" disabled>
+        <span>⟡</span> Generate Learning Objectives
+      </button>
+
+    </div>
+  </aside>
+
+  <!-- WORKSPACE -->
+  <main class="workspace" role="main" aria-label="Lesson plan workspace">
+
+    <div class="workspace-idle" id="workspace-idle">
+      <div class="idle-glyph">⟡</div>
+      <div class="idle-title">Plan the lesson that brings the text to life</div>
+      <div class="idle-sub">
+        Grounded in TRU's learner-centred design framework — caring, connected, active, and open. Choose a chapter from the Open Press catalogue or paste your own text, then generate a complete lesson arc with aligned assessment ideas.
+      </div>
+      <div class="idle-steps">
+        <span class="idle-step">① Set up your session</span>
+        <span class="idle-step">② Load or paste OER text</span>
+        <span class="idle-step">③ Generate objectives</span>
+        <span class="idle-step">④ Build the lesson arc</span>
+        <span class="idle-step">⑤ Suggest assessment</span>
+        <span class="idle-step">⑥ Export your plan</span>
+      </div>
+    </div>
+
+    <div class="workspace-content" id="workspace-content">
+
+      <!-- Objectives -->
+      <div class="objectives-block" id="objectives-block">
+        <div class="section-header">
+          <div class="section-title">Learning Objectives <span class="section-badge">Bloom's Tagged</span></div>
+        </div>
+        <div class="skeleton-block hidden" id="objectives-loading">
+          <div class="skeleton-item short"></div>
+          <div class="skeleton-item short"></div>
+          <div class="skeleton-item short"></div>
+          <div class="loading-label">Generating learning objectives…</div>
+        </div>
+        <div class="error-banner hidden" id="objectives-error">
+          <span class="error-icon">⚠</span>
+          <span id="objectives-error-msg">Could not generate objectives.</span>
+        </div>
+        <div class="objectives-list" id="objectives-list"></div>
+        <div class="objectives-actions" id="objectives-actions" style="display:none">
+          <button class="btn-secondary" id="btn-add-objective">+ Add objective</button>
+          <button class="btn-secondary" id="btn-regen-objectives">↺ Regenerate</button>
+          <button class="btn-generate-arc" id="btn-generate-arc" disabled>Generate Lesson Arc →</button>
+        </div>
+      </div>
+
+      <div class="divider" id="arc-divider" style="display:none"></div>
+
+      <!-- Lesson Arc -->
+      <div class="arc-block" id="arc-block" style="display:none">
+        <div class="section-header">
+          <div class="section-title">Lesson Arc <span class="section-badge" id="arc-mode-badge">In-class</span></div>
+        </div>
+        <div class="arc-meta" id="arc-meta"></div>
+        <div class="skeleton-block hidden" id="arc-loading">
+          <div class="skeleton-item"></div>
+          <div class="skeleton-item tall"></div>
+          <div class="skeleton-item"></div>
+          <div class="skeleton-item tall"></div>
+          <div class="loading-label">Building your lesson arc…</div>
+        </div>
+        <div class="error-banner hidden" id="arc-error">
+          <span class="error-icon">⚠</span>
+          <span id="arc-error-msg">Could not generate lesson arc.</span>
+        </div>
+        <div class="arc-timeline" id="arc-timeline"></div>
+
+        <!-- Assessment suggestion -->
+        <div class="assessment-wrap hidden" id="assessment-wrap">
+          <div class="assessment-header">
+            <div class="assessment-title">Constructive Alignment</div>
+            <div class="assessment-badge">Assessment Ideas</div>
+            <button class="btn-suggest-assessment" id="btn-suggest-assessment">Suggest assessment →</button>
+          </div>
+          <div class="assessment-loading hidden" id="assessment-loading">Generating aligned assessment ideas…</div>
+          <div class="assessment-cards" id="assessment-cards"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="export-bar" id="export-bar">
+      <span class="export-label">Export plan:</span>
+      <button class="btn-export btn-export-md" id="btn-export-md">↓ Markdown</button>
+      <button class="btn-export btn-export-print" id="btn-export-print">⎙ Print / PDF</button>
+      <div class="export-delivery-tag" id="export-delivery-tag">In-class</div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Mobile panel toggle (small screens only) -->
+<button class="btn-open-panel" id="btn-open-panel" style="display:none" aria-label="Open lesson setup" aria-expanded="false">⚙︎</button>
+<div class="mobile-backdrop" id="mobile-backdrop"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+//  SYLVA — Lesson Planner · Open Margins Suite
+//  TRU Open Press
+// ══════════════════════════════════════════════════════════
+
+const $ = id => document.getElementById(id);
+
+// ── State ──────────────────────────────────────────────────
+const state = {
+  connected: false,
+  objectives: [],
+  segments: [],
+  assessments: [],
+  allBooks: [],
+  bookUrl: null, bookTitle: null,
+  tocData: [],
+  chapterId: null, chapterTitle: null,
+  loadedChapterText: null, // legacy — kept for companion seed compat
+  sources: [],             // [{id, label, icon, text, wordCount}]
+};
+
+// ── Utilities ──────────────────────────────────────────────
+function esc(str) {
+  return String(str ?? '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function getProxyUrl()  { return $('field-proxy').value.trim() || 'http://localhost:3001/api/generate'; }
+function getProxyBase() { return getProxyUrl().replace(/\/api\/generate\/?$/, ''); }
+function deliveryLabel(v) {
+  return {'in-class':'In-class','online-sync':'Online synchronous','online-async':'Online asynchronous'}[v] || v;
+}
+function bloomLabel(n) { return ['','Remember','Understand','Apply','Analyze','Evaluate','Create'][n] || 'Understand'; }
+function segTypeClass(t) {
+  t = (t||'').toLowerCase();
+  if (t.includes('communit')||t.includes('belong')||t.includes('connect')||t.includes('icebreak')) return 'type-community';
+  if (t.includes('hook')||t.includes('open')) return 'type-hook';
+  if (t.includes('direct')||t.includes('lecture')||t.includes('content')) return 'type-direct';
+  if (t.includes('activ')||t.includes('collabor')||t.includes('discuss')||t.includes('practice')) return 'type-active';
+  if (t.includes('synth')||t.includes('exit')||t.includes('wrap')||t.includes('close')) return 'type-synthesis';
+  return 'type-other';
+}
+function getOerText() {
+  const parts = [];
+  state.sources.forEach(s => {
+    parts.push(`=== ${s.label} ===\n${s.text}`);
+  });
+  const pasted = $('field-oer-text').value.trim();
+  if (pasted) parts.push(`=== Pasted text ===\n${pasted}`);
+  return parts.join('\n\n');
+}
+
+// ── Sources tray ────────────────────────────────────────────
+let _sourceCounter = 0;
+function addSource(label, icon, text) {
+  const id  = ++_sourceCounter;
+  const wc  = wordCount(text);
+  state.sources.push({id, label, icon, text, wordCount: wc});
+  renderSourceTray();
+  updateGenerateBtn();
+  return id;
+}
+function removeSource(id) {
+  state.sources = state.sources.filter(s => s.id !== id);
+  renderSourceTray();
+  updateGenerateBtn();
+}
+function renderSourceTray() {
+  const tray = $('source-tray');
+  if (!state.sources.length) { tray.classList.add('hidden'); tray.innerHTML = ''; return; }
+  tray.classList.remove('hidden');
+  tray.innerHTML = state.sources.map(s => `
+    <div class="source-chip">
+      <div class="source-chip-icon">${s.icon}</div>
+      <div class="source-chip-body">
+        <div class="source-chip-label" title="${esc(s.label)}">${esc(s.label)}</div>
+        <div class="source-chip-meta">${s.wordCount.toLocaleString()} words</div>
+      </div>
+      <button class="source-chip-remove" data-id="${s.id}" aria-label="Remove source">✕</button>
+    </div>`).join('');
+  tray.querySelectorAll('.source-chip-remove').forEach(btn => {
+    btn.addEventListener('click', () => removeSource(Number(btn.dataset.id)));
+  });
+}
+function wordCount(txt) { return txt.trim().split(/\s+/).filter(Boolean).length; }
+
+function getFormValues() {
+  return {
+    chapter:  $('field-chapter').value.trim(),
+    book:     $('field-book').value.trim(),
+    duration: $('field-duration').value,
+    level:    $('field-level').value,
+    prior:    $('field-prior').value,
+    delivery: document.querySelector('input[name="delivery"]:checked')?.value || 'in-class',
+    oerText:  getOerText(),
+    proxy:    getProxyUrl(),
+  };
+}
+
+// ── Persistence ────────────────────────────────────────────
+function saveForm() {
+  try {
+    localStorage.setItem('sylva-chapter', $('field-chapter').value);
+    localStorage.setItem('sylva-book',    $('field-book').value);
+    localStorage.setItem('sylva-duration',$('field-duration').value);
+    localStorage.setItem('sylva-level',   $('field-level').value);
+    localStorage.setItem('sylva-prior',   $('field-prior').value);
+    const del = document.querySelector('input[name="delivery"]:checked');
+    if (del) localStorage.setItem('sylva-delivery', del.value);
+    localStorage.setItem('sylva-oer',    $('field-oer-text').value);
+    localStorage.setItem('sylva-proxy',  $('field-proxy').value);
+  } catch(e) {}
+}
+function restoreForm() {
+  try {
+    const s = k => localStorage.getItem(k);
+    if (s('sylva-chapter')) $('field-chapter').value = s('sylva-chapter');
+    if (s('sylva-book'))    $('field-book').value    = s('sylva-book');
+    if (s('sylva-duration')) $('field-duration').value = s('sylva-duration');
+    if (s('sylva-level'))   $('field-level').value   = s('sylva-level');
+    if (s('sylva-prior'))   $('field-prior').value   = s('sylva-prior');
+    if (s('sylva-delivery')) {
+      const r = document.querySelector(`input[name="delivery"][value="${s('sylva-delivery')}"]`);
+      if (r) r.checked = true;
+    }
+    if (s('sylva-oer'))   $('field-oer-text').value = s('sylva-oer');
+    if (s('sylva-proxy')) $('field-proxy').value    = s('sylva-proxy');
+    const initTheme = s('sylva-theme') || s('om-theme')
+      || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    applyTheme(initTheme);
+  } catch(e) {}
+}
+
+// ── Theme ──────────────────────────────────────────────────
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = $('btn-theme-toggle');
+  if (theme === 'dark') {
+    btn.textContent = '☀ Light';
+  } else {
+    btn.textContent = '🌙 Dark';
+  }
+  // Keep suite-nav toggle button in sync
+  const sb = document.getElementById('btn-suite-theme');
+  if (sb) {
+    sb.textContent = theme === 'dark' ? '☀' : '🌙';
+    sb.title = theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+  }
+}
+
+// ── Companion seed ─────────────────────────────────────────
+function loadCompanionSeed() {
+  let raw;
+  try { raw = localStorage.getItem('companion-activity-seed'); } catch(e) { return; }
+  if (!raw) return;
+  let payload;
+  try { payload = JSON.parse(raw); } catch(e) { return; }
+  if (!payload || payload.v !== 1) return;
+  try { localStorage.removeItem('companion-activity-seed'); } catch(e) {}
+
+  if (payload.chapterTitle) $('field-chapter').value = payload.chapterTitle;
+  if (payload.bookTitle)    $('field-book').value    = payload.bookTitle;
+  if (payload.chapterText)  {
+    let text = payload.chapterText;
+    if (payload.annotations?.length) {
+      const annBlock = payload.annotations.map((a,i) =>
+        `\n\n[Annotation ${i+1} — ${a.mode}]\n"${a.excerpt}"\n${a.response}`
+      ).join('');
+      text += '\n\n--- Companion Annotations ---' + annBlock;
+    }
+    $('field-oer-text').value = text;
+    // Show paste section so the text is visible
+    $('paste-section').classList.remove('hidden');
+    $('paste-toggle').classList.add('active');
+    $('paste-toggle').textContent = '✕ Close paste panel';
+    updatePasteWordCount();
+  }
+
+  const banner = $('companion-seed-banner');
+  const annCount = payload.annotations?.length || 0;
+  $('companion-seed-title').textContent = payload.chapterTitle || 'Reading session';
+  $('companion-seed-meta').textContent = `Chapter text + ${annCount} annotation${annCount!==1?'s':''} loaded from Companion.`;
+  banner.classList.remove('hidden');
+  updateGenerateBtn();
+}
+
+// ── Book catalogue ─────────────────────────────────────────
+async function loadBooks() {
+  $('books-loading').classList.remove('hidden');
+  $('books-ready').classList.add('hidden');
+  $('books-error').classList.add('hidden');
+
+  try {
+    const res = await fetch(`${getProxyBase()}/api/books`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const books = await res.json();
+    state.allBooks = books.sort((a,b) => a.title.localeCompare(b.title));
+    $('books-loading').classList.add('hidden');
+    $('books-ready').classList.remove('hidden');
+    renderBookList(state.allBooks);
+  } catch(err) {
+    $('books-loading').classList.add('hidden');
+    $('books-error').classList.remove('hidden');
+  }
+}
+
+function filterBooks(query) {
+  const q = query.toLowerCase();
+  const filtered = q
+    ? state.allBooks.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.subject||'').toLowerCase().includes(q) ||
+        (Array.isArray(b.author)?b.author.map(a=>a.name||a).join(' '):b.author||'').toLowerCase().includes(q)
+      )
+    : state.allBooks;
+  renderBookList(filtered);
+}
+
+function renderBookList(books) {
+  const list  = $('book-list');
+  const count = $('book-count');
+  const total = state.allBooks.length;
+  count.textContent = books.length === total
+    ? `${total} book${total!==1?'s':''}`
+    : `${books.length} / ${total}`;
+
+  if (books.length === 0) {
+    list.innerHTML = '<div style="font-size:0.75rem;color:var(--text-faint);padding:10px;text-align:center">No books match your search.</div>';
+    return;
+  }
+  list.innerHTML = books.map(b => {
+    const author = Array.isArray(b.author) && b.author.length
+      ? b.author.map(a => a.name||a).join(', ')
+      : (typeof b.author==='string' ? b.author : '');
+    const subject = Array.isArray(b.subject) ? b.subject[0] : b.subject;
+    return `<button class="book-item" data-url="${esc(b.link)}" data-title="${esc(b.title)}">
+      <div class="book-item-title">${esc(b.title)}</div>
+      <div class="book-item-meta">
+        ${subject ? `<span class="book-subject-badge">${esc(subject)}</span>` : ''}
+        ${author  ? `<span class="book-item-author">${esc(author)}</span>`   : ''}
+      </div>
+    </button>`;
+  }).join('');
+
+  list.querySelectorAll('.book-item').forEach(btn => {
+    btn.addEventListener('click', () => selectBook(btn.dataset.url, btn.dataset.title));
+  });
+}
+
+function selectBook(url, title) {
+  state.bookUrl   = url;
+  state.bookTitle = title;
+  state.chapterId = null;
+
+  // Highlight selected book
+  $('book-list').querySelectorAll('.book-item').forEach(b =>
+    b.classList.toggle('selected', b.dataset.url === url)
+  );
+
+  // Pre-fill book title
+  if (!$('field-book').value.trim()) $('field-book').value = title;
+
+  // Load TOC
+  $('toc-selectors').classList.remove('hidden');
+  loadToc(url);
+}
+
+async function loadToc(bookUrl) {
+  $('toc-loading').classList.remove('hidden');
+  $('part-select').innerHTML = '<option value="">— loading… —</option>';
+  $('chapter-select').innerHTML = '<option value="">— select a chapter —</option>';
+  $('chapter-select').disabled = true;
+  $('btn-add-chapter').style.display = 'none';
+  $('chapter-notice').classList.add('hidden');
+
+  try {
+    const res = await fetch(`${getProxyBase()}/api/toc?bookUrl=${encodeURIComponent(bookUrl)}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const parts = await res.json();
+    state.tocData = parts;
+    $('toc-loading').classList.add('hidden');
+
+    const partSel = $('part-select');
+    partSel.innerHTML = '<option value="">— select a part —</option>' +
+      parts.map(p => `<option value="${esc(String(p.id))}">${esc(p.title)}</option>`).join('');
+  } catch(err) {
+    $('toc-loading').classList.add('hidden');
+    const notice = $('chapter-notice');
+    notice.className = 'chapter-notice error';
+    notice.textContent = `Could not load table of contents: ${err.message}`;
+    notice.classList.remove('hidden');
+  }
+}
+
+function onPartSelected() {
+  const partId = $('part-select').value;
+  const chSel  = $('chapter-select');
+  $('btn-add-chapter').style.display = 'none';
+  $('chapter-notice').classList.add('hidden');
+  state.chapterId = null;
+  updateGenerateBtn();
+
+  if (!partId) { chSel.innerHTML = '<option value="">— select a chapter —</option>'; chSel.disabled = true; return; }
+  const part = state.tocData.find(p => String(p.id) === partId);
+  if (!part) return;
+  chSel.innerHTML = '<option value="">— select a chapter —</option>' +
+    part.chapters.map(c =>
+      `<option value="${esc(String(c.id))}">${esc(c.title)}${c.wordCount ? ` (${Number(c.wordCount).toLocaleString()} words)` : ''}</option>`
+    ).join('');
+  chSel.disabled = false;
+}
+
+function onChapterSelected() {
+  const chId = $('chapter-select').value;
+  const addBtn = $('btn-add-chapter');
+  addBtn.style.display = chId ? 'block' : 'none';
+  $('chapter-notice').classList.add('hidden');
+  state.chapterId = chId || null;
+
+  if (chId) {
+    const partId = $('part-select').value;
+    const part = state.tocData.find(p => String(p.id) === partId);
+    const ch = part?.chapters.find(c => String(c.id) === chId);
+    if (ch) state.chapterTitle = ch.title;
+  }
+  updateGenerateBtn();
+}
+
+async function loadChapter() {
+  const btn    = $('btn-add-chapter');
+  const notice = $('chapter-notice');
+  btn.disabled = true; btn.textContent = 'Loading…';
+  notice.classList.add('hidden');
+
+  try {
+    const url = `${getProxyBase()}/api/chapter?bookUrl=${encodeURIComponent(state.bookUrl)}&chapterId=${encodeURIComponent(state.chapterId)}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (!data.text) throw new Error('No text returned.');
+
+    const title = data.title || state.chapterTitle || 'Chapter';
+    const wc    = data.wordCount || wordCount(data.text);
+
+    // Auto-fill lesson title on first chapter load
+    if (!$('field-chapter').value.trim()) $('field-chapter').value = title;
+    if (data.title) state.chapterTitle = data.title;
+
+    addSource(title, '📖', data.text);
+
+    notice.className = 'chapter-notice success';
+    notice.textContent = `✓ Added — ${Number(wc).toLocaleString()} words`;
+    notice.classList.remove('hidden');
+  } catch(err) {
+    notice.className = 'chapter-notice error';
+    notice.textContent = `Failed to load chapter: ${err.message}`;
+    notice.classList.remove('hidden');
+  } finally {
+    btn.disabled = false; btn.textContent = '+ Add chapter to sources';
+  }
+}
+
+// ── Connection test ────────────────────────────────────────
+async function testConnection() {
+  const pill   = $('status-pill');
+  const txt    = $('status-text');
+  const status = $('proxy-status');
+  txt.textContent = 'Testing…';
+  status.textContent = 'Testing connection…'; status.className = 'proxy-status';
+
+  try {
+    const res = await fetch(getProxyUrl(), {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ model:'claude-opus-4-5', max_tokens:10,
+        system:'Respond with only: ok', messages:[{role:'user',content:'ping'}] })
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (data?.content?.[0]?.text) {
+      state.connected = true;
+      pill.classList.add('connected'); txt.textContent = 'Connected';
+      status.textContent = '✓ Proxy connected'; status.className = 'proxy-status ok';
+      // Also try to load books now that we have proxy
+      if (state.allBooks.length === 0) loadBooks();
+      updateGenerateBtn();
+    } else throw new Error('Unexpected response');
+  } catch(err) {
+    state.connected = false;
+    pill.classList.remove('connected'); txt.textContent = 'Not connected';
+    status.textContent = `✗ ${err.message}`; status.className = 'proxy-status err';
+    updateGenerateBtn();
+  }
+}
+
+// ── Claude API ─────────────────────────────────────────────
+async function callClaude({system, userContent, maxTokens=2048}) {
+  const res = await fetch(getProxyUrl(), {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ model:'claude-opus-4-5', max_tokens:maxTokens, system,
+      messages:[{role:'user',content:userContent}] })
+  });
+  if (!res.ok) throw new Error(`Proxy HTTP ${res.status}`);
+  const data = await res.json();
+  const text = data?.content?.[0]?.text;
+  if (!text) throw new Error('Empty response');
+  return text;
+}
+
+function extractJSON(text) {
+  const arr = text.match(/\[[\s\S]*\]/);
+  const obj = text.match(/\{[\s\S]*\}/);
+  const raw = arr?.[0] || obj?.[0];
+  if (!raw) throw new Error('No JSON in response');
+  return JSON.parse(raw);
+}
+
+// ── Generate objectives ────────────────────────────────────
+async function generateObjectives() {
+  const vals = getFormValues();
+  saveForm();
+  if (!vals.oerText || vals.oerText.length < 30) {
+    alert('Please load a chapter or paste some OER text first.');
+    return;
+  }
+
+  $('workspace-idle').style.display = 'none';
+  $('workspace-content').classList.add('visible');
+  $('objectives-loading').classList.remove('hidden');
+  $('objectives-list').innerHTML = '';
+  $('objectives-error').classList.add('hidden');
+  $('objectives-actions').style.display = 'none';
+  $('arc-divider').style.display = 'none';
+  $('arc-block').style.display = 'none';
+  $('export-bar').classList.remove('visible');
+  document.title = 'Sylva — Lesson Planner · TRU Open Press';
+  $('btn-generate-objectives').disabled = true;
+
+  try {
+    const raw = await callClaude({
+      system: `You are an expert instructional designer helping a university instructor plan a lesson using an Open Educational Resource (OER). Generate clear, measurable learning objectives for a single class session grounded in the provided text.`,
+      userContent: `Chapter/topic: ${vals.chapter||'Unknown'}.
+Book: ${vals.book||'Unknown'}.
+Class level: ${vals.level.replace(/-/g,' ')}.
+Prior knowledge: ${vals.prior}.
+Delivery mode: ${deliveryLabel(vals.delivery)}.
+Session duration: ${vals.duration} minutes.
+OER text:
+${vals.oerText.slice(0,3000)}
+
+Generate 3-5 clear, measurable learning objectives tagged with Bloom's Taxonomy level.
+Return ONLY a JSON array (no markdown, no explanation):
+[{"objective":"Students will be able to...","bloom":"Understand","bloomLevel":2},...]
+bloomLevel: 1=Remember 2=Understand 3=Apply 4=Analyze 5=Evaluate 6=Create`,
+      maxTokens: 800
+    });
+    const parsed = extractJSON(raw);
+    if (!Array.isArray(parsed) || !parsed.length) throw new Error('No objectives returned');
+    state.objectives = parsed;
+    renderObjectives();
+  } catch(err) {
+    $('objectives-error').classList.remove('hidden');
+    $('objectives-error-msg').textContent = `Could not generate objectives: ${err.message}`;
+  } finally {
+    $('objectives-loading').classList.add('hidden');
+    $('btn-generate-objectives').disabled = false;
+  }
+}
+
+function renderObjectives() {
+  const list = $('objectives-list');
+  list.innerHTML = '';
+  state.objectives.forEach((obj, i) => {
+    const level = Math.max(1, Math.min(6, obj.bloomLevel||2));
+    const card = document.createElement('div');
+    card.className = 'objective-card';
+    card.innerHTML = `
+      <span class="bloom-badge bloom-${level}" title="Bloom's: ${esc(obj.bloom||bloomLabel(level))}">${esc(obj.bloom||bloomLabel(level))}</span>
+      <div class="objective-text" contenteditable="true" data-index="${i}">${esc(obj.objective)}</div>
+      <button class="btn-obj-del" data-index="${i}" aria-label="Delete objective ${i+1}">✕</button>
+    `;
+    list.appendChild(card);
+  });
+  list.querySelectorAll('.objective-text').forEach(el => {
+    el.addEventListener('blur', () => {
+      const i = parseInt(el.dataset.index);
+      if (!isNaN(i)) state.objectives[i].objective = el.textContent.trim();
+      updateArcBtn();
+    });
+  });
+  list.querySelectorAll('.btn-obj-del').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.objectives.splice(parseInt(btn.dataset.index), 1);
+      renderObjectives();
+    });
+  });
+  $('objectives-actions').style.display = 'flex';
+  updateArcBtn();
+}
+
+function updateArcBtn() {
+  $('btn-generate-arc').disabled = state.objectives.length === 0;
+}
+
+// ── Generate arc ───────────────────────────────────────────
+async function generateArc() {
+  const vals = getFormValues();
+  $('arc-divider').style.display = '';
+  $('arc-block').style.display = '';
+  $('arc-loading').classList.remove('hidden');
+  $('arc-timeline').innerHTML = '';
+  $('arc-error').classList.add('hidden');
+  $('arc-meta').innerHTML = '';
+  $('export-bar').classList.remove('visible');
+  document.title = 'Sylva — Lesson Planner · TRU Open Press';
+  $('btn-generate-arc').disabled = true;
+  $('arc-mode-badge').textContent = deliveryLabel(vals.delivery);
+
+  const objList = state.objectives.map(o => `- [${o.bloom}] ${o.objective}`).join('\n');
+  const actGuide = {
+    'in-class': 'think-pair-share, cold calling, gallery walk, whiteboard work, sticky notes, show of hands, fishbowl, jigsaw, paper exit tickets, name tents, pair introductions, community agreements',
+    'online-sync': 'BigBlueButton breakout rooms, Moodle poll, collaborative Google Doc, chat waterfall, Hypothesis annotation, virtual whiteboard (Jamboard/Miro), exit poll, virtual icebreaker, Padlet introduction wall',
+    'online-async': 'discussion board prompt, reflection journal, peer review submission, short video response, annotated reading, self-assessment quiz, introduce yourself discussion board, shared interest survey, peer profile review',
+  }[vals.delivery] || '';
+
+  try {
+    const raw = await callClaude({
+      system: `You are an expert instructional designer applying TRU Open Learning's learner-centred design framework (Caring, Connected, Active, Open). Create a detailed, timed lesson plan for a single university class session. Ground every segment in the provided OER text. Suggest specific, practical activities appropriate for the delivery mode. Be concrete and actionable. Include a 'community' segment type (in addition to hook, direct, active, synthesis) for activities that build belonging, connection, or shared identity — especially valuable in online or first-year courses. For each segment's instructorNote, include one brief care or accessibility reminder where relevant: e.g. acknowledging that learners may have uneven prior knowledge, suggesting a low-stakes entry point for anxious students, flagging if shared docs should be screen-reader accessible, or noting the 10-minute guideline if a direct-instruction segment risks running long.`,
+      userContent: `Delivery mode: ${deliveryLabel(vals.delivery)} (${vals.delivery}).
+Total duration: ${vals.duration} minutes.
+Class level: ${vals.level.replace(/-/g,' ')}.
+Prior knowledge: ${vals.prior}.
+Learning objectives:
+${objList}
+
+OER text (excerpt):
+${vals.oerText.slice(0,4000)}
+
+Appropriate activities for this mode: ${actGuide}.
+
+Generate a complete, timed lesson arc as a JSON array. Total duration of all segments MUST equal exactly ${vals.duration} minutes.
+Return ONLY a JSON array (no markdown, no explanation):
+[{"title":"","duration":<int>,"description":"2-3 sentences","instructorNote":"practical tip + one care or accessibility reminder","activity":"specific named activity","activityType":"hook|direct|active|synthesis|community","passage":"short quote from OER text"}]
+Include 4-6 segments. First = opening/hook or community. Last = synthesis/wrap-up. Consider one community segment for online or longer sessions.`,
+      maxTokens: 2500
+    });
+    const parsed = extractJSON(raw);
+    if (!Array.isArray(parsed) || !parsed.length) throw new Error('No segments returned');
+    state.segments = parsed;
+    renderArc(vals);
+  } catch(err) {
+    $('arc-error').classList.remove('hidden');
+    $('arc-error-msg').textContent = `Could not generate lesson arc: ${err.message}`;
+  } finally {
+    $('arc-loading').classList.add('hidden');
+    $('btn-generate-arc').disabled = false;
+  }
+}
+
+function renderArc(vals) {
+  const timeline = $('arc-timeline');
+  timeline.innerHTML = '';
+  const total = state.segments.reduce((s,seg) => s + (parseInt(seg.duration)||0), 0);
+  $('arc-meta').innerHTML = `
+    <div class="arc-meta-chip">⏱ <strong>${total} min</strong> total</div>
+    <div class="arc-meta-chip">🎓 <strong>${esc(vals.level.replace(/-/g,' '))}</strong></div>
+    <div class="arc-meta-chip">📡 <strong>${esc(deliveryLabel(vals.delivery))}</strong></div>
+    <div class="arc-meta-chip">📖 <strong>${esc(vals.chapter||'Chapter')}</strong></div>
+  `;
+
+  let t = 0;
+  state.segments.forEach((seg, i) => {
+    const dur = parseInt(seg.duration)||0;
+    const start = t; t += dur;
+    const typeClass = segTypeClass(seg.activityType||seg.title);
+    const card = document.createElement('div');
+    card.className = 'segment-card';
+    card.innerHTML = `
+      <div class="segment-time-col">
+        <div class="segment-dot"></div>
+        <div class="segment-duration">${start}–${t}m</div>
+      </div>
+      <div class="segment-body">
+        <div class="segment-top">
+          <div class="segment-title">${esc(seg.title)}</div>
+          <div class="segment-type-badge ${typeClass}">${esc(seg.activityType||'segment')} · ${dur}m</div>
+        </div>
+        <div class="segment-description">${esc(seg.description)}</div>
+        <div class="segment-detail-grid">
+          <div class="segment-detail">
+            <div class="segment-detail-label">Activity</div>
+            <div class="segment-detail-value"><span class="segment-activity-tag">⟡ ${esc(seg.activity)}</span></div>
+          </div>
+          <div class="segment-detail">
+            <div class="segment-detail-label">Instructor note</div>
+            <div class="segment-detail-value">${esc(seg.instructorNote)}</div>
+          </div>
+          ${seg.passage ? `<div class="segment-detail full-width">
+            <div class="segment-detail-label">OER passage</div>
+            <div class="segment-detail-value" style="font-style:italic">"${esc(seg.passage)}"</div>
+          </div>` : ''}
+        </div>
+      </div>
+    `;
+    timeline.appendChild(card);
+  });
+
+  $('export-delivery-tag').textContent = deliveryLabel(vals.delivery);
+  $('export-bar').classList.add('visible');
+
+  // Show assessment suggestion block
+  state.assessments = [];
+  $('assessment-cards').innerHTML = '';
+  $('assessment-loading').classList.add('hidden');
+  $('assessment-wrap').classList.remove('hidden');
+
+  // Set document title so Print → Save as PDF uses a meaningful filename
+  const chap = vals.chapter || 'Lesson Plan';
+  const book = vals.book;
+  document.title = book ? `${chap} — ${book}` : chap;
+}
+
+// ── Assessment Generation ────────────────────────────────────
+async function generateAssessment() {
+  const btn = $('btn-suggest-assessment');
+  btn.disabled = true;
+  $('assessment-loading').classList.remove('hidden');
+  $('assessment-cards').innerHTML = '';
+
+  const objList = state.objectives.map(o => `[${o.bloom}] ${o.objective}`).join('\n');
+  const arcSummary = state.segments.map((s,i) => `${i+1}. ${s.title} (${s.duration} min, ${s.activityType}): ${s.description}`).join('\n');
+
+  try {
+    const raw = await callClaude({
+      system: `You are an expert instructional designer applying constructive alignment principles from the TRU Open Learning Design Framework. Given a set of learning objectives and a lesson arc, suggest 2-3 assessment ideas that directly align with the objectives. Include at least one formative (during learning) and one summative (after learning) option. Ground suggestions in TRU's values: assessment should be active, authentic, and inclusive — with meaningful application rather than mere recall. Prioritize open and accessible formats where possible.`,
+      userContent: `Learning objectives:\n${objList}\n\nLesson arc:\n${arcSummary}\n\nSuggest 2-3 constructively aligned assessment ideas.\nReturn ONLY a JSON array (no markdown, no explanation):\n[{"type":"formative|summative","title":"Assessment name","description":"2-3 sentences describing the task","alignment":"Which objective(s) this addresses","tru_note":"One sentence: how this reflects TRU Open Learning values (active, authentic, caring, accessible, open)"}]`,
+      maxTokens: 1000
+    });
+    const parsed = extractJSON(raw);
+    if (!Array.isArray(parsed) || !parsed.length) throw new Error('No assessments returned');
+    state.assessments = parsed;
+    renderAssessments(parsed);
+  } catch(err) {
+    $('assessment-cards').innerHTML = `<div class="error-banner"><span class="error-icon">⚠</span> Could not generate assessment ideas: ${esc(err.message)}</div>`;
+  } finally {
+    $('assessment-loading').classList.add('hidden');
+    btn.disabled = false;
+  }
+}
+
+function renderAssessments(assessments) {
+  const container = $('assessment-cards');
+  container.innerHTML = '';
+  assessments.forEach(a => {
+    const typeClass = (a.type||'').toLowerCase().includes('summ') ? 'summative' : 'formative';
+    const typeLabel = typeClass === 'summative' ? 'Summative' : 'Formative';
+    const div = document.createElement('div');
+    div.className = 'assessment-card';
+    div.innerHTML = `
+      <div class="assessment-card-header">
+        <span class="assessment-card-type ${typeClass}">${typeLabel}</span>
+        <span class="assessment-card-title">${esc(a.title)}</span>
+      </div>
+      <div class="assessment-card-desc">${esc(a.description)}</div>
+      <div class="assessment-card-meta"><strong>Aligns with:</strong> ${esc(a.alignment)}</div>
+      ${a.tru_note ? `<div class="assessment-tru-note">⟡ ${esc(a.tru_note)}</div>` : ''}
+    `;
+    container.appendChild(div);
+  });
+}
+
+// ── URL fetch ───────────────────────────────────────────────
+async function fetchUrl() {
+  const raw    = $('field-url').value.trim();
+  const status = $('url-fetch-status');
+  if (!raw) return;
+  let url;
+  try { url = new URL(raw); } catch { status.className='url-fetch-status err'; status.textContent='Invalid URL.'; status.classList.remove('hidden'); return; }
+
+  status.className = 'url-fetch-status';
+  status.textContent = 'Fetching…';
+  status.classList.remove('hidden');
+  $('btn-fetch-url').disabled = true;
+
+  try {
+    const res  = await fetch(`${getProxyBase()}/api/fetch-url?url=${encodeURIComponent(url.href)}`);
+    if (!res.ok) throw new Error(`Server error ${res.status}`);
+    const data = await res.json();
+    if (!data.text || data.text.length < 20) throw new Error('No readable text found at that URL.');
+
+    const label = data.title || url.hostname;
+    addSource(label, '🔗', data.text);
+    status.className = 'url-fetch-status ok';
+    status.textContent = `✓ Added "${label}" — ${wordCount(data.text).toLocaleString()} words`;
+    $('field-url').value = '';
+  } catch(err) {
+    status.className = 'url-fetch-status err';
+    status.textContent = `✗ ${err.message}`;
+  } finally {
+    $('btn-fetch-url').disabled = false;
+  }
+}
+
+// ── File upload ─────────────────────────────────────────────
+async function handleFileUpload(file) {
+  const status = $('file-upload-status');
+  status.className = 'file-upload-status';
+  status.textContent = `Reading ${file.name}…`;
+  status.classList.remove('hidden');
+
+  try {
+    const ext = file.name.split('.').pop().toLowerCase();
+    let text = '';
+
+    if (ext === 'pdf') {
+      // Use PDF.js (loaded via CDN) to extract text
+      if (!window.pdfjsLib) throw new Error('PDF library not loaded yet — try again in a moment.');
+      const buf    = await file.arrayBuffer();
+      const pdf    = await pdfjsLib.getDocument({data: buf}).promise;
+      const pages  = [];
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page    = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        pages.push(content.items.map(it => it.str).join(' '));
+      }
+      text = pages.join('\n\n');
+    } else if (ext === 'docx') {
+      // Use mammoth.js (loaded via CDN) for .docx
+      if (!window.mammoth) throw new Error('Word library not loaded yet — try again in a moment.');
+      const buf    = await file.arrayBuffer();
+      const result = await mammoth.extractRawText({arrayBuffer: buf});
+      text = result.value;
+    } else if (ext === 'doc') {
+      throw new Error('.doc format not supported — please save as .docx and retry.');
+    } else {
+      throw new Error('Unsupported file type. Please use PDF or .docx.');
+    }
+
+    text = text.replace(/\s+/g, ' ').trim();
+    if (text.length < 20) throw new Error('Could not extract readable text from this file.');
+
+    addSource(file.name, ext === 'pdf' ? '📕' : '📝', text);
+    status.className = 'file-upload-status ok';
+    status.textContent = `✓ Added "${file.name}" — ${wordCount(text).toLocaleString()} words`;
+  } catch(err) {
+    status.className = 'file-upload-status err';
+    status.textContent = `✗ ${err.message}`;
+  }
+}
+
+// ── Export ─────────────────────────────────────────────────
+function buildMarkdown() {
+  const vals = getFormValues();
+  const ts   = new Date().toLocaleString();
+  const objs = state.objectives.map(o => `- **[${o.bloom}]** ${o.objective}`).join('\n');
+  let md = `# Sylva Lesson Plan — ${vals.chapter || 'Unnamed Lesson'}\n\n`;
+  md += `**Course/Book:** ${vals.book||'—'}\n**Generated:** ${ts}\n**Duration:** ${vals.duration} min\n`;
+  md += `**Delivery:** ${deliveryLabel(vals.delivery)}\n**Level:** ${vals.level.replace(/-/g,' ')}\n**Prior knowledge:** ${vals.prior}\n\n`;
+  md += `---\n\n## Learning Objectives\n\n${objs}\n\n---\n\n## Lesson Arc\n\n`;
+  let t = 0;
+  state.segments.forEach((seg, i) => {
+    const dur = parseInt(seg.duration)||0;
+    md += `### ${i+1}. ${seg.title} (${t}–${t+dur} min)\n\n${seg.description}\n\n`;
+    md += `**Activity:** ${seg.activity}\n\n**Instructor note:** ${seg.instructorNote}\n\n`;
+    if (seg.passage) md += `**OER passage:** *"${seg.passage}"*\n\n`;
+    md += `---\n\n`; t += dur;
+  });
+  if (state.assessments && state.assessments.length) {
+    md += `## Assessment Ideas\n\n`;
+    state.assessments.forEach(a => {
+      const type = (a.type||'formative').charAt(0).toUpperCase() + (a.type||'formative').slice(1);
+      md += `### ${a.title} *(${type})*\n\n${a.description}\n\n`;
+      md += `**Aligns with:** ${a.alignment}\n\n`;
+      if (a.tru_note) md += `**TRU Open Learning note:** ${a.tru_note}\n\n`;
+      md += `---\n\n`;
+    });
+  }
+  md += `*Generated by Sylva — Open Margins Suite · TRU Open Press*\n`;
+  return md;
+}
+
+function downloadMd() {
+  const md = buildMarkdown();
+  const vals = getFormValues();
+  const slug = (vals.chapter||'lesson').toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,40);
+  const blob = new Blob([md], {type:'text/markdown;charset=utf-8'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a'); a.href = url; a.download = `sylva-${slug}.md`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// ── Generate button state ──────────────────────────────────
+function updateGenerateBtn() {
+  const hasText = getOerText().length > 30;
+  $('btn-generate-objectives').disabled = !state.connected || !hasText;
+}
+
+// ── Paste field word count ─────────────────────────────────
+function updatePasteWordCount() {
+  const txt = $('field-oer-text').value;
+  const wc  = wordCount(txt);
+  const el  = $('paste-word-count');
+  if (!txt.trim()) {
+    el.classList.add('hidden');
+    return;
+  }
+  el.classList.remove('hidden');
+  el.textContent = `${wc.toLocaleString()} word${wc !== 1 ? 's' : ''}`;
+  el.classList.remove('ok', 'warn');
+  if (wc >= 200) el.classList.add('ok');
+  else           el.classList.add('warn');
+}
+
+// ── Init ───────────────────────────────────────────────────
+function init() {
+  restoreForm();
+  loadCompanionSeed();
+
+  // Theme toggle
+  $('btn-theme-toggle').addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    const next = current === 'light' ? 'dark' : 'light';
+    applyTheme(next);
+    try { localStorage.setItem('sylva-theme', next); localStorage.setItem('om-theme', next); } catch(e) {}
+  });
+
+  // Form persistence + generate btn
+  document.querySelectorAll('.field-input, .field-select, .field-textarea').forEach(el => {
+    el.addEventListener('input', () => { saveForm(); updateGenerateBtn(); });
+    el.addEventListener('change', () => { saveForm(); updateGenerateBtn(); });
+  });
+  document.querySelectorAll('input[name="delivery"]').forEach(r => {
+    r.addEventListener('change', () => { saveForm(); updateGenerateBtn(); });
+  });
+
+  // Proxy test
+  $('btn-test-connection').addEventListener('click', testConnection);
+  $('field-proxy').addEventListener('change', () => {
+    state.connected = false;
+    $('status-pill').classList.remove('connected');
+    $('status-text').textContent = 'Not connected';
+    updateGenerateBtn();
+  });
+
+  // Book catalogue
+  $('book-search').addEventListener('input', e => filterBooks(e.target.value));
+  $('btn-retry-books').addEventListener('click', loadBooks);
+  $('part-select').addEventListener('change', onPartSelected);
+  $('chapter-select').addEventListener('change', onChapterSelected);
+  $('btn-add-chapter').addEventListener('click', loadChapter);
+
+  // URL fetch
+  $('btn-fetch-url').addEventListener('click', fetchUrl);
+  $('field-url').addEventListener('keydown', e => { if (e.key === 'Enter') fetchUrl(); });
+
+  // File upload
+  $('btn-file-upload').addEventListener('click', () => $('file-upload-input').click());
+  $('file-upload-input').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (file) { handleFileUpload(file); e.target.value = ''; }
+  });
+
+  // Paste toggle
+  $('paste-toggle').addEventListener('click', () => {
+    const open = !$('paste-section').classList.contains('hidden');
+    $('paste-section').classList.toggle('hidden', open);
+    $('paste-toggle').classList.toggle('active', !open);
+    $('paste-toggle').textContent = open ? '✎ Paste text directly' : '✕ Close paste panel';
+    if (!open) updateGenerateBtn();
+  });
+
+  // Paste word count
+  $('field-oer-text').addEventListener('input', () => {
+    updatePasteWordCount();
+    updateGenerateBtn();
+  });
+
+  // Companion seed dismiss
+  const dismissBtn = $('companion-seed-dismiss');
+  if (dismissBtn) dismissBtn.addEventListener('click', () => $('companion-seed-banner').classList.add('hidden'));
+
+  // Objectives
+  $('btn-generate-objectives').addEventListener('click', generateObjectives);
+  $('btn-regen-objectives').addEventListener('click', () => { state.objectives=[]; generateObjectives(); });
+  $('btn-add-objective').addEventListener('click', () => {
+    state.objectives.push({objective:'Students will be able to…',bloom:'Understand',bloomLevel:2});
+    renderObjectives();
+  });
+
+  // Arc
+  $('btn-generate-arc').addEventListener('click', generateArc);
+
+  // Assessment
+  $('btn-suggest-assessment').addEventListener('click', generateAssessment);
+
+  // Export
+  $('btn-export-md').addEventListener('click', downloadMd);
+  $('btn-export-print').addEventListener('click', () => window.print());
+
+  // Auto-connect (will also trigger loadBooks on success)
+  testConnection();
+
+  // ── Mobile panel drawer ──────────────────────────────────────
+  (function initMobilePanel() {
+    const MQ = window.matchMedia('(max-width: 768px)');
+    const panel    = document.querySelector('.setup-panel');
+    const btn      = document.getElementById('btn-open-panel');
+    const backdrop = document.getElementById('mobile-backdrop');
+    function open()  { panel.classList.add('mobile-open'); btn.setAttribute('aria-expanded','true'); backdrop.classList.add('visible'); }
+    function close() { panel.classList.remove('mobile-open'); btn.setAttribute('aria-expanded','false'); backdrop.classList.remove('visible'); }
+    function applyMobile(m) { btn.style.display = m ? 'flex' : 'none'; if (!m) close(); }
+    btn.addEventListener('click', () => panel.classList.contains('mobile-open') ? close() : open());
+    backdrop.addEventListener('click', close);
+    MQ.addEventListener('change', e => applyMobile(e.matches));
+    applyMobile(MQ.matches);
+  })();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+
+// ── Suite-nav theme button (synced with in-app btn-theme-toggle) ──
+(function() {
+  var btn = document.getElementById('btn-suite-theme');
+  if (!btn) return;
+  btn.addEventListener('click', function() {
+    var cur = document.documentElement.getAttribute('data-theme') || 'light';
+    var next = cur === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    try { localStorage.setItem('sylva-theme', next); localStorage.setItem('om-theme', next); } catch(e) {}
+  });
+  // Set initial icon (theme already applied by head script / applyTheme in init)
+  var cur = document.documentElement.getAttribute('data-theme') || 'light';
+  btn.textContent = cur === 'dark' ? '☀' : '🌙';
+  btn.title = cur === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+})();
+</script>
+</body>
+</html>
