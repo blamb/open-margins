@@ -1651,8 +1651,8 @@ mark.tts-active-sentence {
 .tts-reader-bar {
   display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
   padding: 10px 16px;
-  background: var(--surface); border-top: 2px solid rgba(160,120,200,0.45);
-  box-shadow: 0 -4px 14px rgba(0,0,0,0.13);
+  background: var(--surface); border-bottom: 2px solid rgba(160,120,200,0.45);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.13);
   font-size: 0.75rem; flex-shrink: 0;
 }
 .tts-reader-bar.hidden { display: none; }
@@ -1961,21 +1961,7 @@ mark.tts-active-sentence {
     <!-- Line-focus ruler overlay (pointer-events:none — never blocks selection) -->
     <div id="line-focus-overlay" aria-hidden="true"></div>
 
-    <div class="reading-body" id="reading-body">
-      <div class="reading-idle" id="reading-idle">
-        <div class="idle-glyph">¶</div>
-        <div class="idle-title">Read with a companion in the margin</div>
-        <div class="idle-sub">Load a chapter from TRU Open Press — or paste any text — then select a passage and ask it to illuminate, interrogate, or connect.</div>
-        <div class="idle-modes">
-          <span class="idle-mode-chip chip-illuminate">✦ Illuminate</span>
-          <span class="idle-mode-chip chip-council">⊛ Council</span>
-          <span class="idle-mode-chip chip-connect">⬡ Connect</span>
-          <span class="idle-mode-chip chip-note">✎ Note</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- TTS reader bar -->
+    <!-- TTS reader bar — sits above the text, below the reading header -->
     <div id="tts-reader-bar" class="tts-reader-bar hidden" role="toolbar" aria-label="Read aloud controls">
       <div class="tts-bar-source" aria-live="polite" aria-atomic="true">
         <span class="tts-bar-source-icon">🔊</span>
@@ -1999,6 +1985,20 @@ mark.tts-active-sentence {
         <select id="tts-voice-select" aria-label="Select voice"></select>
       </div>
       <button class="btn-tts-close" id="btn-tts-close" aria-label="Close reader">×</button>
+    </div>
+
+    <div class="reading-body" id="reading-body">
+      <div class="reading-idle" id="reading-idle">
+        <div class="idle-glyph">¶</div>
+        <div class="idle-title">Read with a companion in the margin</div>
+        <div class="idle-sub">Load a chapter from TRU Open Press — or paste any text — then select a passage and ask it to illuminate, interrogate, or connect.</div>
+        <div class="idle-modes">
+          <span class="idle-mode-chip chip-illuminate">✦ Illuminate</span>
+          <span class="idle-mode-chip chip-council">⊛ Council</span>
+          <span class="idle-mode-chip chip-connect">⬡ Connect</span>
+          <span class="idle-mode-chip chip-note">✎ Note</span>
+        </div>
+      </div>
     </div>
 
   </main>
