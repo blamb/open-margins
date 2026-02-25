@@ -1650,12 +1650,24 @@ mark.tts-active-sentence {
 }
 .tts-reader-bar {
   display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-  padding: 8px 16px;
-  background: var(--panel); border-top: 1px solid var(--border-hi);
-  box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+  padding: 10px 16px;
+  background: var(--surface); border-top: 2px solid rgba(160,120,200,0.45);
+  box-shadow: 0 -4px 14px rgba(0,0,0,0.13);
   font-size: 0.75rem; flex-shrink: 0;
 }
 .tts-reader-bar.hidden { display: none; }
+/* Source / progress indicator — leftmost element in the bar */
+.tts-bar-source {
+  display: flex; align-items: center; gap: 5px;
+  margin-right: 4px; flex-shrink: 0;
+}
+.tts-bar-source-icon { font-size: 0.85rem; opacity: 0.75; line-height: 1; }
+.tts-progress {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem; font-weight: 500;
+  color: var(--lilac, #a07ac8);
+  letter-spacing: 0.02em; min-width: 52px;
+}
 .tts-bar-controls { display: flex; gap: 5px; }
 .btn-tts {
   padding: 4px 11px; border-radius: 6px; font-size: 0.72rem; font-weight: 600;
@@ -1965,6 +1977,10 @@ mark.tts-active-sentence {
 
     <!-- TTS reader bar -->
     <div id="tts-reader-bar" class="tts-reader-bar hidden" role="toolbar" aria-label="Read aloud controls">
+      <div class="tts-bar-source" aria-live="polite" aria-atomic="true">
+        <span class="tts-bar-source-icon">🔊</span>
+        <span id="tts-progress" class="tts-progress">—</span>
+      </div>
       <div class="tts-bar-controls">
         <button class="btn-tts" id="btn-tts-play">▶ Play</button>
         <button class="btn-tts hidden" id="btn-tts-pause">⏸ Pause</button>
@@ -3943,10 +3959,20 @@ document.addEventListener('DOMContentLoaded', init);
     tts.highlightEl = null;
   }
 
+  // ── Progress display helper ──
+  function ttsUpdateProgress(str) {
+    const el = document.getElementById('tts-progress');
+    if (!el) return;
+    el.textContent = str !== undefined
+      ? str
+      : (tts.sentences.length ? `${tts.currentIdx + 1} / ${tts.sentences.length}` : '—');
+  }
+
   // ── Speak one sentence (sentence-by-sentence avoids Chrome's ~15s utterance limit) ──
   function ttsSpeakSentence(idx) {
     if (!tts.active || idx >= tts.sentences.length) { ttsStop(); return; }
     tts.currentIdx = idx;
+    ttsUpdateProgress();
     ttsHighlight(idx);
     const utt = new SpeechSynthesisUtterance(tts.sentences[idx].text);
     utt.rate  = tts.rate;
@@ -3966,6 +3992,7 @@ document.addEventListener('DOMContentLoaded', init);
     $('btn-tts-play').classList.add('hidden');
     $('btn-tts-pause').classList.remove('hidden');
     $('btn-tts-resume').classList.add('hidden');
+    ttsUpdateProgress(`1 / ${tts.sentences.length}`);
     ttsSpeakSentence(0);
   }
 
@@ -3989,18 +4016,43 @@ document.addEventListener('DOMContentLoaded', init);
     tts.active = false; tts.paused = false;
     window.speechSynthesis.cancel();
     ttsRemoveHighlight();
+    ttsUpdateProgress('—');
     const play = $('btn-tts-play'), pause = $('btn-tts-pause'), resume = $('btn-tts-resume');
     if (play)   play.classList.remove('hidden');
     if (pause)  pause.classList.add('hidden');
     if (resume) resume.classList.add('hidden');
   }
 
-  // Speak arbitrary text once (selection popup)
+  // Speak arbitrary text once (selection popup) — shows bar so user has full controls
   window.ttsSpeak = function(text) {
     window.speechSynthesis.cancel();
+    ttsRemoveHighlight();
+    // Treat as active so pause/stop/resume work via bar buttons
+    tts.active = true; tts.paused = false;
+    tts.sentences = [];  // no chapter sentences in one-shot mode
+
     const utt = new SpeechSynthesisUtterance(text);
     utt.rate = tts.rate;
     if (tts.voice) utt.voice = tts.voice;
+
+    // Show bar and put it in "playing" state
+    document.getElementById('tts-reader-bar').classList.remove('hidden');
+    $('btn-tts-play').classList.add('hidden');
+    $('btn-tts-pause').classList.remove('hidden');
+    $('btn-tts-resume').classList.add('hidden');
+    ttsUpdateProgress('Selection');
+
+    utt.onend = () => {
+      tts.active = false; tts.paused = false;
+      $('btn-tts-play').classList.remove('hidden');
+      $('btn-tts-pause').classList.add('hidden');
+      $('btn-tts-resume').classList.add('hidden');
+      ttsUpdateProgress('—');
+    };
+    utt.onerror = (e) => {
+      if (e.error !== 'interrupted' && e.error !== 'canceled') ttsStop();
+    };
+
     window.speechSynthesis.speak(utt);
   };
 
