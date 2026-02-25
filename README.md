@@ -1,25 +1,27 @@
 # Open Margins
 
-**Open Margins** is a suite of AI-assisted tools for open educational resource (OER) pedagogy, built for [TRU Open Press](https://openpress.trubox.ca). Each tool pairs a different reading or design practice with Claude AI, running entirely in the browser with a lightweight local proxy server.
+**Open Margins** is a suite of AI-assisted tools for open educational resource (OER) pedagogy, developed at [TRU Open Press](https://openpress.trubox.ca). Each tool pairs a different reading or design practice with Claude AI, running entirely in the browser with a lightweight local proxy server.
+
+**Works with any OER content.** The TRU Open Press catalogue is the featured collection and loads directly from the built-in book browser, but every tool also accepts a **URL** (any open web page), a **PDF or .docx upload**, or **pasted text** — so you can bring any openly licensed material you're already working with.
 
 ---
 
 ## Tools
 
 ### 📖 Companion
-An AI-assisted reading companion for OER texts. Load any chapter from TRU Open Press (or paste your own text), select a passage, and ask Claude to *illuminate*, *interrogate*, or *connect* it to other ideas. Annotations accumulate in the margin as you read. Includes a full **voice reader** (Web Speech API) with sentence-by-sentence highlighting, speed control, and voice selection.
+An AI-assisted reading companion for OER texts. Browse the TRU Open Press catalogue, fetch any open URL, upload a PDF or .docx, or paste text directly — then select a passage and ask Claude to *illuminate*, *interrogate*, or *connect* it to other ideas. Annotations accumulate in the margin as you read. Includes a full **voice reader** (Web Speech API) with sentence-by-sentence highlighting, speed control, and voice selection.
 
 ### ⬡ Nova
-An experimental concept-map explorer for TRU Open Press books. Load a chapter and Nova generates an interactive concept map showing key ideas and their relationships. Designed for exploratory, non-linear engagement with OER content.
+An experimental concept-map explorer for OER texts. Browse the TRU Open Press catalogue, fetch a URL, upload a file, or paste text — and Nova generates an interactive concept map showing key ideas and their relationships. Designed for exploratory, non-linear engagement with any open content.
 
 ### 🌿 Rhizo
 A rhizomatic learning activity builder grounded in [Dave Cormier's](https://davecormier.com) work on rhizomatic education and his book *The Rhizome and the Good Learning Life*. Generates activities around key concepts — Trust Audit, Abundance Check, Breadcrumb Trail — and surfaces rotating quotes from Cormier's writing.
 
 ### 🌲 Sylva
-A lesson design tool grounded in [TRU's Open Learning Design Framework](https://designframework.trubox.ca) (Caring, Connected, Active, Open). Generates Bloom's-tagged learning objectives, timed lesson arcs with five segment types (Hook, Direct, Active, Community, Synthesis), and constructive alignment assessment suggestions.
+A lesson design tool grounded in [TRU's Open Learning Design Framework](https://designframework.trubox.ca) (Caring, Connected, Active, Open). Load any OER content via the TRU catalogue, a URL, file upload, or paste — then generate Bloom's-tagged learning objectives, timed lesson arcs with five segment types (Hook, Direct, Active, Community, Synthesis), and constructive alignment assessment suggestions.
 
 ### 🔧 Activity Builder
-A standalone tool for generating H5P-style interactive activities from OER content. Paste a passage and generate drag-and-drop, matching, or scenario-based activities ready for Moodle.
+A standalone tool for generating H5P-style interactive activities from OER content. Paste a passage, upload a file, or pull from any open URL — and generate drag-and-drop, matching, or scenario-based activities ready for Moodle.
 
 ---
 
