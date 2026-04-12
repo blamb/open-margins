@@ -35,10 +35,10 @@ if (!API_KEY) {
 app.use(cors({ origin: '*' }));
 app.use(express.json({ limit: '2mb' }));
 
+// ── Serve static HTML files (companion, nova, rhizo, sylva, etc.) ────────────
+app.use(express.static(__dirname));
+
 // ── Health check ──────────────────────────────────────────────────────────────
-app.get('/', (req, res) => {
-  res.json({ status: 'ok', message: 'TRU OER Proxy is running.' });
-});
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'TRU OER Proxy is running.' });
 });
