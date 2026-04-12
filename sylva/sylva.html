@@ -1280,8 +1280,8 @@ Tip: 300–1000 words works well."
         <div class="field-group">
           <div class="proxy-row">
             <input class="field-input" id="field-proxy" type="url"
-                   placeholder="http://localhost:3001/api/generate"
-                   value="http://localhost:3001/api/generate"
+                   placeholder="Auto-detected from current URL"
+                   value=""
                    aria-label="Proxy server URL">
             <button class="btn-test" id="btn-test-connection">Test</button>
           </div>
@@ -1419,7 +1419,7 @@ function esc(str) {
     .replace(/&/g,'&amp;').replace(/</g,'&lt;')
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-function getProxyUrl()  { return $('field-proxy').value.trim() || 'http://localhost:3001/api/generate'; }
+function getProxyUrl()  { return $('field-proxy').value.trim() || `${window.location.origin}/api/generate`; }
 function getProxyBase() { return getProxyUrl().replace(/\/api\/generate\/?$/, ''); }
 function deliveryLabel(v) {
   return {'in-class':'In-class','online-sync':'Online synchronous','online-async':'Online asynchronous'}[v] || v;

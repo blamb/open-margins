@@ -1303,8 +1303,8 @@ button { cursor: pointer; }
       <div class="section-label">Proxy Server</div>
       <div class="proxy-row">
         <input type="url" class="proxy-input" id="proxy-url"
-               value="http://localhost:3001/api/generate"
-               placeholder="http://localhost:3001/api/generate"
+               value=""
+               placeholder="Auto-detected from current URL"
                aria-label="Proxy server URL">
         <button class="btn-connect" id="btn-connect" type="button">Connect</button>
       </div>
@@ -1507,7 +1507,7 @@ button { cursor: pointer; }
 //  Inspired by Dave Cormier's rhizomatic learning
 // ══════════════════════════════════════════════════════════
 
-const PROXY_BASE = 'http://localhost:3001';
+const PROXY_BASE = window.location.origin;
 
 const ACTIVITY_LABELS = {
   garden:      'Weed the Garden',

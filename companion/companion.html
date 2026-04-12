@@ -1792,8 +1792,8 @@ mark.tts-active-sentence {
         <div class="section-label">Proxy & Connection</div>
         <div class="proxy-row">
           <input class="proxy-input" id="proxy-url"
-                 type="url" value="http://localhost:3001/api/generate"
-                 placeholder="http://localhost:3001/api/generate"
+                 type="url" value=""
+                 placeholder="Auto-detected from current URL"
                  spellcheck="false" autocomplete="off"
                  aria-label="Proxy server URL">
           <button class="btn-connect" id="btn-connect">Connect</button>
@@ -2099,7 +2099,7 @@ mark.tts-active-sentence {
 //  COMPANION — State
 // ══════════════════════════════════════════════════════════
 
-const PROXY_BASE_DEFAULT = 'http://localhost:3001';
+const PROXY_BASE_DEFAULT = window.location.origin;
 
 let state = {
   connected: false,

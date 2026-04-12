@@ -2708,9 +2708,9 @@
                 type="url"
                 class="api-input"
                 id="proxy-url-input"
-                placeholder="http://localhost:3001/api/generate"
+                placeholder="Auto-detected from current URL"
                 aria-label="Proxy server URL"
-                value="http://localhost:3001/api/generate"
+                value=""
               >
               <button type="button" class="btn-test" id="test-connection-btn" aria-label="Test proxy connection">Test</button>
             </div>
@@ -3020,7 +3020,7 @@ function getQuestionsForResource(resourceId) {
 //  STATE
 // ─────────────────────────────────────────────
 
-const PROXY_BASE = 'http://localhost:3001';
+const PROXY_BASE = window.location.origin;
 
 let state = {
   selectedResource: null,   // id string (static mode) or book object (live mode)
