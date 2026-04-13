@@ -2191,11 +2191,7 @@ async function fetchUrl() {
   btn.disabled = true; btn.textContent = '…';
   status.textContent = 'Fetching…'; status.style.color = 'var(--text-dim)';
   try {
-    const res = await fetch(`${getProxyBase()}/api/fetch-url`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url }),
-    });
+    const res = await fetch(`${getProxyBase()}/api/fetch-url?url=${encodeURIComponent(url)}`);
     if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error || `HTTP ${res.status}`); }
     const data = await res.json();
     if (!data.text) throw new Error('No text returned.');
