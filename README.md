@@ -75,6 +75,35 @@ node server.js
 
 ---
 
+## Configuration
+
+All settings are environment variables. Only `ANTHROPIC_API_KEY` is required.
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `ANTHROPIC_API_KEY` | — | Your Anthropic API key (required) |
+| `CLAUDE_MODEL` | `claude-haiku-4-5` | Claude model used for all generation. Haiku is fast and roughly 5× cheaper than Opus; set this to a more capable model only if a task needs it. |
+| `MAX_TOKENS_LIMIT` | `8192` | Upper bound on `max_tokens` per request |
+| `ALLOWED_ORIGINS` | *(none)* | Comma-separated origins allowed to call the API cross-origin, e.g. `https://tools.example.ca`. Localhost is always allowed, and pages served by the proxy itself are unaffected. |
+| `GENERATE_RATE_LIMIT` | `12` | AI generation requests allowed per IP per minute |
+| `API_RATE_LIMIT` | `60` | Other API requests allowed per IP per minute |
+| `PROXY_ACCESS_TOKEN` | *(none)* | If set, `/api/generate` on the root server requires a matching `x-proxy-token` request header. Leave unset for normal use — the bundled tools don't send this header, so enabling it is only useful if you've customized the front-ends or call the proxy from your own code. |
+
+The model is decided by the server. Any `model` field sent by a browser is
+ignored, so a deployed proxy can't be used to run requests on a more
+expensive model than the one you configured.
+
+### A note on public deployments
+
+The proxy spends money from your Anthropic account on every generation
+request. If you deploy it somewhere public (Railway, a campus server), at
+minimum set `ALLOWED_ORIGINS` to your real domain and keep the default rate
+limits. For anything beyond a small pilot, consider putting the deployment
+behind your institution's single sign-on or a reverse proxy with
+authentication.
+
+---
+
 ## Project Structure
 
 ```
