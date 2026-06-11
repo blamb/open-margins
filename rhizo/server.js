@@ -25,6 +25,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const API_KEY = process.env.ANTHROPIC_API_KEY;
 const PB_NETWORK = 'https://pressbooks.tru.ca';
+const CLAUDE_MODEL = process.env.CLAUDE_MODEL || 'claude-haiku-4-5';
 
 if (!API_KEY) {
   console.error('\n  ERROR: ANTHROPIC_API_KEY environment variable is not set.');
@@ -59,7 +60,7 @@ app.post('/api/generate', async (req, res) => {
     }
     messages   = [{ role: 'user', content: prompt }];
     system     = '';
-    model      = 'claude-opus-4-5';
+    model      = CLAUDE_MODEL;
     max_tokens = 4096;
   } else {
     // Modern format (Nova, Rhizo, Companion, Sylva)
@@ -67,7 +68,7 @@ app.post('/api/generate', async (req, res) => {
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return res.status(400).json({ error: 'Request body must contain a messages array or a prompt string.' });
     }
-    model      = model      || 'claude-opus-4-5';
+    model      = CLAUDE_MODEL;  // client-supplied model is ignored
     max_tokens = max_tokens || 2048;
     system     = system     || '';
   }

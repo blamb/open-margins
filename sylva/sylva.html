@@ -1765,7 +1765,7 @@ async function testConnection() {
   try {
     const res = await fetch(getProxyUrl(), {
       method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ model:'claude-opus-4-5', max_tokens:10,
+      body: JSON.stringify({ max_tokens:10,
         system:'Respond with only: ok', messages:[{role:'user',content:'ping'}] })
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -1790,7 +1790,7 @@ async function testConnection() {
 async function callClaude({system, userContent, maxTokens=2048}) {
   const res = await fetch(getProxyUrl(), {
     method: 'POST', headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({ model:'claude-opus-4-5', max_tokens:maxTokens, system,
+    body: JSON.stringify({ max_tokens:maxTokens, system,
       messages:[{role:'user',content:userContent}] })
   });
   if (!res.ok) throw new Error(`Proxy HTTP ${res.status}`);

@@ -6,10 +6,23 @@
  *   2. Proxies Pressbooks REST API requests (works around CORS restrictions)
  *
  * SETUP:
- *   1. npm install express cors
+ *   1. npm install
  *   2. Set your API key:
  *        export ANTHROPIC_API_KEY=sk-ant-...
  *   3. node server.js
+ *
+ * Optional environment variables:
+ *   CLAUDE_MODEL        — Claude model for all generation requests
+ *                         (default: claude-haiku-4-5)
+ *   MAX_TOKENS_LIMIT    — upper bound on max_tokens per request (default: 8192)
+ *   ALLOWED_ORIGINS     — comma-separated list of origins allowed to call the
+ *                         API cross-origin, e.g. https://tools.example.ca
+ *                         (localhost is always allowed; same-origin requests
+ *                         are unaffected by CORS)
+ *   PROXY_ACCESS_TOKEN  — if set, /api/generate requires a matching
+ *                         "x-proxy-token" header (see README)
+ *   GENERATE_RATE_LIMIT — Claude requests allowed per IP per minute (default: 12)
+ *   API_RATE_LIMIT      — other API requests allowed per IP per minute (default: 60)
  *
  * Endpoints:
  *   POST /api/generate          → Claude API proxy
@@ -20,11 +33,23 @@
 
 const express = require('express');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 const API_KEY = process.env.ANTHROPIC_API_KEY;
 const PB_NETWORK = 'https://pressbooks.tru.ca';
+
+// The model is decided here, not by the browser — a client-supplied "model"
+// would let anyone spend credits on the most expensive model available.
+// Haiku handles the suite's generation tasks at a fraction of Opus pricing.
+const CLAUDE_MODEL = process.env.CLAUDE_MODEL || 'claude-haiku-4-5';
+const MAX_TOKENS_LIMIT = parseInt(process.env.MAX_TOKENS_LIMIT || '8192', 10);
+const PROXY_ACCESS_TOKEN = process.env.PROXY_ACCESS_TOKEN || '';
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || '')
+  .split(',')
+  .map(o => o.trim().replace(/\/$/, ''))
+  .filter(Boolean);
 
 if (!API_KEY) {
   console.error('\n  ERROR: ANTHROPIC_API_KEY environment variable is not set.');
@@ -32,8 +57,43 @@ if (!API_KEY) {
   process.exit(1);
 }
 
-app.use(cors({ origin: '*' }));
+// Railway/Heroku-style deployments sit behind a reverse proxy; without this,
+// every request appears to come from the proxy's IP and rate limits are shared.
+app.set('trust proxy', 1);
+
+// ── CORS ──────────────────────────────────────────────────────────────────────
+// Same-origin requests (the tools served by this server) never need CORS.
+// Cross-origin access is limited to localhost (dev) plus ALLOWED_ORIGINS.
+const LOCALHOST_RE = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i;
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin || LOCALHOST_RE.test(origin) || ALLOWED_ORIGINS.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Origin not allowed by CORS'));
+  },
+}));
+
 app.use(express.json({ limit: '2mb' }));
+
+// ── Rate limiting ─────────────────────────────────────────────────────────────
+// Claude calls are the expensive resource; everything else gets a looser limit.
+const generateLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: parseInt(process.env.GENERATE_RATE_LIMIT || '12', 10),
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  message: { error: 'Too many AI requests — please wait a minute and try again.' },
+});
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: parseInt(process.env.API_RATE_LIMIT || '60', 10),
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  message: { error: 'Too many requests — please slow down.' },
+});
+app.use('/api/generate', generateLimiter);
+app.use(['/api/books', '/api/toc', '/api/chapter', '/api/fetch-url'], apiLimiter);
 
 // ── Serve static HTML files (companion, nova, rhizo, sylva, etc.) ────────────
 app.use(express.static(__dirname));
@@ -44,32 +104,42 @@ app.get('/api/health', (req, res) => {
 });
 
 // ── Claude API proxy ──────────────────────────────────────────────────────────
-// Accepts both legacy { prompt } and modern { messages, system, model, max_tokens }
+// Accepts both legacy { prompt } and modern { messages, system, max_tokens }.
+// The model is always CLAUDE_MODEL — any model field sent by the client is ignored.
 app.post('/api/generate', async (req, res) => {
-  let messages, system, model, max_tokens;
+  if (PROXY_ACCESS_TOKEN && req.get('x-proxy-token') !== PROXY_ACCESS_TOKEN) {
+    return res.status(401).json({ error: 'Missing or invalid proxy access token.' });
+  }
+
+  let messages, system, max_tokens;
 
   if (req.body.prompt && typeof req.body.prompt === 'string') {
-    // Legacy format (Activity Builder)
+    // Legacy format (Activity Builder, Companion, Nova, Rhizo)
     const prompt = req.body.prompt;
     if (prompt.length > 50000) {
       return res.status(400).json({ error: 'Prompt exceeds maximum length. Shorten your OER content.' });
     }
     messages   = [{ role: 'user', content: prompt }];
     system     = '';
-    model      = 'claude-opus-4-5';
     max_tokens = 4096;
   } else {
-    // Modern format (Nova, Rhizo, Companion, Sylva)
-    ({ messages, system, model, max_tokens } = req.body);
+    // Modern format (Sylva)
+    ({ messages, system, max_tokens } = req.body);
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return res.status(400).json({ error: 'Request body must contain a messages array or a prompt string.' });
     }
-    model      = model      || 'claude-opus-4-5';
     max_tokens = max_tokens || 2048;
     system     = system     || '';
   }
 
-  console.log(`[${new Date().toISOString()}] Claude request — model: ${model}`);
+  if (!Number.isFinite(max_tokens) || max_tokens < 1) max_tokens = 2048;
+  max_tokens = Math.min(max_tokens, MAX_TOKENS_LIMIT);
+
+  if (req.body.model && req.body.model !== CLAUDE_MODEL) {
+    console.log(`[${new Date().toISOString()}] Ignoring client-requested model "${req.body.model}" — using ${CLAUDE_MODEL}`);
+  }
+
+  console.log(`[${new Date().toISOString()}] Claude request — model: ${CLAUDE_MODEL}`);
 
   let claudeResponse;
   try {
@@ -80,7 +150,7 @@ app.post('/api/generate', async (req, res) => {
         'x-api-key': API_KEY,
         'anthropic-version': '2023-06-01',
       },
-      body: JSON.stringify({ model, max_tokens, system, messages }),
+      body: JSON.stringify({ model: CLAUDE_MODEL, max_tokens, system, messages }),
     });
   } catch (fetchErr) {
     console.error('Network error reaching Claude API:', fetchErr.message);
@@ -96,7 +166,8 @@ app.post('/api/generate', async (req, res) => {
     });
   }
 
-  console.log(`[${new Date().toISOString()}] Claude responded (${body?.usage?.output_tokens ?? '?'} tokens)`);
+  const u = body?.usage || {};
+  console.log(`[${new Date().toISOString()}] Claude responded — in: ${u.input_tokens ?? '?'}, out: ${u.output_tokens ?? '?'} tokens`);
   res.json(body);
 });
 
@@ -403,10 +474,21 @@ app.get('/api/fetch-url', async (req, res) => {
   }
 });
 
+// ── Error handler ─────────────────────────────────────────────────────────────
+app.use((err, req, res, next) => {
+  if (err.message === 'Origin not allowed by CORS') {
+    return res.status(403).json({ error: 'This origin is not allowed to use the proxy.' });
+  }
+  next(err);
+});
+
 // ── Start ─────────────────────────────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`\n  TRU OER Activity Builder — Proxy Server`);
   console.log(`  Listening at http://localhost:${PORT}`);
+  console.log(`  Claude model:         ${CLAUDE_MODEL}`);
+  console.log(`  Cross-origin access:  localhost${ALLOWED_ORIGINS.length ? ', ' + ALLOWED_ORIGINS.join(', ') : ' only'}`);
+  console.log(`  Access token:         ${PROXY_ACCESS_TOKEN ? 'required' : 'not required'}`);
   console.log(`  Claude endpoint:      POST http://localhost:${PORT}/api/generate`);
   console.log(`  Books endpoint:       GET  http://localhost:${PORT}/api/books`);
   console.log(`  TOC endpoint:         GET  http://localhost:${PORT}/api/toc?bookUrl=...`);

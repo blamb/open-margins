@@ -25,6 +25,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const API_KEY = process.env.ANTHROPIC_API_KEY;
 const PB_NETWORK = 'https://pressbooks.tru.ca';
+const CLAUDE_MODEL = process.env.CLAUDE_MODEL || 'claude-haiku-4-5';
 
 if (!API_KEY) {
   console.error('\n  ERROR: ANTHROPIC_API_KEY environment variable is not set.');
@@ -69,7 +70,7 @@ app.post('/api/generate', async (req, res) => {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-opus-4-6',
+        model: CLAUDE_MODEL,
         max_tokens: 4096,
         messages: [{ role: 'user', content: prompt }],
       }),
