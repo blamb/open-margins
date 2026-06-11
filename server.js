@@ -77,13 +77,23 @@ const ORIGIN_MATCHERS = ALLOWED_ORIGINS.map(entry => {
 });
 const originAllowed = origin =>
   LOCALHOST_RE.test(origin) || ORIGIN_MATCHERS.some(matches => matches(origin));
-app.use(cors({
-  origin(origin, callback) {
-    if (!origin || originAllowed(origin)) {
-      return callback(null, true);
-    }
-    return callback(new Error('Origin not allowed by CORS'));
-  },
+// Browsers send an Origin header on every POST, including same-origin ones,
+// so the proxy's own pages must always be allowed: an origin whose host equals
+// the Host the request was sent to is this server. (Host-only comparison —
+// the scheme may differ from req.protocol behind a TLS-terminating proxy.)
+const isSameOrigin = (origin, req) => {
+  try {
+    return new URL(origin).host === req.headers.host;
+  } catch {
+    return false;
+  }
+};
+app.use(cors((req, callback) => {
+  const origin = req.headers.origin;
+  if (!origin || isSameOrigin(origin, req) || originAllowed(origin)) {
+    return callback(null, { origin: true });
+  }
+  return callback(new Error('Origin not allowed by CORS'));
 }));
 
 app.use(express.json({ limit: '2mb' }));
