@@ -17,8 +17,9 @@
  *   MAX_TOKENS_LIMIT    — upper bound on max_tokens per request (default: 8192)
  *   ALLOWED_ORIGINS     — comma-separated list of origins allowed to call the
  *                         API cross-origin, e.g. https://tools.example.ca
- *                         (localhost is always allowed; same-origin requests
- *                         are unaffected by CORS)
+ *                         or https://*.pressbooks.tru.ca (wildcard covers all
+ *                         subdomains plus the bare domain; localhost is always
+ *                         allowed; same-origin requests are unaffected by CORS)
  *   PROXY_ACCESS_TOKEN  — if set, /api/generate requires a matching
  *                         "x-proxy-token" header (see README)
  *   GENERATE_RATE_LIMIT — Claude requests allowed per IP per minute (default: 12)
@@ -64,10 +65,21 @@ app.set('trust proxy', 1);
 // ── CORS ──────────────────────────────────────────────────────────────────────
 // Same-origin requests (the tools served by this server) never need CORS.
 // Cross-origin access is limited to localhost (dev) plus ALLOWED_ORIGINS.
+// An entry like https://*.pressbooks.tru.ca allows every subdomain as well as
+// the bare domain — Pressbooks networks put each book on its own subdomain.
 const LOCALHOST_RE = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i;
+const escapeRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const ORIGIN_MATCHERS = ALLOWED_ORIGINS.map(entry => {
+  const wildcard = entry.match(/^(https?):\/\/\*\.(.+)$/i);
+  if (!wildcard) return origin => origin === entry;
+  const re = new RegExp(`^${wildcard[1]}://([a-z0-9-]+\\.)*${escapeRe(wildcard[2])}$`, 'i');
+  return origin => re.test(origin);
+});
+const originAllowed = origin =>
+  LOCALHOST_RE.test(origin) || ORIGIN_MATCHERS.some(matches => matches(origin));
 app.use(cors({
   origin(origin, callback) {
-    if (!origin || LOCALHOST_RE.test(origin) || ALLOWED_ORIGINS.includes(origin)) {
+    if (!origin || originAllowed(origin)) {
       return callback(null, true);
     }
     return callback(new Error('Origin not allowed by CORS'));

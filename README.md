@@ -84,7 +84,7 @@ All settings are environment variables. Only `ANTHROPIC_API_KEY` is required.
 | `ANTHROPIC_API_KEY` | — | Your Anthropic API key (required) |
 | `CLAUDE_MODEL` | `claude-haiku-4-5` | Claude model used for all generation. Haiku is fast and roughly 5× cheaper than Opus; set this to a more capable model only if a task needs it. |
 | `MAX_TOKENS_LIMIT` | `8192` | Upper bound on `max_tokens` per request |
-| `ALLOWED_ORIGINS` | *(none)* | Comma-separated origins allowed to call the API cross-origin, e.g. `https://tools.example.ca`. Localhost is always allowed, and pages served by the proxy itself are unaffected. |
+| `ALLOWED_ORIGINS` | *(none)* | Comma-separated origins allowed to call the API cross-origin, e.g. `https://tools.example.ca`. A leading wildcard like `https://*.pressbooks.tru.ca` allows every subdomain as well as the bare domain — useful for Pressbooks networks, where each book lives on its own subdomain. Localhost is always allowed, and pages served by the proxy itself are unaffected. |
 | `GENERATE_RATE_LIMIT` | `12` | AI generation requests allowed per IP per minute |
 | `API_RATE_LIMIT` | `60` | Other API requests allowed per IP per minute |
 | `PROXY_ACCESS_TOKEN` | *(none)* | If set, `/api/generate` on the root server requires a matching `x-proxy-token` request header. Leave unset for normal use — the bundled tools don't send this header, so enabling it is only useful if you've customized the front-ends or call the proxy from your own code. |
